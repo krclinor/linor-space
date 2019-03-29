@@ -4,8 +4,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.junit.Before;
@@ -71,7 +69,16 @@ public class SingerDaoTests {
 //		listSingers(singers);
 //		
 //	}
-	
+
+	@Test
+	public void testDeleteSinger() {
+		singerDao.delete(3);
+		List<Singer> singers = singerDao.findAll();
+		log.info("가수 삭제 후 가수 목록>>>");
+		listSingers(singers);
+		
+	}
+
 	private void listSingers(List<Singer> singers){
 		for(Singer singer: singers){
 			log.info(singer.toString());

@@ -92,6 +92,11 @@
 	where	id = #{id}
 </update>
 
+<update id="delete" parameterType="int">
+	delete from singer
+	where	id = #{id}
+</update>
+
 <insert id="insertWithAlbum" parameterType="com.linor.singer.domain.Singer">
 	<selectKey keyProperty="id" resultType="int" order="BEFORE">
 		Select nextval(pg_get_serial_sequence('singer', 'id'))
