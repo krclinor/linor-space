@@ -1,12 +1,12 @@
 package com.linor.singer;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 
 import java.time.LocalDate;
 import java.util.List;
-
-import javax.transaction.Transactional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,21 +18,16 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.linor.singer.dao.SingerDao;
 import com.linor.singer.domain.Album;
 import com.linor.singer.domain.Singer;
+import com.linor.singer.domain.SingerSummary;
 
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
-@Transactional
 public class SingerDaoTests {
 	@Autowired
 	private SingerDao singerDao;
-	
-	@Before
-	public void setUp() {
-		//singerDao = new SingerDaoImpl();
-	}
 	
 	@Test
 	public void testFindAll(){
@@ -49,13 +44,22 @@ public class SingerDaoTests {
 			log.info(singer.toString());
 		}
 	}
-
+	
+	@Test
+	public void testFindAllByNativeQuery() {
+		log.info("네이티브 쿼리 실행 결과");
+		listSingers(singerDao.findAllByNativeQuery());
+	}
+	
 	@Test
 	public void testFindAllWidthAlbums() {
 		List<Singer> singers = singerDao.findAllWithAlbums();
 		assertTrue(singers.size() == 3);
 		singers.forEach(singer -> {
 			log.info(singer.toString());
+			singer.getAlbums().forEach(album -> {
+				log.info("앨범 >>> " + album.toString());
+			});
 		});
 	}
 
@@ -64,6 +68,9 @@ public class SingerDaoTests {
 		Singer singer = singerDao.findById(1);
 		log.info("주키 검색 결과>>>");
 		log.info(singer.toString());
+		singer.getAlbums().forEach(album -> {
+			log.info("앨범 >>> " + album.toString());
+		});
 	}
 	
 	@Test
@@ -71,6 +78,21 @@ public class SingerDaoTests {
 		List<Singer> singers = singerDao.findByFirstName("종서");
 		assertTrue(singers.size() == 1);
 		listSingers(singers);
+	}
+
+	@Test
+	public void testListSingersSummary() {
+		List<SingerSummary> singers = singerDao.listAllSingersSummary();
+		listSingerSummary(singers);
+		assertEquals(2, singers.size());
+		
+	}
+	
+	private void listSingerSummary(List<SingerSummary> singers) {
+		log.info("--- 가수 요약 리스트 : ");
+		for(SingerSummary singer : singers) {
+			log.info(singer.toString());
+		}
 	}
 
 	@Test
@@ -87,13 +109,18 @@ public class SingerDaoTests {
 	
 	@Test
 	public void testUpdateSinger() {
-		Singer singer = singerDao.findById(1);
+		Singer singerOldSinger = singerDao.findById(1);
 		log.info(">>> 김종서 수정 전 >>>");
-		log.info(singer.toString());
+		log.info(singerOldSinger.toString());
+		Singer singer = new Singer();
+		singer.setId(1);
+		singer.setFirstName("종서");
+		singer.setLastName("김");
 		singer.setBirthDate(LocalDate.parse("1977-10-16"));
 		singerDao.update(singer);
+		Singer singerNewSinger = singerDao.findById(1);
 		log.info(">>> 김종서 수정 후 >>>");
-		log.info(singer.toString());
+		log.info(singerNewSinger.toString());
 	}
 
 	@Test
