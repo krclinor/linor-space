@@ -12,14 +12,19 @@ import org.springframework.integration.endpoint.MethodInvokingMessageSource;
 import com.linor.singer.adapter.MessageConsumer;
 import com.linor.singer.adapter.MessageProducer;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
 @EnableIntegration
+@RequiredArgsConstructor
 public class IntegrationFlowConfig {
-
+	private final MessageProducer messageProducer;
+	
 	@Bean
 	public MessageSource<?> source(){
 		MethodInvokingMessageSource source = new MethodInvokingMessageSource();
-		source.setObject(new MessageProducer());
+		//source.setObject(new MessageProducer());
+		source.setObject(messageProducer);
 		source.setMethodName("produce");
 		return source;
 	}
