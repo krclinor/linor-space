@@ -32,10 +32,6 @@ public class SingerDaoTests {
 	}
 	
 	@Test
-	public void contextLoads() {
-	}
-	
-	@Test
 	public void testFindAll(){
 		List<Singer> singers = singerDao.findAll();
 		assertNotNull(singers);

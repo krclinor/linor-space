@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.linor.singer.dao.SingerDao">
-<select id="findAll" resultType="com.linor.singer.domain.Singer">
+<select id="findAll" resultType="Singer">
 	select * from singer
 </select>
 
 <!-- findAllWithAllbums 첫 번째 방법 -->
-<!-- <resultMap type="com.linor.singer.domain.Singer" id="singerWithAlbumMap">
-	<collection property="albums" ofType="com.linor.singer.domain.Album"
+<!-- <resultMap type="Singer" id="singerWithAlbumMap">
+	<collection property="albums" ofType="Album"
 		column="id" select="selectAlbumsForSinger"/>
 </resultMap>
 <select id="findAllWithAlbums" resultMap="singerWithAlbumMap">
 	select * from singer
 </select>
-<select id="selectAlbumsForSinger" parameterType="int" resultType="com.linor.singer.domain.Album">
+<select id="selectAlbumsForSinger" parameterType="int" resultType="Album">
 	select *
 	from	album
 	where	singer_id = #{id}
@@ -21,12 +21,12 @@
  -->
 
 <!-- findAllWithAllbums 두 번째 방법 -->
-<resultMap type="com.linor.singer.domain.Singer" id="singerWithAlbumMap">
+<resultMap type="Singer" id="singerWithAlbumMap">
 	<id property="id" column="id"/>
 	<result property="firstName" column="first_name"/>
 	<result property="lastName" column="last_name"/>
 	<result property="birthDate" column="birth_date"/>
-	<collection property="albums" ofType="com.linor.singer.domain.Album">
+	<collection property="albums" ofType="Album">
 		<id property="id" column="album_id"/>
 		<result property="singerId" column="singer_id"/>
 		<result property="title" column="title"/>
@@ -41,7 +41,7 @@
 </select>
 
 <!-- findById 첫 번째 방법-->
-<!-- <select id="findById" parameterType="int" resultType="com.linor.singer.domain.Singer">
+<!-- <select id="findById" parameterType="int" resultType="Singer">
 	select * from singer where id = #{id}
 </select>
  -->
@@ -77,14 +77,14 @@
 	</where>
 </select>
 
-<insert id="insert" parameterType="com.linor.singer.domain.Singer"
+<insert id="insert" parameterType="Singer"
 	useGeneratedKeys="true"
 	keyProperty="id">
 	insert into singer (first_name, last_name, birth_date)
 	values(#{firstName}, #{lastName}, #{birthDate})
 </insert>
 
-<update id="update" parameterType="com.linor.singer.domain.Singer">
+<update id="update" parameterType="Singer">
 	update singer
 	set		first_name = #{firstName},
 			last_name = #{lastName},
@@ -97,7 +97,7 @@
 	where	id = #{id}
 </update>
 
-<insert id="insertWithAlbum" parameterType="com.linor.singer.domain.Singer">
+<insert id="insertWithAlbum" parameterType="Singer">
 	<selectKey keyProperty="id" resultType="int" order="BEFORE">
 		Select nextval(pg_get_serial_sequence('singer', 'id'))
 	</selectKey>
