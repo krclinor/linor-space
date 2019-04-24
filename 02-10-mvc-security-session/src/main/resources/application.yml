@@ -1,0 +1,39 @@
+#세션관리 관련
+server:
+  servlet:
+    session:
+      timeout: 1 #세션 타임아웃 1분
+      cookie:
+        http-only: true #브라우저에스 세션 쿠키값을 못보도록 
+        secure: false #true 이면 쿠키값 전송을 https를 통해 전달
+
+#로거
+logging:
+  pattern:
+    console: '%-5level %logger{0} - %msg%n'
+  level:
+    root: info
+    com.linor.singer.dao: trace
+    
+spring:
+  mvc: #Spring Boot에서 JSP사용을 위한 설정
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+    locale: ko_KR
+  messages: #메시시 프로퍼티 설정
+    basename: org/springframework/security/messages
+    cache-duration: -1
+    encoding: UTF-8
+    fallback-to-system-locale: true
+  datasource: #데이타소스
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: always
+    password: spring1234
+    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+    username: spring
+
+mybatis: #Mybatis 설정
+  mapper-locations: classpath*:/**/dao/*.xml
+  type-aliases-package: com.linor.singer.domain
+  configuration.map-underscore-to-camel-case: true
