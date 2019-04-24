@@ -1,0 +1,30 @@
+#로거
+logging:
+  pattern:
+    console: '%-5level %logger{0} - %msg%n'
+  level:
+    root: info
+    com.linor.singer.dao: trace
+
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+    locale: ko_KR
+  messages: #메시시 프로퍼티 설정
+    basename: org/springframework/security/messages
+    cache-duration: -1
+    encoding: UTF-8
+    fallback-to-system-locale: true
+  datasource: #데이타소스
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: always
+    password: spring1234
+    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+    username: spring
+
+mybatis:
+  mapper-locations: classpath*:/**/dao/*.xml
+  type-aliases-package: com.linor.singer.domain
+  configuration.map-underscore-to-camel-case: true
