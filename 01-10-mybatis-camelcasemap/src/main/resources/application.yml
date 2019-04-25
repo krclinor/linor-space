@@ -1,0 +1,21 @@
+#로거
+logging:
+  pattern:
+    console: '%-5level %logger{0} - %msg%n'
+  level:
+    root: info
+    com.linor.app.dao: trace
+    
+#데이타소스
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: always
+    password: spring1234
+    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+    username: spring
+
+mybatis:
+  mapper-locations: classpath*:/**/dao/*.xml
+  type-aliases-package: com.linor.app.domain
+  configuration.map-underscore-to-camel-case: true
