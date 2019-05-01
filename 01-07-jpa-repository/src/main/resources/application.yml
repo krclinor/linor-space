@@ -12,10 +12,10 @@ spring:
   profiles: postgres
   datasource:
     platform: postgresql
-    driver-class-name: org.postgresql.Driver
     initialization-mode: always
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/spring?currentSchema=new
     password: spring1234
-    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
     username: spring
 
     #hikari Connection Pull 설정
