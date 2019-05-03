@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linor.app.dao.Singer2Dao">
+<select id="findAll" resultType="Singer2">
+	select * 
+	from singer2 s
+</select>
+
+<select id="findByFirstName" parameterType="string" resultType="Singer2">
+	select * 
+	from singer2 s
+	<where>
+		<if test="value != null">
+		s.first_name = #{first_name}
+		</if>
+	</where>
+</select>
+
+<select id="findByFirstNameAndLastName" parameterType="Singer2" resultType="Singer2">
+	select * 
+	from singer2 s
+	<where>
+		<if test="firstName != null">
+		s.first_name = #{firstName}
+		</if>
+		<if test="lastName != null">
+		and s.last_name = #{lastName}
+		</if>
+	</where>
+</select>
+
+<select id="findNameById" parameterType="Singer2" resultType="string">
+	select last_name || ' ' || first_name
+	from singer2 s
+	where	s.id = #{id}
+</select>
+
+<!-- findById 두 번째 방법-->
+<select id="findById" parameterType="int" resultType="Singer2">
+	select s.id, s.first_name, s.last_name, s.birth_date
+	from	singer2 s
+	where	s.id = #{id}
+</select>
+
+<select id="findFirstNameById" parameterType="Singer2" resultType="string">
+	select first_name
+	from singer2 s
+	where	s.id = #{id}
+</select>
+
+<insert id="insert" parameterType="Singer2"
+	useGeneratedKeys="true"
+	keyProperty="id">
+	insert into singer2 (first_name, last_name, birth_date)
+	values(#{firstName}, #{lastName}, #{birthDate})
+</insert>
+
+<update id="update" parameterType="Singer2">
+	update singer2
+	set		first_name = #{firstName},
+			last_name = #{lastName},
+			birth_date = #{birthDate}
+	where	id = #{id}
+</update>
+
+<update id="delete" parameterType="int">
+	delete from singer2
+	where	id = #{id}
+</update>
+</mapper>

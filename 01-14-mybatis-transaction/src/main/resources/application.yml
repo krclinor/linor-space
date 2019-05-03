@@ -1,0 +1,22 @@
+spring:
+#데이타소스
+  datasource:
+    initialization-mode: always
+    driver-class-name: org.postgresql.Driver
+    password: spring1234
+    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+    username: spring    
+
+mybatis:
+  mapper-locations: classpath*:/**/dao/*.xml
+  type-aliases-package: com.linor.app.domain
+  configuration.map-underscore-to-camel-case: true
+        
+#로거
+logging:
+  pattern:
+    console: '%-5level %logger{0} - %msg%n'
+  level:
+    root: info
+#    com.linor.app.mybatis.dao: trace
+        
