@@ -4,8 +4,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.junit.Before;
