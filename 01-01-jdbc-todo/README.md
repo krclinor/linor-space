@@ -282,3 +282,5 @@ public class SingerDaoTests {
     }
 }
 ```
+todo 프로젝트는 SpringBoot로 실행은 가능하나 테스트케이스는 실행되지 않는다.  
+이 프로젝트는 다음에 진행할 JDBC프로젝트의 기본 구조로 사용된다.
