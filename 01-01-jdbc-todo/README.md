@@ -53,6 +53,8 @@ spring:
     password: linor1234
     initialization-mode: always
 ```
+yml은 properties파일보다 시스템 설정사항을 효율적으로 관리할 수 있다.
+datasource 설정에 필요한 속성은 driver-class-name, url, username, password이다.
 initialization-mode를 always로 하면 spring boot시작시 schema.sql과 data.sql파일을 
 실행하여 데이타베이스의 테이블을 생성하고 데이타를 로드하여 데이타베이스를 초기화 한다.
 
@@ -97,4 +99,27 @@ values
 (1, '아름다운 구속','20190101'),
 (1, '날개를 활짝펴고','20190201'),
 (2, '황혼의 문턱','20190301');
+```
+
+### DAO인터페이스 생성
+데이타베이스를 이용한 처리 인터페이스 선언으로 향후 이 인터페이스를 구현할 예정이다.
+```java
+package com.linor.singer.dao;
+
+import java.util.List;
+
+import com.linor.singer.domain.Singer;
+
+public interface SingerDao {
+    List<Singer> findAll();
+    List<Singer> findByFirstName(String firstName);
+    String findNameById(Integer id);
+    Singer findById(Integer id);
+    String findFirstNameById(Integer id);
+    void insert(Singer singer);
+    void update(Singer singer);
+    void delete(Integer singerId);
+    List<Singer> findAllWithAlbums();
+    void insertWithAlbum(Singer singer);
+}
 ```
