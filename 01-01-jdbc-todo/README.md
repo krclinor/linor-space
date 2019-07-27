@@ -100,10 +100,54 @@ values
 (1, '날개를 활짝펴고','20190201'),
 (2, '황혼의 문턱','20190301');
 ```
+### Domain 클래스 생성
+도메인 클래스는 보통 테이블에 대응되는 엔터티 클래스로 Singer와 Album클래스를 생성한다.  
+파일명: com.linor.singer.domain.Singer.java
+```java
+package com.linor.singer.domain;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import lombok.Data;
+
+@Data
+public class Singer {
+    private Integer id;
+    private String firstName;
+    private String lastName;
+    private LocalDate birthDate;
+    private List<Album> albums;
+
+    public void addAlbum(Album album) {
+        if(albums == null) {
+            albums = new ArrayList<>();
+        }
+        albums.add(album);
+    }
+}
+```
+파일명: com.linor.singer.domain.Album.java
+```java
+package com.linor.singer.domain;
+
+import java.time.LocalDate;
+
+import lombok.Data;
+
+@Data
+public class Album {
+    private Integer id;
+    private Integer singerId;
+    private String title;
+    private LocalDate releaseDate;
+}
+```
 
 ### DAO인터페이스 생성
 데이타베이스를 이용한 처리 인터페이스 선언으로 향후 이 인터페이스를 구현할 예정이다.  
-파일명 :src/main/java/com.linor.singer.dao.SingerDao.java
+파일명 :com.linor.singer.dao.SingerDao.java
 ```java
 package com.linor.singer.dao;
 
