@@ -103,6 +103,7 @@ values
 
 ### DAO인터페이스 생성
 데이타베이스를 이용한 처리 인터페이스 선언으로 향후 이 인터페이스를 구현할 예정이다.
+파일명 :src/main/java/com.linor.singer.dao.SingerDao.java
 ```java
 package com.linor.singer.dao;
 
