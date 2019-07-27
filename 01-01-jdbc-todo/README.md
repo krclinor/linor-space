@@ -131,6 +131,9 @@ public class Singer {
     }
 }
 ```
+Data어노테이션은 Lombok에서 제공하는 것으로 자동으로 get/set메서드를 생성하여 코딩을 깔끔하게 작성할 수 있다.
+
+
 파일명: com.linor.singer.domain.Album.java
 ```java
 package com.linor.singer.domain;
