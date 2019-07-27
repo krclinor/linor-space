@@ -42,7 +42,7 @@ CREATE SCHEMA singer
 Spring Boot -> Spring Starter Project로 생성한다.
 추가할 dependency : devtools, lombok, postgresql
 
-### 스프링 부트 application.yml설정
+### application.yml설정
 src/main/resources/application.yml에 스프링부트에서 사용할 데이타소스를 설정한다.
 ```yml
 spring:
@@ -53,4 +53,48 @@ spring:
     password: linor1234
     initialization-mode: always
 ```
+initialization-mode를 always로 하면 spring boot시작시 schema.sql과 data.sql파일을 
+실행하여 데이타베이스의 테이블을 생성하고 데이타를 로드하여 데이타베이스를 초기화 한다.
 
+### 데이타베이스 초기화 파일 생성
+#### schema.sql
+```sql
+set search_path to singer;
+
+drop table if exists singer cascade;
+
+create table singer(
+  id serial not null primary key,
+  first_name varchar(60) not null,
+  last_name varchar(60) not null,
+  birth_date date,
+  constraint singer_uq_01 unique(first_name, last_name)
+);
+
+drop table if exists album cascade;
+
+create table album(
+  id serial not null primary key,
+  singer_id integer not null,
+  title varchar(100) not null,
+  release_date date,
+  constraint album_uq_01 unique(singer_id, title),
+  constraint album_fk_01 foreign key (singer_id) references singer(id) on delete cascade
+);
+
+```
+#### data.sql
+```sql
+insert into singer(first_name, last_name, birth_date)
+values
+('종서','김','19701209'),
+('건모','김','19990712'),
+('용필','조','19780628'),
+('진아','태','20001101');
+
+insert into album(singer_id, title, release_date)
+values
+(1, '아름다운 구속','20190101'),
+(1, '날개를 활짝펴고','20190201'),
+(2, '황혼의 문턱','20190301');
+```
