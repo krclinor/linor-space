@@ -14,8 +14,8 @@ CREATE USER spring WITH
 	NOREPLICATION
 	CONNECTION LIMIT -1
 	PASSWORD 'sring1234';
+```
 로그인이 가능한 spring 계정으로 비밀번호는 'spring1234'로 설정하였다.
-
 
 ## 2. spring 데이타베이스 생성
 ```sql
@@ -24,3 +24,4 @@ CREATE DATABASE spring
     OWNER = spring
     ENCODING = 'UTF8'
     CONNECTION LIMIT = -1;
+```
