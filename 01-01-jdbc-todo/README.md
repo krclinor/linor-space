@@ -1,3 +1,14 @@
 # JDBC Todo
-안녕하세요.
-잘 되는지 테스트.
+사용 데이타베이스는 postgresql을 사용한다.
+postgresql을 설치 후 spring계정을 생성한다.
+##1. 계정 생성
+```sql
+CREATE USER spring WITH
+	LOGIN
+	NOSUPERUSER
+	NOCREATEDB
+	NOCREATEROLE
+	INHERIT
+	NOREPLICATION
+	CONNECTION LIMIT -1
+	PASSWORD 'sring1234';
