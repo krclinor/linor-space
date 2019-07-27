@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -22,7 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class SingerDaoTests {
-	private final SingerDao singerDao;
+	@Autowired
+	private SingerDao singerDao;
 	
 	@Test
 	public void contextLoads() {

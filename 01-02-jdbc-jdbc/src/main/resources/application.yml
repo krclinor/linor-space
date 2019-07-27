@@ -4,8 +4,8 @@ logging:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    initialization-mode: always
-    password: spring1234
     url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
-    username: spring
-
+    username: linor
+    password: linor1234
+    initialization-mode: always
+    

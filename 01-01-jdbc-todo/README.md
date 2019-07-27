@@ -43,8 +43,35 @@ CREATE SCHEMA singer
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
 Spring Boot -> Spring Starter Project로 생성한다.
-추가할 dependency : devtools, lombok, postgresql
-
+추가할 dependency : devtools, lombok, postgresql, jdbc
+pom.xml파일에 다음 내용을 확인할 수 있다.
+```xml
+    <dependencies>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+    </dependencies>
+```
 ### application.yml설정
 src/main/resources/application.yml에 스프링부트에서 사용할 데이타소스를 설정한다.
 ```yml
@@ -188,6 +215,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -202,7 +230,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class SingerDaoTests {
-    private final SingerDao singerDao;
+    @Autowired
+    private SingerDao singerDao;
     
     @Test
     public void contextLoads() {
@@ -287,4 +316,5 @@ public class SingerDaoTests {
         log.info(singerNewSinger.toString());
     }
 }
+
 ```
