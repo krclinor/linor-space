@@ -1,4 +1,7 @@
 # JDBC Todo
+이 프로젝트는 SpringBoot로 실행은 가능하나 테스트케이스는 실행되지 않는다.  
+이 프로젝트는 다음에 진행할 JDBC프로젝트의 기본 구조로 사용된다.  
+
 Spring Boot JDBC개발을 진행하기 위한 준비과정으로 데이타베이스 설정,  
 lombok설정, dao인터페이스, 테스트케이스를 준비한다.
 
@@ -282,5 +285,3 @@ public class SingerDaoTests {
     }
 }
 ```
-todo 프로젝트는 SpringBoot로 실행은 가능하나 테스트케이스는 실행되지 않는다.  
-이 프로젝트는 다음에 진행할 JDBC프로젝트의 기본 구조로 사용된다.
