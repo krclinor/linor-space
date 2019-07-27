@@ -1,9 +1,9 @@
 # JDBC Todo
-사용 데이타베이스는 postgresql을 사용한다.
-postgresql을 설치 후 Spring Boot에서 사용할 수 있도록 설정한다.
+Spring Boot JDBC개발을 진행하기 위한 준비과정으로 데이타베이스 설정,  
+lombok설정, dao인터페이스, 테스트케이스를 준비한다.
 
-
-## 1. 계정 생성
+## 데이타베이스 설정
+### 계정 생성
 ```sql
 CREATE USER linor WITH
 	LOGIN
@@ -17,7 +17,7 @@ CREATE USER linor WITH
 ```
 로그인이 가능한 linor 계정으로 비밀번호는 'linor1234'로 설정하였다.
 
-## 2. 데이타베이스 생성
+### 데이타베이스 생성
 ```sql
 CREATE DATABASE spring
     WITH 
@@ -27,7 +27,7 @@ CREATE DATABASE spring
 ```
 spring이라는 데이타베이스를 생성하고 소유자는 위에서 만든 linor로 한다.
 
-## 3. 스키마 생성
+### 스키마 생성
 ```sql
 CREATE SCHEMA singer
     AUTHORIZATION linor;
