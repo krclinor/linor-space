@@ -51,10 +51,11 @@ public class SingerDaoImpl implements SingerDao {
 				singer.setLastName(rs.getString("last_name"));
 				singer.setBirthDate(rs.getDate("birth_date").toLocalDate());
 				singers.add(singer);
+				log.info("가수명 : {}{}, 생년월일: {}", singer.getLastName(), singer.getFirstName(),singer.getBirthDate().toString());
 			}
 			return singers;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("에러코드: {}, 에러내역: {}", e.getErrorCode(), e.getMessage());
 			return null;
 		}finally {
 			if(rs != null ) try {rs.close();}catch (Exception e2) {}
