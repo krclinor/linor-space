@@ -1,6 +1,9 @@
 # Spring JDBC
 01-01-jdbc-todo프로젝트에 SingerDao인터페이스를 스프링 JDBC로 구현한다.  
-
+Spring-jdbc를 사용하면 Connection, Statement를 close할 필요가 없다.  
+스프링에서 알아서 처리해 준다. 또한 트랜잭션 관리도 가능하다.  
+하지만 OR매핑을 지원하지 않아 레코드 컬럼과 오브젝트 필드 매핑을 직접 처리해야 한다. 또한 sql문이 자바 클래스 내에 분산되어 있어 관리가 어려울 수 있다. 
+ 
 ## SingerDao인터페이스 구현
 
 ### 클래스에 선언한 어노테이션
@@ -201,5 +204,48 @@ jdbcTemplate은 NamedParameterJdbctTemplate클래스로 생성한다.
         }
     }
 ```
+SqlUpdate클래스를 상속받아 InsertSinger클래스를 생성한다.
+InsertSinger클래스의 생성자에서 데이타소스와 sql문을 설정하고, 이름이 부여된 파라미터를 매칭하기 위하여 declareParameter메서드에 
+SqlParamter클래스 객체로 파라미터명과 타입을 선언한다.     
+setGeneratedKeysColumnNames메서드를 이용하여 자동으로 생성되는 키칼럼을 설정한다.    
+인서트시 자동으로 생성된 키값은 KeyHolder를 이용하여 받아온다.  
+
+### insertWithAlbum 메서드 구현
+#### BatchSqlUpdate를 이용한 배치작업
+```java
+    @Override
+    public void insertWithAlbum(Singer singer) {
+        InsertAlbum insertAlbum = new InsertAlbum(dataSource);
+        insert(singer);
+        List<Album> albums = singer.getAlbums();
+        if(albums != null) {
+            for(Album album:albums) {
+                Map<String, Object> paramMap = new HashMap<>();
+                paramMap.put("singer_id", singer.getId());
+                paramMap.put("title",album.getTitle());
+                paramMap.put("release_date", album.getReleaseDate());
+                insertAlbum.updateByNamedParam(paramMap);
+            }
+            insertAlbum.flush();
+        }
+    }
+
+    private static class InsertAlbum extends BatchSqlUpdate{
+        private static final String sql = "insert into album (singer_id, title, release_date)\n"+
+                "values(:singer_id, :title, :release_date)";
+        private static final int BATCH_SIZE = 10;
+        
+        public InsertAlbum(DataSource dataSource) {
+            super(dataSource, sql);
+            declareParameter(new SqlParameter("singer_id", Types.INTEGER));
+            declareParameter(new SqlParameter("title", Types.VARCHAR));
+            declareParameter(new SqlParameter("release_date", Types.DATE));
+            setBatchSize(BATCH_SIZE);
+        }
+    }
+```
+BatchSqlUpdate.setBatchSize()를 이용하여 배치처리 횟수를 지정한다.  
+SqlUpdate는 바로바로 실행되지만 BatchSqlUpdate는 배치 사이즈 회수만큼 발생할 때 마다 한꺼번에 처리한다.  
+BatchSqlUpdate.flush()는 배치사이즈에 도달하지 않아 기다리는 sql문을 처리한다.
 
  
