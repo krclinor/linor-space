@@ -9,8 +9,7 @@
 @Transactional
 public class SingerDaoImpl implements SingerDao {
 ```
-@Slf4j는 로그를 위한어노테이션으로 lombok에서 제공한다.
-@Repository는 스프링이 제공하는 어노테이션으로 데이타베이스 저장소를 구현하기 위해 설정한다.
-@Transactional은 스프링이 제공하는 어노테이션으로 트랜젝션 관리용이다.
-
+@Slf4j는 로그를 위한어노테이션으로 lombok에서 제공한다.  
+@Repository는 스프링이 제공하는 어노테이션으로 데이타베이스 저장소를 구현하기 위해 설정한다.  
+@Transactional은 스프링이 제공하는 어노테이션으로 트랜젝션 관리용이다.  
  
