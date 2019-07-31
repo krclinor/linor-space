@@ -118,7 +118,7 @@ public class SingerDaoImpl implements SingerDao {
 //			singer.setId(rs.getInt("id"));
 //			singer.setFirstName(rs.getString("first_name"));
 //			singer.setLastName(rs.getString("last_name"));
-//			singer.setBirthDate(rs.getDate("birth_date"));
+//			singer.setBirthDate(rs.getDate("birth_date").toLocalDate());
 //			return singer;
 //		});
 		return (Singer)jdbcTemplate.queryForObject(sql,	new Object[] {id}, new BeanPropertyRowMapper<Singer>(Singer.class));
