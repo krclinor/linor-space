@@ -1,4 +1,4 @@
-# Native JDBC
+# Native JDBC를 이용한 구현
 01-01-jdbc-todo프로젝트에 SingerDao인터페이스를 일반적인 JDBC프로그램으로 구현한다.  
 구현한 SingerDaoImpl클래스를 분석해보자.
 
