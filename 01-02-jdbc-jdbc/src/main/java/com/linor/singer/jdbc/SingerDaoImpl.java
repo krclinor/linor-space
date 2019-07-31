@@ -56,13 +56,12 @@ public class SingerDaoImpl implements SingerDao {
 			return singers;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return null;
 		}finally {
 			if(rs != null ) try {rs.close();}catch (Exception e2) {}
 			if(stmt != null ) try {stmt.close();}catch (Exception e2) {}
 			if(con != null ) try {con.close();}catch (Exception e2) {}
 		}
-		
-		return null;
 	}
 
 	@Override
@@ -90,12 +89,12 @@ public class SingerDaoImpl implements SingerDao {
 			return singers;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return null;
 		}finally {
 			if(rs != null ) try {rs.close();}catch (Exception e2) {}
 			if(stmt != null ) try {stmt.close();}catch (Exception e2) {}
 			if(con != null ) try {con.close();}catch (Exception e2) {}
 		}
-		return null;
 	}
 
 	@Override
@@ -114,12 +113,12 @@ public class SingerDaoImpl implements SingerDao {
 			return rs.getString("name");
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return null;
 		}finally {
 			if(rs != null ) try {rs.close();}catch (Exception e2) {}
 			if(stmt != null ) try {stmt.close();}catch (Exception e2) {}
 			if(con != null ) try {con.close();}catch (Exception e2) {}
 		}
-		return null;
 	}
 
 	@Override
@@ -142,14 +141,15 @@ public class SingerDaoImpl implements SingerDao {
 				singer.setBirthDate(rs.getDate("birth_date").toLocalDate());
 				return singer;
 			}
+			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return null;
 		}finally {
 			if(rs != null ) try {rs.close();}catch (Exception e2) {}
 			if(stmt != null ) try {stmt.close();}catch (Exception e2) {}
 			if(con != null ) try {con.close();}catch (Exception e2) {}
 		}
-		return null;
 	}
 
 	@Override
@@ -168,12 +168,12 @@ public class SingerDaoImpl implements SingerDao {
 			return rs.getString("first_name");
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return null;
 		}finally {
 			if(rs != null ) try {rs.close();}catch (Exception e2) {}
 			if(stmt != null ) try {stmt.close();}catch (Exception e2) {}
 			if(con != null ) try {con.close();}catch (Exception e2) {}
 		}
-		return null;
 	}
 
 	@Override
@@ -288,13 +288,12 @@ public class SingerDaoImpl implements SingerDao {
 			return new ArrayList<>(map.values());
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return null;
 		}finally {
 			if(rs != null ) try {rs.close();}catch (Exception e2) {}
 			if(stmt != null ) try {stmt.close();}catch (Exception e2) {}
 			if(con != null ) try {con.close();}catch (Exception e2) {}
 		}
-		
-		return null;
 	}
 
 	@Override
