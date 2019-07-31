@@ -57,7 +57,7 @@ public class SingerDaoImpl implements SingerDao {
     }
 ```
 PreparedStatement를 이용하여 "select * from singer"sql문을 실행한 후  
-결과를 Singer클래스 객체에 담은 리스트객체를 리턴하는 메서드를 구현하였다.
+결과를 Singer클래스 객체에 담은 리스트객체를 리턴하는 메서드를 구현하였다.  
 @Override어노테이션은 인터페이스로 상속받은 메서드임을 표시한다.  
 @Transactional(readOnly=true)을 표기하여 트랜잭션을 읽기전용으로 설정하였다.  
 @Slf4j어노테이션을 설정하였기 때문에 log.info나 log.error메서드를 사용하여 로그를 뿌릴 수 있다.  
