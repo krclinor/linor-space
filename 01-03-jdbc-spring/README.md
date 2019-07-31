@@ -1,4 +1,4 @@
-# Spring JDBC
+# Spring JDBC Template을 이용한 구현
 01-01-jdbc-todo프로젝트에 SingerDao인터페이스를 스프링 JDBC로 구현한다.  
 Spring-jdbc를 사용하면 Connection, Statement를 close할 필요가 없다.  
 스프링에서 알아서 처리해 준다. 또한 트랜잭션 관리도 가능하다.  
