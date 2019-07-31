@@ -62,3 +62,36 @@ PreparedStatement를 이용하여 "select * from singer"sql문을 실행한 후
 @Transactional(readOnly=true)을 표기하여 트랜잭션을 읽기전용으로 설정하였다.  
 @Slf4j어노테이션을 설정하였기 때문에 log.info나 log.error메서드를 사용하여 로그를 뿌릴 수 있다.  
 
+### insert 메서드 구현
+```java
+    @Override
+    public void insert(Singer singer) {
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = dataSource.getConnection();
+            stmt = con.prepareStatement("insert into SINGER\n"+
+                    "(first_name, last_name, birth_date)\n"+
+                    "values(?, ?, ?)\n",
+                    Statement.RETURN_GENERATED_KEYS);
+            stmt.setString(1, singer.getFirstName());
+            stmt.setString(2, singer.getLastName());
+            stmt.setDate(3, Date.valueOf(singer.getBirthDate()));
+            stmt.execute();
+            rs = stmt.getGeneratedKeys();
+            if(rs.next()) {
+                singer.setId(rs.getInt(1));
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if(rs != null ) try {rs.close();}catch (Exception e2) {}
+            if(stmt != null ) try {stmt.close();}catch (Exception e2) {}
+            if(con != null ) try {con.close();}catch (Exception e2) {}
+        }
+    }
+```
+insert메서드는 매개변수로 받은 가수 객체를 데이타베이스에 인서트 하는 작업을 수행한다.
+클래스 단에서 이미 @Transactional어노테이션을 선언하였기 때문에 트랜잰션 선언을 하지 않더라도 트랜잭션을 탄다.
+
