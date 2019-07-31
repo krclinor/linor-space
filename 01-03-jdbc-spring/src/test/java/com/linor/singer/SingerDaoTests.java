@@ -4,11 +4,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 public class SingerDaoTests {
 	@Autowired
 	private SingerDao singerDao;
-	
-	@Before
-	public void setUp() {
-		//singerDao = new SingerDaoImpl();
-	}
 	
 	@Test
 	public void contextLoads() {

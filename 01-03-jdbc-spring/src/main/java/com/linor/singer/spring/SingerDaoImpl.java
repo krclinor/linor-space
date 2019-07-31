@@ -1,11 +1,9 @@
 package com.linor.singer.spring;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +17,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.object.BatchSqlUpdate;
@@ -33,7 +32,6 @@ import com.linor.singer.dao.SingerDao;
 import com.linor.singer.domain.Album;
 import com.linor.singer.domain.Singer;
 
-import ch.qos.logback.classic.Logger;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -53,16 +51,31 @@ public class SingerDaoImpl implements SingerDao {
 	public List<Singer> findAll() {
 		NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(dataSource);
 		String sql = "select * from singer";
-	
+////1. RowMapper를 이용한 방법		
+//		return template.query(sql,new RowMapper<Singer>() {
+//			@Override
+//			public Singer mapRow(ResultSet rs, int rowNum) throws SQLException {
+//				Singer singer = new Singer();
+//				singer.setId(rs.getInt("id"));
+//				singer.setFirstName(rs.getString("first_name"));
+//				singer.setLastName(rs.getString("last_name"));
+//				singer.setBirthDate(rs.getDate("birth_date").toLocalDate());
+//				return singer;
+//			}
+//		});
+		
+////2. 람다함수를 이용한 방법		
 //		return template.query(sql, (rs, rowNum) -> {
 //			Singer singer = new Singer();
 //			singer.setId(rs.getInt("id"));
 //			singer.setFirstName(rs.getString("first_name"));
 //			singer.setLastName(rs.getString("last_name"));
-//			singer.setBirthDate(rs.getDate("birth_date"));
+//			singer.setBirthDate(rs.getDate("birth_date").toLocalDate());
 //			return singer;
 //		});
 
+		
+////3. BeanPropertyRowMapper를 이용한 방법		
 		return template.query(sql, new BeanPropertyRowMapper<Singer>(Singer.class));
 	}
 
