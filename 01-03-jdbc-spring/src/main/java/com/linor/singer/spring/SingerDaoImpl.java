@@ -49,7 +49,7 @@ public class SingerDaoImpl implements SingerDao {
 	@Override	
 	@Transactional(readOnly=true)
 	public List<Singer> findAll() {
-		NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(dataSource);
+		JdbcTemplate template = new JdbcTemplate(dataSource);
 		String sql = "select * from singer";
 ////1. RowMapper를 이용한 방법		
 //		return template.query(sql,new RowMapper<Singer>() {

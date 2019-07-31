@@ -20,14 +20,16 @@ public class SingerDaoImpl implements SingerDao {
     private DataSource dataSource;
 ``` 
  데이타소스를 선언하고 @Autowired어노테이션으로 스프링이 데이타소스를 주입하도록 한다.
-  
+
+JdbcTemplate의 query메서드는 여러 레코드인 배열객체를 리턴하고, queryForObject메서드는 단일 레코드인 단일객체를 리턴한다.   
+
 ### findAll 메서드 구현
 #### 방법1. RowMapper클래스2를 이용한 방법
 ```java
     @Override   
     @Transactional(readOnly=true)
     public List<Singer> findAll() {
-        NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(dataSource);
+        JdbcTemplate template = new JdbcTemplate(dataSource);
         String sql = "select * from singer";
     
         return template.query(sql,new RowMapper<Singer>() {
@@ -48,7 +50,7 @@ public class SingerDaoImpl implements SingerDao {
     @Override   
     @Transactional(readOnly=true)
     public List<Singer> findAll() {
-        NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(dataSource);
+        JdbcTemplate template = new JdbcTemplate(dataSource);
         String sql = "select * from singer";
     
         return template.query(sql, (rs, rowNum) -> {
@@ -66,7 +68,7 @@ public class SingerDaoImpl implements SingerDao {
     @Override   
     @Transactional(readOnly=true)
     public List<Singer> findAll() {
-        NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(dataSource);
+        JdbcTemplate template = new JdbcTemplate(dataSource);
         String sql = "select * from singer";
     
         return template.query(sql, new BeanPropertyRowMapper<Singer>(Singer.class));
@@ -74,7 +76,7 @@ public class SingerDaoImpl implements SingerDao {
 ```
 방법1 RowMapper를 이용한 방법은 가장 일반적인 방법이지만 코딩이 약간 길다.  
 방법2 람다함수를 이용한 방법은 RowMapper를 이용한 방법보다 코딩이 줄지만 자바 8이상에서만 가능하다.  
-방법3 BeanPropertyRowMapper를 이용한 방법이 가장 단순하지만 성능면에서 위 2가지 방법보다 떨어질 수 있다.  
+방법3 BeanPropertyRowMapper를 이용한 방법은 snake case를 camel case로 자동변환까지 가능한 쉽고, 단순하지만 성능면에서 위 2가지 방법보다 떨어질 수 있다.  
 
 ### findAllWithAlbums 메서드 구현
 #### ResultSetExtractor를 이용한 중첩 도메인 오브젝트 추출
@@ -152,7 +154,52 @@ public class SingerDaoImpl implements SingerDao {
         return (Singer)jdbcTemplate.queryForObject(sql, new Object[] {id}, new BeanPropertyRowMapper<Singer>(Singer.class));
     }
 ```
+파라미터 값을 전달하기 위해 Object배열 객체를 사용한다.  
 
+### findNameById 메서드 구현
+#### 이름이 부여된 파라미터 처리
+```java
+    @Override
+    @Transactional(readOnly=true)
+    public String findNameById(Integer id) {
+        NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+        String sql = "select first_name||' '||last_name from singer where id = :singer_id";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("singer_id", id);
+        return jdbcTemplate.queryForObject(sql, paramMap, String.class);
+    }
+```
+이름이 부여된 파라미터를 처리하기 위해서 sql문에 :(콜론)을 이용하여 파라미터에 이름을 부여한다.  
+jdbcTemplate은 NamedParameterJdbctTemplate클래스로 생성한다.  
+파라미터는 맵객체를 이용하여 전달한다.  
 
+### insert 메서드 구현
+#### SqlUpdate이용한 자료 수정
+```java
+    @Override
+    public void insert(Singer singer) {
+        InsertSinger insertSinger = new InsertSinger(dataSource);
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("first_name", singer.getFirstName());
+        paramMap.put("last_name", singer.getLastName());
+        paramMap.put("birth_date", singer.getBirthDate());
+        KeyHolder keyHolder =new GeneratedKeyHolder();
+        insertSinger.updateByNamedParam(paramMap, keyHolder);
+        singer.setId(keyHolder.getKey().intValue());
+        log.info("추가된 가수ID: {}",singer.getId() );
+    }
+    private static final class InsertSinger extends SqlUpdate{
+        private static final String sql = "insert into singer (first_name, last_name, birth_date)\n"+
+                "values(:first_name, :last_name, :birth_date)";
+        public InsertSinger(DataSource dataSource) {
+            super(dataSource, sql);
+            declareParameter(new SqlParameter("first_name", Types.VARCHAR));
+            declareParameter(new SqlParameter("last_name", Types.VARCHAR));
+            declareParameter(new SqlParameter("birth_date", Types.DATE));
+            setGeneratedKeysColumnNames(new String[] {"id"});
+            setReturnGeneratedKeys(true);
+        }
+    }
+```
 
  
