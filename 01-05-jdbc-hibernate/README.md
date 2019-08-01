@@ -209,7 +209,8 @@ generator는 SequenceGenerator나 TableGenerator 애노테이션에서 명시된
 - AUTO : (persistence provider가) 특정 DB에 맞게 자동 선택  
 - IDENTITY : DB의 identity 컬럼을 이용  
 - SEQUENCE : DB의 시퀀스 컬럼을 이용  
-- TABLE : 유일성이 보장된 데이터베이스 테이블을 이용  
+- TABLE : 유일성이 보장된 데이터베이스 테이블을 이용
+
 @Column은 매핑할 테이블을 칼럼을 표시한다. @Column(name="first_name")는 데이터베이스 테이블의 칼럼이 first_name이다.  
 application.yml설정에서 physical-naming-strategy를 설정하였기 때문에 @Column어노테이션을 사용하지 않더라도 firstName프로퍼티를 first_name칼럼과 매핑된다.   
 @Version은 엔티티가 수정될때 자동으로 버전이 하나씩 증가하게 된다. 엔티티를 수정할 때 조회 시점의 버전과 수정 시점의 버전이 다르면 예외가 발생한다. 
