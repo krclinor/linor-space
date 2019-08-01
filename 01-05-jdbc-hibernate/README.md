@@ -138,7 +138,9 @@ values
 (3, '드럼');
 ```
 ### 엔터티 클래스 생성
-가수 엔터티 클래스
+#### Singer 엔터티 클래스(일대다, 다대다 관계)
+가수 엔터티 클래스를 생성한다.  
+가수 엔터티는 앨범 엔터티와 일대다, 악기 엔터티와 다대다의 관계이다.  
 ```java
 @Entity
 //@Table(name="singer")
@@ -228,160 +230,83 @@ mappedBy="singer"는 Album클래스에서 Singer를 나타내는 프로퍼티이
 @Version은 엔티티가 수정될때 자동으로 버전이 하나씩 증가하게 된다. 엔티티를 수정할 때 조회 시점의 버전과 수정 시점의 버전이 다르면 예외가 발생한다.  
 예를 들어 트랜잭션 1이 조회한 엔티티를 수정하고 있는데 트랜잭션 2에서 같은 엔티티를 수정하고 커밋해서 버전이 증가해버리면 트랜잭션 1이 커밋할 때 버전 정보가 다르므로 예외가 발생한다.
 
-파일명: com.linor.singer.domain.Album.java
+#### Album 엔터티 클래스(다대일 관계)
+앨범 엔터티는 가수 엔터티와 다대일 관계이다.    
 ```java
-package com.linor.singer.domain;
-
-import java.time.LocalDate;
-
-import lombok.Data;
-
+@Entity
+//@Table(name = "album")
 @Data
-public class Album {
+public class Album implements Serializable{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer singerId;
+
     private String title;
+
+    //@Column(name = "release_date")
     private LocalDate releaseDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "singer_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Singer singer;
+
+    @Version
+    private int version;
 }
 ```
+@ManyToOne은 Singer와 다대1을 의미한다.  
+@JoinColumn은 외부키를 정의한다.  
+@JoinColumn(name="SINGER_ID")은 SINGER_ID를 외부키로 사용함을 나타낸다.
 
-### DAO인터페이스 생성
-데이타베이스를 이용한 처리 인터페이스 선언으로 향후 이 인터페이스를 구현할 예정이다.  
-파일명 :com.linor.singer.dao.SingerDao.java
+#### Instrument 엔터티 클래스(다대다 관계)
+악기 엔터티는 가수 엔터티와 다대다 관계이다.    
 ```java
-package com.linor.singer.dao;
+@Entity
+//@Table(name = "instrument")
+@Data
+public class Instrument implements Serializable{
+    @Id
+    //@Column(name = "instrument_id")
+    private String instrumentId;
 
-import java.util.List;
-
-import com.linor.singer.domain.Singer;
-
-public interface SingerDao {
-    List<Singer> findAll();
-    List<Singer> findByFirstName(String firstName);
-    String findNameById(Integer id);
-    Singer findById(Integer id);
-    String findFirstNameById(Integer id);
-    void insert(Singer singer);
-    void update(Singer singer);
-    void delete(Integer singerId);
-    List<Singer> findAllWithAlbums();
-    void insertWithAlbum(Singer singer);
+    @ManyToMany
+    @JoinTable(name = "singer_instrument", joinColumns = @JoinColumn(name = "instrument_id"), inverseJoinColumns = @JoinColumn(name = "singer_id"))
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Singer> singers = new HashSet<>();
 }
 ```
+@ManyToMany는 다대다 매핑을 의미한다.  
+@JoinTable은 다대다 매핑에 사용되는 테이블을 정의한다.  
+@JoinTable(name="singer_instrument", joinColumns = @JoinColumn(name="SINGER_ID"), 
+inverseJoinColumns=@JoinColumn(name="INSTRUMENT_ID"))은 SINGER_INSTRUMENT이라는 
+조인테이블에 칼럼이 SINGER_ID이고 상대 조인컬럼은 INSTRUMENT_ID임을 나타낸다.
 
-## Test Case 생성
-파일명: com.linor.singer.SingerDaoTests.java
+### DAO인터페이스 구현클래스 생성
 ```java
-package com.linor.singer;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import com.linor.singer.dao.SingerDao;
-import com.linor.singer.domain.Singer;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@RequiredArgsConstructor
+@Transactional
+@Repository
 @Slf4j
-public class SingerDaoTests {
+public class SingerDaoImpl implements SingerDao {
+    
     @Autowired
-    private SingerDao singerDao;
+    private EntityManagerFactory entityManagerFactory;
     
-    @Test
-    public void contextLoads() {
-    }
-    
-    @Test
-    public void testFindNameById() {
-        String name = singerDao.findNameById(1);
-        assertTrue("종서 김".equals(name));
-    }
+```
+@Transactional은 데이터베이스 트랜잭션을 처리하기 위하여 설정한다.  
+@Repository는 Persistency레이어에서 빈을 정의하기 위해 사용하는 어노테이션이다.  
+인스턴스 생성시 EntityManagerFactory를 주입할 수 있도록 @Autowired어노테이션을 설정한다. 
 
-    @Test
-    public void testFindAll(){
-        List<Singer> singers = singerDao.findAll();
-        assertNotNull(singers);
-        assertTrue(singers.size() == 4);
-        log.info("가수목록");
-        listSingers(singers);
-        
-        Singer singer = new Singer();
-        singer.setFirstName("길동");
-        singer.setLastName("홍");
-        singer.setBirthDate(LocalDate.parse("1977-10-16"));
-        singerDao.insert(singer);
-        
-        singers = singerDao.findAll();
-        assertTrue(singers.size() == 5);
-        log.info("가수 추가 후 가수 목록");
-        listSingers(singers);
-        
-        singerDao.delete(singer.getId());
-        singers = singerDao.findAll();
-        assertTrue(singers.size() == 4);
-        log.info("가수 삭제 후 가수 목록");
-        listSingers(singers);
-        
+#### findAll 메서드 구현
+```java
+    @Override
+    @Transactional(readOnly=true)
+    public List<Singer> findAll() {
+        Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+        return session
+                .createQuery("from Singer")
+                .list();
     }
-    
-    
-    private void listSingers(List<Singer> singers){
-        for(Singer singer: singers){
-            log.info(singer.toString());
-        }
-    }
-
-    @Test
-    public void testFindAllWidthAlbums() {
-        List<Singer> singers = singerDao.findAllWithAlbums();
-        assertTrue(singers.size() == 4);
-        singers.forEach(singer -> {
-            log.info(singer.toString());
-        });
-    }
-    
-    @Test
-    public void testFindByFirstName() {
-        List<Singer> singers = singerDao.findByFirstName("종서");
-        assertTrue(singers.size() == 1);
-        listSingers(singers);
-    }
-
-    @Test
-    public void testFindbyId() {
-        Singer singer = singerDao.findById(1);
-        log.info("주키로 1개 레코드 검색 결과>>>");
-        log.info(singer.toString());
-    }
-    
-    @Test
-    public void testSingerUpdate() {
-        Singer singerOldSinger = singerDao.findById(1);
-        log.info(">>> 김종서 수정 전 >>>");
-        log.info(singerOldSinger.toString());
-        Singer singer = new Singer();
-        singer.setId(1);
-        singer.setFirstName("종서");
-        singer.setLastName("김");
-        singer.setBirthDate(LocalDate.parse("1977-10-16"));
-        singerDao.update(singer);
-        Singer singerNewSinger = singerDao.findById(1);
-        log.info(">>> 김종서 수정 후 >>>");
-        log.info(singerNewSinger.toString());
-    }
-}
-
 ```

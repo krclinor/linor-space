@@ -27,5 +27,4 @@ public class Instrument implements Serializable{
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	private Set<Singer> singers = new HashSet<>();
-
 }
