@@ -1,49 +1,9 @@
-# JDBC Todo
-이 프로젝트는 SpringBoot로 실행은 가능하나 테스트케이스는 실행되지 않는다.  
-이 프로젝트는 다음에 진행할 JDBC프로젝트의 기본 구조로 사용된다.  
-
-Spring Boot JDBC개발을 진행하기 위한 준비과정으로 데이타베이스 설정,  
-lombok설정, dao인터페이스, 테스트케이스를 준비한다.
-
-## 이클립스 추가 플러그인 설치
-Spring Tool Suite
-Lombok
-
-## 데이타베이스 설정
-### 계정 생성
-```sql
-CREATE USER linor WITH
-	LOGIN
-	NOSUPERUSER
-	NOCREATEDB
-	NOCREATEROLE
-	INHERIT
-	NOREPLICATION
-	CONNECTION LIMIT -1
-	PASSWORD 'sring1234';
-```
-로그인이 가능한 linor 계정으로 비밀번호는 'linor1234'로 설정하였다.
-
-### 데이타베이스 생성
-```sql
-CREATE DATABASE spring
-    WITH 
-    OWNER = linor
-    ENCODING = 'UTF8'
-    CONNECTION LIMIT = -1;
-```
-spring이라는 데이타베이스를 생성하고 소유자는 위에서 만든 linor로 한다.
-
-### 스키마 생성
-```sql
-CREATE SCHEMA singer
-    AUTHORIZATION linor;
-```
-마지막으로 singer라는 스키마를 생성하고 소유자는 linor로 한다.
+# Hibernate
+Hibernate로 다대다의 관계를 표현하기 위해 악기테이블을 추가하여 스키마를 구성하여 작업한다.
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
 Spring Boot -> Spring Starter Project로 생성한다.
-추가할 dependency : devtools, lombok, postgresql, jdbc
+추가할 dependency : devtools, lombok, postgresql, jpa, hibernate-types-52
 pom.xml파일에 다음 내용을 확인할 수 있다.
 ```xml
     <dependencies>
@@ -66,27 +26,44 @@ pom.xml파일에 다음 내용을 확인할 수 있다.
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        
+        <!-- Hibernate CamelCase를 SnakeCase로 변경 -->
+        <dependency>
+            <groupId>com.vladmihalcea</groupId>
+            <artifactId>hibernate-types-52</artifactId>
+            <version>2.5.0</version>
         </dependency>
     </dependencies>
 ```
 ### application.yml설정
-src/main/resources/application.yml에 스프링부트에서 사용할 데이타소스를 설정한다.
+src/main/resources/application.yml에 hibernate관련 설정을 추가한다.
 ```yml
-spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
-    username: linor
-    password: linor1234
-    initialization-mode: always
+  jpa:
+    show-sql: true
+    #hibernate:
+      #ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        physical-naming-strategy: com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy
+        format_sql: true
+        use_sql_comments: true
+        jdbc.lob.non_contextual_creation: true
+        #temp.use_jdbc_metadata_default: false
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
 ```
-yml은 properties파일보다 시스템 설정사항을 효율적으로 관리할 수 있다.
-datasource 설정에 필요한 속성은 driver-class-name, url, username, password이다.
-initialization-mode를 always로 하면 spring boot시작시 schema.sql과 data.sql파일을 
-실행하여 데이타베이스의 테이블을 생성하고 데이타를 로드하여 데이타베이스를 초기화 한다.
+dialect에 사용하는 데이타베이스가 postgresql이므로 org.hibernate.dialect.PostgreSQLDialect를 설정한다.  
+physical-naming-strategy에 Camel Case로 작성된 객체의 프로퍼티를 Snake Case로 작성된 테이블 칼럼과 매칭될 수 있도록 
+CamelCaseToSnakeCaseNamingStrategy를 설정한다.  
+postgresql을 사용하는 경우 발생하는 오류를 제거하기 위해 jdbc.lob.non_contextual_creation을 true로 설정한다.  
+getCurrentSession을 사용하기 위해서 current_session_context_class에 org.springframework.orm.hibernate5.SpringSessionContext를 
+설정한다.
+ 
 
 ### 데이타베이스 초기화 파일 생성
 #### schema.sql
@@ -94,72 +71,149 @@ initialization-mode를 always로 하면 spring boot시작시 schema.sql과 data.
 set search_path to singer;
 
 drop table if exists singer cascade;
-
 create table singer(
-  id serial not null primary key,
+  id serial primary key,
   first_name varchar(60) not null,
   last_name varchar(60) not null,
   birth_date date,
+  version int default 0,
   constraint singer_uq_01 unique(first_name, last_name)
 );
 
 drop table if exists album cascade;
-
 create table album(
-  id serial not null primary key,
-  singer_id integer not null,
+  id serial primary key,
+  singer_id int not null,
   title varchar(100) not null,
   release_date date,
+  version int default 0,
   constraint album_uq_01 unique(singer_id, title),
   constraint album_fk_01 foreign key (singer_id) references singer(id) on delete cascade
 );
 
+drop table if exists instrument cascade;
+create table instrument(
+  instrument_id varchar(20) not null primary key
+);
+
+drop table if exists singer_instrument cascade;
+create table singer_instrument(
+  singer_id int not null,
+  instrument_id varchar(20) not null,
+  constraint singer_instrument_pk 
+    primary key (singer_id, instrument_id),
+  constraint fk_singer_instrument_fk_01 
+    foreign key(singer_id) 
+    references singer(id) 
+    on delete cascade,
+  constraint fk_singer_instrument_fk_02 
+    foreign key(instrument_id) 
+    references instrument(instrument_id)
+    on delete cascade
+);
 ```
 #### data.sql
 ```sql
 insert into singer(first_name, last_name, birth_date)
-values
-('종서','김','19701209'),
-('건모','김','19990712'),
-('용필','조','19780628'),
-('진아','태','20001101');
+values 
+('종서','김','1970-12-09'),
+('건모','김','1999-07-12'),
+('용필','조','1978-06-28');
 
 insert into album(singer_id, title, release_date)
-values
-(1, '아름다운 구속','20190101'),
-(1, '날개를 활짝펴고','20190201'),
-(2, '황혼의 문턱','20190301');
+values 
+(1, '아름다운 구속','2019-01-01'),
+(1, '날개를 활짝펴고','2019-02-01'),
+(2, '황혼의 문턱','2019-03-01');
+
+insert into instrument (instrument_id)
+values 
+('기타'), ('피아노'), ('드럼'), ('신디사이저');
+
+insert into singer_instrument(singer_id, instrument_id)
+values 
+(1, '기타'),
+(1, '피아노'),
+(2, '기타'),
+(3, '드럼');
 ```
-### Domain 클래스 생성
-도메인 클래스는 보통 테이블에 대응되는 엔터티 클래스로 Singer와 Album클래스를 생성한다.  
-파일명: com.linor.singer.domain.Singer.java
+### 엔터티 클래스 생성
+가수 엔터티 클래스
 ```java
-package com.linor.singer.domain;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import lombok.Data;
-
+@Entity
+//@Table(name="singer")
+@NamedQueries({
+    @NamedQuery(name="Singer.findById",
+            query="select distinct s from Singer s " +
+            "left join fetch s.albums a " +
+            "left join fetch s.instruments i " +
+            "where s.id = :id"),
+    @NamedQuery(name="Singer.findAllWithAlbum",
+            query="select distinct s from Singer s \n"
+                    + "left join fetch s.albums a \n"
+                    + "left join fetch s.instruments i"),
+    @NamedQuery(name="Singer.findByFirstName",
+    query="select distinct s from Singer s \n"
+            + "where s.firstName = :firstName")
+})
 @Data
-public class Singer {
+public class Singer implements Serializable{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    
+    //@Column(name="first_name")
     private String firstName;
+    
+    //@Column(name="last_name")
     private String lastName;
+    
+    //@Column(name="birth_date")
     private LocalDate birthDate;
-    private List<Album> albums;
+    
+    @OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Album> albums = new HashSet<>();
 
-    public void addAlbum(Album album) {
-        if(albums == null) {
-            albums = new ArrayList<>();
-        }
-        albums.add(album);
+    @ManyToMany
+    @JoinTable(name="singer_instrument", 
+        joinColumns=@JoinColumn(name="singer_id"),
+        inverseJoinColumns=@JoinColumn(name="instrument_id"))
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Instrument> instruments = new HashSet<>();
+    
+    @Version
+    private int version;
+    
+    public boolean addAlbum(Album album) {
+        album.setSinger(this);
+        return getAlbums().add(album);
+    }
+    public void reoveAlbum(Album album) {
+        getAlbums().remove(album);
     }
 }
 ```
-Data어노테이션은 Lombok에서 제공하는 것으로 자동으로 get/set메서드를 생성하여 코딩을 깔끔하게 작성할 수 있다.
-
+@Entity는 해당 클레스가 엔터티 클래스임을 표시한다.  
+@Table은 매핑될 데이터베이스 테블을 설정한다. @Table(name = "singer")은 데이터베이스의 SINGER테이블과 매핑한다.   
+클래스명과 테이블 명이 동일할 경우 생략 가능하다.  
+@Id는 주키를 표시한다. @GeneratedValue는 자동생성되는 값을 설정하기 위해 사용한다.   
+@GeneratedValue는 주키의 값을 위한 자동 생성 전략을 명시하는데 사용한다.  
+선택적 속성으로 generator와 strategy가 있다.  
+strategy는 persistence provider가 엔티티의 주키를 생성할 때 사용해야 하는 주키생성 전략을 의미한다.  
+디폴트 값은 AUTO이다.  
+generator는 SequenceGenerator나 TableGenerator 애노테이션에서 명시된 주키 생성자를 재사용할 때 쓰인다. 디폴트 값은 공백문자("")이다. 
+주키 생성 전략으로 JPA가 지원하는 것은 아래의 네 가지이다.  
+    • AUTO : (persistence provider가) 특정 DB에 맞게 자동 선택
+    • IDENTITY : DB의 identity 컬럼을 이용
+    • SEQUENCE : DB의 시퀀스 컬럼을 이용
+    • TABLE : 유일성이 보장된 데이터베이스 테이블을 이용
+@Column은 매핑할 테이블을 칼럼을 표시한다. @Column(name="first_name")는 데이터베이스 테이블의 칼럼이 first_name이다.  
+application.yml설정에서 physical-naming-strategy를 설정하였기 때문에 @Column어노테이션을 사용하지 않더라도 firstName프로퍼티를 first_name칼럼과 매핑된다.   
+@Version은 엔티티가 수정될때 자동으로 버전이 하나씩 증가하게 된다. 엔티티를 수정할 때 조회 시점의 버전과 수정 시점의 버전이 다르면 예외가 발생한다. 
+예를 들어 트랜잭션 1이 조회한 엔티티를 수정하고 있는데 트랜잭션 2에서 같은 엔티티를 수정하고 커밋해서 버전이 증가해버리면 트랜잭션 1이 커밋할 때 버전 정보가 다르므로 예외가 발생한다.
 
 파일명: com.linor.singer.domain.Album.java
 ```java
