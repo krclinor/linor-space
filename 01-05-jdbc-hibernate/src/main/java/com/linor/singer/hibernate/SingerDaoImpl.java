@@ -6,6 +6,7 @@ import javax.persistence.EntityManagerFactory;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,19 +73,23 @@ public class SingerDaoImpl implements SingerDao {
 	@Override
 	public void update(Singer singer) {
 		Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+		Transaction transaction = session.beginTransaction();
 		session.update(singer);
+		transaction.commit();
 	}
 
 	@Override
 	public void delete(Integer singerId) {
 		Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+		Transaction transaction = session.beginTransaction();
 		Singer singer = (Singer)session
 				.getNamedQuery("Singer.findById")
 				.setParameter("id", singerId)
 				.uniqueResult();
 		if(singer != null) {
-			session.delete(singer);
+			session.remove(singer);
 		}
+		transaction.commit();
 	}
 
 	@Override

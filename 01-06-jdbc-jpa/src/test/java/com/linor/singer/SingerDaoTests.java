@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.singer.dao.SingerDao;
 import com.linor.singer.domain.Album;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
+@Transactional
 public class SingerDaoTests {
 	@Autowired
 	private SingerDao singerDao;
@@ -110,12 +112,10 @@ public class SingerDaoTests {
 		Singer singerOldSinger = singerDao.findById(1);
 		log.info(">>> 김종서 수정 전 >>>");
 		log.info(singerOldSinger.toString());
-		Singer singer = new Singer();
-		singer.setId(1);
-		singer.setFirstName("종서");
-		singer.setLastName("김");
-		singer.setBirthDate(LocalDate.parse("1977-10-16"));
-		singerDao.update(singer);
+		singerOldSinger.setFirstName("종서");
+		singerOldSinger.setLastName("김");
+		singerOldSinger.setBirthDate(LocalDate.parse("1977-10-16"));
+		singerDao.update(singerOldSinger);
 		Singer singerNewSinger = singerDao.findById(1);
 		log.info(">>> 김종서 수정 후 >>>");
 		log.info(singerNewSinger.toString());

@@ -54,16 +54,12 @@ public class Singer implements Serializable{
 	private LocalDate birthDate;
 	
 	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.LAZY)
-	@ToString.Exclude
-	@EqualsAndHashCode.Exclude
 	private Set<Album> albums = new HashSet<>();
 
 	@ManyToMany
 	@JoinTable(name="singer_instrument", 
 		joinColumns=@JoinColumn(name="singer_id"),
 		inverseJoinColumns=@JoinColumn(name="instrument_id"))
-	@ToString.Exclude
-	@EqualsAndHashCode.Exclude
 	private Set<Instrument> instruments = new HashSet<>();
 	
 	@Version

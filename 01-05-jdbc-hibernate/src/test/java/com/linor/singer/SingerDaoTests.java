@@ -37,7 +37,6 @@ public class SingerDaoTests {
 		listSingers(singers);
 	}
 	
-	
 	private void listSingers(List<Singer> singers){
 		for(Singer singer: singers){
 			log.info(singer.toString());
@@ -93,6 +92,7 @@ public class SingerDaoTests {
 
 	@Test
 	public void testDeleteSinger() {
+		log.info("가수 삭제 시작>>>");
 		singerDao.delete(3);
 		List<Singer> singers = singerDao.findAll();
 		log.info("가수 삭제 후 가수 목록>>>");

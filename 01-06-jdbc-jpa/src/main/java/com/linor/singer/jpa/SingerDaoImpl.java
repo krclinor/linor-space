@@ -36,7 +36,6 @@ public class SingerDaoImpl implements SingerDao {
 				.getResultList();
 	}
 
-
 	@Override
 	public List<Singer> findByFirstName(String firstName) {
 		return entityManager.createNamedQuery("Singer.findByFirstName", Singer.class)
