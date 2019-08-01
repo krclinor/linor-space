@@ -64,6 +64,12 @@
 </select>
  -->
  
+ <select id="findNameById" parameterType="int" resultType="string">
+	select s.first_name ||' '|| s.last_name as name
+	from	singer s
+	where	s.id = #{id}
+</select>
+ 
 <!-- findByFirstName 첫 번째 방법 -->
 <select id="findByFirstName" parameterType="string" resultMap="singerWithAlbumMap">
 	select s.id, s.first_name, s.last_name, s.birth_date,
