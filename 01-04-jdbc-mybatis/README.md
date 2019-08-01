@@ -34,7 +34,18 @@ public interface SingerDao {
 dao인터페이스에 @Mapper어노테이션을 추가하여 인터페이스를 Mybatis Mapper에서 구현하도록 한다.
 
 ## SingerDao인터페이스 구현
+Mybatis Mapper인터페이스 구현은 인터페이스 내에 어노테이션으로 처리할 수도 있고 별도 XML파일로 처리할 수도 있다.  
+여기에서는 XML로 처리하는 방법을 설명한다.  
 
+### Mapper 선언부
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linor.singer.dao.SingerDao">
+```
+처음 2줄은 무조건 추가한다.  
+namespace에 구현할 인터페이스 명을 등록한다.
 
 ## 정리
 Mybatis는 전자정부프레임워크에서 Persistence레이어를 담당하고 있어 중요하고 좋은 도구이다.  
