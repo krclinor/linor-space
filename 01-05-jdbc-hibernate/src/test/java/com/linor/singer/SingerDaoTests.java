@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 public class SingerDaoTests {
 	@Autowired
 	private SingerDao singerDao;
-	
-	@Before
-	public void setUp() {
-		//singerDao = new SingerDaoImpl();
-	}
 	
 	@Test
 	public void testFindAll(){
@@ -93,6 +87,7 @@ public class SingerDaoTests {
 		singer.setBirthDate(LocalDate.parse("1977-10-16"));
 		singerDao.update(singer);
 		log.info(">>> 김종서 수정 후 >>>");
+		singer = singerDao.findById(1);
 		log.info(singer.toString());
 	}
 
