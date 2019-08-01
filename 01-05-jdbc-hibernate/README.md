@@ -182,7 +182,6 @@ public class Singer implements Serializable{
     @JoinTable(name="singer_instrument", 
         joinColumns=@JoinColumn(name="singer_id"),
         inverseJoinColumns=@JoinColumn(name="instrument_id"))
-    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<Instrument> instruments = new HashSet<>();
     
@@ -258,8 +257,10 @@ public class Album implements Serializable{
 ```
 @ManyToOne은 Singer와 다대1을 의미한다.  
 @JoinColumn은 외부키를 정의한다.  
-@JoinColumn(name="SINGER_ID")은 SINGER_ID를 외부키로 사용함을 나타낸다.
-
+@JoinColumn(name="SINGER_ID")은 SINGER_ID를 외부키로 사용함을 나타낸다.  
+※ Lombok를 사용하여 개발하는 경우 두 엔터티의 관계에서 하나는 @ToString.Exclude어노테이션을 추가하여야 한다.  
+그렇지 않으면 toString메서드가 무한루프에 빠져 오류가 발생한다. @EqualsAndHashCode.Exclude또한 마찬가지 이다.
+   
 #### Instrument 엔터티 클래스(다대다 관계)
 악기 엔터티는 가수 엔터티와 다대다 관계이다.    
 ```java
@@ -310,3 +311,80 @@ public class SingerDaoImpl implements SingerDao {
                 .list();
     }
 ```
+entityManagerFactory에서 현재 세션을 받아와 session에 대입한다.  
+session으로 쿼리문을 실행한다. 여기서 사용되는 쿼리문은 Hibernate Query Language(HQL)로 데이터베이스의 SQL문과 다르다.  
+"from Singer s"는 sql문 "select s from Singer s"와 동일하다.  
+
+#### findByFirstName 메서드 구현(NamedQuery)
+NamedQuery를 사용하기 위해 먼저 엔터티 클래스에서 NamedQuery를 작성한다.
+```java
+@NamedQueries({
+    @NamedQuery(name="Singer.findByFirstName",
+    query="select distinct s from Singer s \n"
+            + "where s.firstName = :firstName")
+})
+@Data
+public class Singer implements Serializable{
+```
+엔터티 클래스에서 작성한 NamedQuery를 다음과 같이 사용한다.  
+파라미터는 앞에 콜론(:)을 붙인다.
+```java
+    @Override
+    public List<Singer> findByFirstName(String firstName) {
+        Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+        return session
+                .getNamedQuery("Singer.findByFirstName")
+                .setParameter("firstName", firstName)
+                .list();
+    }
+```
+session의 getNamedQuery메서드를 이용하여 호출한다.  
+Name 파라미터 설정은 Query.setParameter(), 또는 Query.setParameterList()를 사용하여 설정한다.    
+단일 레코드를 리턴하기 위해 Query.uniqueResult()를 사용하고, 여러 레코드를 리터하려면 Query.list()를 사용한다.  
+
+#### insert 메서드 구현
+```java
+    @Override
+    public void insert(Singer singer) {
+        Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+        session.saveOrUpdate(singer);
+        log.info("저장된 가수 ID: " + singer.getId());
+    }
+```
+Session.saveOrUpdate()를 호출하여 insert와 update처리를 모두 한다. Id가 없는 경우 생성된 id가 singer.id에 주입된다.  
+
+#### update 메서드 구현
+```java
+    @Override
+    public void update(Singer singer) {
+        Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+        session.update(singer);
+    }
+```
+Session.update()를 호출하거나 Session.saveOrUpdate()를 호출하여 데이타를 update한다.  
+
+#### delete 메서드 구현
+```java
+    @Override
+    public void delete(Integer singerId) {
+        Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+        Singer singer = (Singer)session
+                .getNamedQuery("Singer.findById")
+                .setParameter("id", singerId)
+                .uniqueResult();
+        if(singer != null) {
+            session.delete(singer);
+        }
+    }
+```
+Session.delete()를 호출하여 레코드를 삭제한다.    
+
+
+## 정리
+Hibernate는 OR매핑툴 중에서 가장 많이 사용되고 있다.  
+장점은 도메인오브젝트에 테이블 및 컬럼정의만 해 놓으면 별도의 sql문 없이도 많은 처리가 가능하다.  
+따라서 데이터베이스 밴더의 영향을 받지 않으면서 시스템 개발이 가능하다.
+단점은 hibernate가 생성한 sql문이 우리가 원하는 sql문이 아닐 수도 있기 때문에 세심한 체크가 필요하며, 
+native sql을 사용하게 되면 어쩔 수 없이 데이터베이스 밴더에 종속적인 시스템이 될 수도 있다.
+
+
