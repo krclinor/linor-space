@@ -136,7 +136,49 @@ value에 값이 없을 경우 findAll과 동일한 효과가 나타난다.
 ```
 sql insert문 실행시 자동으로 생성되는 id값을 받아오기 위해 useGeneratedKeys를 true로 설정하고, keyProperty를 id로 설정한다.  
 insert문 실행 후 mybatis가 singer객체의 id에 값을 대입한다. 
- 
+
+### update 메서드 구현
+```xml
+<update id="update" parameterType="Singer">
+    update singer
+    set     first_name = #{firstName},
+            last_name = #{lastName},
+            birth_date = #{birthDate}
+    where   id = #{id}
+</update>
+```
+
+### delete 메서드 구현
+```xml
+<update id="delete" parameterType="int">
+    delete from singer
+    where   id = #{id}
+</update>
+```
+
+### insertWithAlbum 메서드 구현(plsql처리)
+```xml
+<insert id="insertWithAlbum" parameterType="Singer">
+    <selectKey keyProperty="id" resultType="int" order="BEFORE">
+        Select nextval(pg_get_serial_sequence('singer', 'id'))
+    </selectKey>
+    begin;
+        insert into singer(id, first_name, last_name, birth_date)
+        values(#{id}, #{firstName}, #{lastName}, #{birthDate});
+        <if test="albums != null">
+            <foreach collection="albums" item="album">
+                insert into album (singer_id, title, release_date)
+                values (#{id}, #{album.title}, #{album.releaseDate});
+            </foreach>
+        </if>
+    end;
+</insert>
+```
+주요 sql문을 처리하기 전에 sql문을 처리할 수 있는 selectKey를 제공한다.  
+selectKey에서 처리 후 결가 값을 keyProperty에 선언한 id에 저장하는에 이 id는 Singer클래스의 프로퍼티로 선언되어 있어야 한다.  
+order를 BEFORE로 선언함으로써 주 쿼리 실행전에 처리하도록 한다.  
+plsql을 처리하기 위해서는 begin end;블록으로 감싸서 처리한다.  
+
 ## 정리
 Mybatis는 전자정부프레임워크에서 Persistence레이어를 담당하고 있어 중요하고 좋은 도구이다.  
 SQL문을 잘 다루는 개발자에게 적합하고, 모든 SQL문을 별도의 저장공간에서 관리할 수 있어 편리하다.  
