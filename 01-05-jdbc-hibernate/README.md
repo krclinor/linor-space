@@ -211,9 +211,15 @@ generator는 SequenceGenerator나 TableGenerator 애노테이션에서 명시된
 - SEQUENCE : DB의 시퀀스 컬럼을 이용  
 - TABLE : 유일성이 보장된 데이터베이스 테이블을 이용
 
-@Column은 매핑할 테이블을 칼럼을 표시한다. @Column(name="first_name")는 데이터베이스 테이블의 칼럼이 first_name이다.  
-application.yml설정에서 physical-naming-strategy를 설정하였기 때문에 @Column어노테이션을 사용하지 않더라도 firstName프로퍼티를 first_name칼럼과 매핑된다.   
-@Version은 엔티티가 수정될때 자동으로 버전이 하나씩 증가하게 된다. 엔티티를 수정할 때 조회 시점의 버전과 수정 시점의 버전이 다르면 예외가 발생한다. 
+@Column은 매핑할 테이블을 칼럼을 표시한다.  
+@Column(name="first_name")는 데이터베이스 테이블의 칼럼이 first_name이다.  
+application.yml설정에서 physical-naming-strategy를 설정하였기 때문에 @Column어노테이션을 사용하지 않더라도 
+firstName프로퍼티를 first_name칼럼과 매핑된다.  
+
+@OneToMany는 1대다를 표현하기 위해 사용한다.  
+mappedBy="singer"는 Album클래스에서 Singer를 나타내는 프로퍼티이다.   
+
+@Version은 엔티티가 수정될때 자동으로 버전이 하나씩 증가하게 된다. 엔티티를 수정할 때 조회 시점의 버전과 수정 시점의 버전이 다르면 예외가 발생한다.  
 예를 들어 트랜잭션 1이 조회한 엔티티를 수정하고 있는데 트랜잭션 2에서 같은 엔티티를 수정하고 커밋해서 버전이 증가해버리면 트랜잭션 1이 커밋할 때 버전 정보가 다르므로 예외가 발생한다.
 
 파일명: com.linor.singer.domain.Album.java
