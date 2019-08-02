@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    initialization-mode: always
+  jta:
+    enabled: true
+    
+#Multi DataSource 설정
+db:
+  db1: 
+    datasource:
+      unique-resource-name: dataSourceOne
+      max-pool-size: 5
+      min-pool-size: 1
+      max-life-time: 20000
+      borrow-connection-timeout: 10000
+      xa-data-source-class-name: org.postgresql.xa.PGXADataSource
+      xa-properties:
+        user: linor
+        password: linor1234
+        URL: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+  db2: 
+    datasource:
+      unique-resource-name: dataSourceTwo
+      max-pool-size: 5
+      min-pool-size: 1
+      max-life-time: 20000
+      borrow-connection-timeout: 10000
+      xa-data-source-class-name: org.postgresql.xa.PGXADataSource
+      xa-properties:
+        user: linor
+        password: linor1234
+        URL: jdbc:postgresql://localhost:5432/spring?currentSchema=public
+    
