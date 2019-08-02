@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.singer.dao.SingerDao;
@@ -27,6 +26,11 @@ public class SingerDaoImpl implements SingerDao {
 	@Override
 	public List<Singer> findAll() {
 		return singerRepository.findAll();
+	}
+
+	@Override
+	public List<Singer> findAllByNativeQuery() {
+		return singerRepository.findAllByNativeQuery();
 	}
 
 	@Override

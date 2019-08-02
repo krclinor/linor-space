@@ -10,6 +10,8 @@ import com.linor.singer.domain.SingerSummary;
 
 public interface SingerDao {
 	List<Singer> findAll();
+	List<Singer> findAllByNativeQuery();
+
 	List<Singer> findByFirstName(String firstName);
 	List<Singer> findByFirstNameAndLastName(String firstName, String lastName);
 	List<Singer> findAllWithAlbums();

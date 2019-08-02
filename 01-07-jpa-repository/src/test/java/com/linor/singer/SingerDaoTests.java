@@ -37,6 +37,15 @@ public class SingerDaoTests {
 	}
 
 	@Test
+	public void testFindAllByNativeQuery() {
+		List<Singer> singers = singerDao.findAllByNativeQuery();
+		log.info("네이티브 쿼리 실행 결과");
+		singers.forEach(singer -> {
+			log.info(singer.toString());
+		});
+	}
+
+	@Test
 	public void testFindByFirstName() {
 		List<Singer> singers = singerDao.findByFirstName("종서");
 		assertTrue(singers.size() == 1);

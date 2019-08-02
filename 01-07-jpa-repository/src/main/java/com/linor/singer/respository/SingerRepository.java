@@ -2,6 +2,8 @@ package com.linor.singer.respository;
 
 import java.util.List;
 
+import javax.persistence.NamedNativeQuery;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -21,4 +23,7 @@ public interface SingerRepository extends JpaRepository<Singer, Integer> {
 				+ "where a.releaseDate=(select max(a2.releaseDate)\n"
 				+ "from Album a2 where a2.singer.id = s.id)")
 	public List<SingerSummary> listAllSingersSummary();
+	
+	@Query(value = "select id, first_name, last_name, birth_date, version from singer", nativeQuery = true)
+	public List<Singer> findAllByNativeQuery();
 }

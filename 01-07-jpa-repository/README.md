@@ -314,121 +314,293 @@ public interface SingerRepository extends JpaRepository<Singer, Integer> {
                 + "where a.releaseDate=(select max(a2.releaseDate)\n"
                 + "from Album a2 where a2.singer.id = s.id)")
     public List<SingerSummary> listAllSingersSummary();
+
+    @Query(value = "select id, first_name, last_name, birth_date, version from singer", nativeQuery = true)
+    public List<Singer> findAllByNativeQuery();
 }
 ```
 JpaRepository를 상속하여 생성한다. 이 때 사용될 엔터티와 주키를 제공해야 한다.  
-JpaRepository는 기본적으로 
-<table class="txc-table" width="804" cellspacing="0" cellpadding="0" border="0" 맑은="" 고딕",="" sans-serif;font-size:13px"="" style="color: rgb(51, 51, 51); font-family: &quot;Noto Sans Korean&quot;, &quot;Apple SD Gothic Neo&quot;, NanumBarunGothic, 나눔바른고딕, NanumGothic, 나눔고딕, &quot;Malgun Gothic&quot;, &quot;Helvetica Neue&quot;, Helvetica, &quot;Open Sans&quot;, Arial, Dotum, 돋움, sans-serif; font-size: 20px; letter-spacing: -1px; text-size-adjust: auto; border: none; border-collapse: collapse;"><tbody><tr><td style="width: 259px; height: 36px; border: 1px solid rgb(209, 223, 250); background-color: rgb(231, 239, 255);"><p><b><span style="font-size: 11pt;">&nbsp;</span><span style="font-size: 12pt;"><span style="font-size: 11pt;">met</span><span style="font-size: 11pt;">hod</span></span></b></p></td><td style="width: 544px; height: 36px; border-bottom: 1px solid rgb(209, 223, 250); border-right: 1px solid rgb(209, 223, 250); border-top: 1px solid rgb(209, 223, 250); background-color: rgb(231, 239, 255);"><p><b><span style="font-size: 11pt;">&nbsp;기능</span></b></p></td></tr><tr><td style="width: 259px; height: 26px; border-bottom: 1px solid rgb(209, 223, 250); border-right: 1px solid rgb(209, 223, 250); border-left: 1px solid rgb(209, 223, 250); background-color: transparent;"><p><span style="font-size: 11pt;">&nbsp;</span><span style="font-size: 11pt;">save()</span></p></td><td style="width: 544px; height: 26px; border-bottom: 1px solid rgb(209, 223, 250); border-right: 1px solid rgb(209, 223, 250); background-color: transparent;"><p><span style="font-size: 11pt;">&nbsp;</span><span style="font-size: 11pt;">레코드 저장 (insert, update)</span></p></td></tr><tr><td rowspan="1" style="width: 259px; height: 24px; border-bottom: 1px solid rgb(209, 223, 250); border-right: 1px solid rgb(209, 223, 250); border-left: 1px solid rgb(209, 223, 250); background-color: transparent;"><p><span style="font-size: 11pt;">&nbsp;</span><span style="font-size: 11pt;">findOne()</span></p></td><td rowspan="1" style="width: 544px; height: 24px; border-bottom: 1px solid rgb(209, 223, 250); border-right: 1px solid rgb(209, 223, 250); background-color: transparent;"><span style="font-size: 11pt;">&nbsp;</span><span style="font-size: 11pt;">primary key로 레코드 한건 찾기</span></td></tr><tr><td rowspan="1" style="width: 259px; height: 23px; border-bottom: 1px solid rgb(209, 223, 250); border-right: 1px solid rgb(209, 223, 250); border-left: 1px solid rgb(209, 223, 250); background-color: transparent;"><span style="font-size: 11pt;">&nbsp;</span><span style="font-size: 11pt;">findAll()</span></td><td rowspan="1" style="width: 544px; height: 23px; border-bottom: 1px solid rgb(209, 223, 250); border-right: 1px solid rgb(209, 223, 250); background-color: transparent;"><p><span style="font-size: 11pt;">&nbsp;</span><span style="font-size: 11pt;">전체 레코드 불러오기. 정렬(sort), 페이징(pageable) 가능</span></p></td></tr><tr><td rowspan="1" style="width: 259px; height: 24px; border-bottom: 1px solid rgb(209, 223, 250); border-right: 1px solid rgb(209, 223, 250); border-left: 1px solid rgb(209, 223, 250); background-color: transparent;"><span style="font-size: 11pt;">&nbsp;</span><span style="font-size: 11pt;">count()</span></td><td rowspan="1" style="width: 544px; height: 24px; border-bottom: 1px solid rgb(209, 223, 250); border-right: 1px solid rgb(209, 223, 250); background-color: transparent;"><span style="font-size: 11pt;">&nbsp;</span><span style="font-size: 11pt;">레코드 갯수</span></td></tr><tr><td rowspan="1" style="width: 259px; height: 24px; border-bottom: 1px solid rgb(209, 223, 250); border-right: 1px solid rgb(209, 223, 250); border-left: 1px solid rgb(209, 223, 250); background-color: transparent;"><span style="font-size: 11pt;">&nbsp;</span><span style="font-size: 11pt;">delete()</span></td><td rowspan="1" style="width: 544px; height: 24px; border-bottom: 1px solid rgb(209, 223, 250); border-right: 1px solid rgb(209, 223, 250); background-color: transparent;"><span style="font-size: 11pt;">&nbsp;</span><span style="font-size: 11pt;">레코드 삭제</span></td></tr></tbody></table>
+JpaRepository는 기본적으로 다음 메서드를 제공한다.
+<table>
+    <tbody>
+        <tr>
+            <td>method</td>
+            <td>기능</td>
+        </tr>
+        <tr>
+            <td>save()</td>
+            <td>레코드 저장 (insert, update)</td>
+        </tr>
+        <tr>
+            <td>findOne()</td>
+            <td>primary key로 레코드 한건 찾기</td>
+       </tr>
+        <tr>
+            <td>findAll()</td>
+            <td>전체 레코드 불러오기. 정렬(sort), 페이징(pageable) 가능</td>
+        </tr>
+        <tr>
+            <td>count()</td>
+            <td>레코드 갯수</td>
+        </tr>
+        <tr>
+            <td>delete()</td>
+            <td>레코드 삭제</td>
+        </tr>
+    </tbody>
+</table>
+
+또한 Query메소드를 작성할 수 있으며 다음 규칙에 따라 작성하여 스프링이 구현하도록 할 수 있다.    
+<table>
+    <tr>
+        <td>메서드</td>
+        <td>설명</td>
+    </tr>
+    <tr>
+        <td>findBy로 시작</td>
+        <td>쿼리를 요청하는 메서드임을 알림
+    </tr>
+    <tr>
+        <td>countBy로 시작</td>
+        <td>쿼리결과 레코드 수를 요청하는 메서드임을 알림</td>
+    </tr>
+</table>
+findBy다음에는 Entity의 프로퍼티를 입력하면 해당 필드를 검색하여 결과를 리턴한다.  
+sql문의 where절을 메서드 이름으로 전달한다고 생각하면 된다.  
+
+findBy나 countBy다음에 나올 쿼리 메서드레 포함할 수 있는 키워드는 다음과 같다.  
+<table class="tableblock frame-all grid-all">
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Keyword</th>
+<th class="tableblock halign-left valign-top">Sample</th>
+<th class="tableblock halign-left valign-top">JPQL snippet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>And</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByLastnameAndFirstname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.lastname = ?1 and x.firstname = ?2</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Or</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByLastnameOrFirstname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.lastname = ?1 or x.firstname = ?2</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Is,Equals</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByFirstname</code>,<code>findByFirstnameIs</code>,<code>findByFirstnameEquals</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.firstname = ?1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Between</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByStartDateBetween</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.startDate between ?1 and ?2</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LessThan</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAgeLessThan</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age &lt; ?1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LessThanEqual</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAgeLessThanEqual</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age ⇐ ?1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GreaterThan</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAgeGreaterThan</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age &gt; ?1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GreaterThanEqual</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAgeGreaterThanEqual</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age &gt;= ?1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>After</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByStartDateAfter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.startDate &gt; ?1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Before</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByStartDateBefore</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.startDate &lt; ?1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IsNull</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAgeIsNull</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age is null</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IsNotNull,NotNull</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAge(Is)NotNull</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age not null</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Like</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByFirstnameLike</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.firstname like ?1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NotLike</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByFirstnameNotLike</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.firstname not like ?1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>StartingWith</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByFirstnameStartingWith</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.firstname like ?1</code> (parameter bound with appended <code>%</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EndingWith</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByFirstnameEndingWith</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.firstname like ?1</code> (parameter bound with prepended <code>%</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Containing</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByFirstnameContaining</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.firstname like ?1</code> (parameter bound wrapped in <code>%</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OrderBy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAgeOrderByLastnameDesc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age = ?1 order by x.lastname desc</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Not</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByLastnameNot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.lastname &lt;&gt; ?1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>In</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAgeIn(Collection&lt;Age&gt; ages)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age in ?1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NotIn</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAgeNotIn(Collection&lt;Age&gt; age)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age not in ?1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>True</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByActiveTrue()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.active = true</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>False</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByActiveFalse()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.active = false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IgnoreCase</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByFirstnameIgnoreCase</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where UPPER(x.firstame) = UPPER(?1)</code></p></td>
+</tr>
+</tbody>
+</table>
+
 ### DAO인터페이스 구현클래스 생성
 ```java
-@Transactional
 @Repository
+@Transactional
 @Slf4j
 public class SingerDaoImpl implements SingerDao {
     
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private SingerRepository singerRepository;
+    
+    @Autowired
+    private AlbumRespository albumRepository;
 ```
 @Transactional은 데이터베이스 트랜잭션을 처리하기 위하여 설정한다.  
-@Repository는 Persistency레이어에서 빈을 정의하기 위해 사용하는 어노테이션이다.  
-인스턴스 생성시 EntityManager를 주입할 수 있도록 @Autowired어노테이션을 설정한다. 
+@Service는 서비스 레이어에서 빈을 정의하기 위해 사용하는 어노테이션이다.  
+JpaRepository를 상속받아 생성한 SingerRepository와 AlbumRespository를 @Autowired를 이용하여 주입한다.  
 
-#### findAll 메서드 구현(단순 쿼리)
+#### findAll 메서드 구현
 ```java
     @Override
-    @Transactional(readOnly=true)
     public List<Singer> findAll() {
-        return entityManager.createQuery("from Singer s", Singer.class).getResultList();
+        return singerRepository.findAll();
     }
 ```
-EntityManager.createQuery()를 호출하여 쿼리를 생성하고 Query.getResultList()를 호출하여 결과 목록을 받아온다.  
-단일 레코드만 조회하려면 Query.uniqueResult()를 호출한다.  
-여기에서 사용되는 쿼리는 JPQL(Java Persistence Query Language)이며, 
-JPA스팩의 일부로 정의된 플랫폼 독립적인 객체지향 쿼리 언어이다.  
+JpaRepository가 제공하는 findAll()메서드를 바로 이용한다. 
 
-#### findByFirstName 메서드 구현(NamedQuery)
-NamedQuery를 사용하기 위해 먼저 엔터티 클래스에서 NamedQuery를 작성한다.
-```java
-@NamedQueries({
-    @NamedQuery(name="Singer.findByFirstName",
-    query="select distinct s from Singer s \n"
-            + "where s.firstName = :firstName")
-})
-@Data
-public class Singer implements Serializable{
-```
-엔터티 클래스에서 작성한 NamedQuery를 다음과 같이 사용한다.  
-파라미터는 앞에 콜론(:)을 붙인다.
+#### findByFirstName 메서드 구현
 ```java
     @Override
     public List<Singer> findByFirstName(String firstName) {
-        return entityManager.createNamedQuery("Singer.findByFirstName", Singer.class)
-                .setParameter("firstName", firstName)
-                .getResultList();
+        return singerRepository.findByFirstName(firstName);
     }
 ```
-EntityManager.createNamedQuery()를 이용하여 호출한다.  
-Name 파라미터 설정은 Query.setParameter(), 또는 Query.setParameterList()를 사용하여 설정한다.    
-단일 레코드를 리턴하기 위해 Query.uniqueResult()를 사용하고, 여러 레코드를 리터하려면 Query.getResultList()를 사용한다.  
+SingerRepository에 선언한 findByFirstName()메서드를 호출하기만 하면 된다.  
 
 #### insert 메서드 구현
 ```java
     @Override
     public void insert(Singer singer) {
-        entityManager.persist(singer);
+        singerRepository.save(singer);
     }
 ```
-EntityManager.persist()를 호출하여 insert를 처리한다. Id가 없는 경우 생성된 id가 singer.id에 주입된다.  
+JpaRepository인터페이스에서 제공하는 save()메서드를 호출한다.  
 
 #### update 메서드 구현
 ```java
     @Override
     public void update(Singer singer) {
-        entityManager.merge(singer);
+        singerRepository.save(singer);
     }
 ```
-EntityManager.merge()를 호출하여 데이타를 update한다.  
+insert()메서드와 로직이 동일하다.  
 
 #### delete 메서드 구현
 ```java
     @Override
     public void delete(Integer singerId) {
-        Singer singer = entityManager.createNamedQuery("Singer.findById",Singer.class).
-                setParameter("id", singerId).getSingleResult();
-        if(singer != null) {
-            entityManager.remove(singer);
-        }
+        singerRepository.deleteById(singerId);
     }
 ```
-EntityManager.remove()를 호출하여 레코드를 삭제한다.    
+JpaRepository에서 제공하는 deleteById()메서드를 호출한다.    
 
 #### listAllSingersSummary 메서드 구현(클래스 타입이 없는 결과 쿼리)
+먼저 SingerRepository에 다음 메서드를 선언한다.
 ```java
-    @Override
-    public List<SingerSummary> listAllSingersSummary() {
-        List<SingerSummary> result = entityManager.createQuery("select \n"
+    @Query("select \n"
                 + "new com.linor.singer.domain.SingerSummary(\n"
                 + "s.firstName, s.lastName, a.title) from Singer s\n"
                 + "left join s.albums a\n"
                 + "where a.releaseDate=(select max(a2.releaseDate)\n"
-                + "from Album a2 where a2.singer.id = s.id)", SingerSummary.class)
-                .getResultList();
-        return result;
+                + "from Album a2 where a2.singer.id = s.id)")
+    public List<SingerSummary> listAllSingersSummary();
+```
+findBy로 해결할 수 없는 쿼리는 JPQL을 이용하여 작성한다.  
+
+```java
+    @Override
+    public List<SingerSummary> listAllSingersSummary() {
+        return singerRepository.listAllSingersSummary();
     }
 ```
 JPQL에서 명시적으로 컬럼을 지정하면 JPA는 Iterator<Object[]>를 리턴한다.  
 JQPL은 select다음에 new 키워드와 함께 사용자정의 도메인 클래스를 선언하고, 생성자의 매개변수에 조회결과를 대입한다.    
 
 #### findAllByNativeQuery 메서드 구현(Native SQL)
+SingerRepository에 다음과 같에 메서드를 선언한다.
 ```java
-    private static final String ALL_SINGER_NATIVE_SQL =
-            "select id, first_name, last_name, birth_date, version from singer";
+    @Query(value = "select id, first_name, last_name, birth_date, version from singer", nativeQuery = true)
+    public List<Singer> findAllByNativeQuery();
+```
+@Query에서 nativeQuery를 true로 설정하여 해당 쿼리가 sql문임을 선언한다.  
+
+```java
     @Override
     public List<Singer> findAllByNativeQuery() {
-        return entityManager.createNativeQuery(ALL_SINGER_NATIVE_SQL, Singer.class)
-                .getResultList();
+        return singerRepository.findAllByNativeQuery();
     }
 ```
-JPQL이 아닌 SQL문을 직접 사용하려면 EntityManager.createNativeQuery()메서드를 사용하여 처리한다.  
+SingerRepository에서 선언한 findAllByNativeQuery()메서드를 호출한다.  
+
+## 주의사항
 
 
