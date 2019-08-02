@@ -8,9 +8,8 @@ import javax.persistence.PersistenceContext;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.singer.dao.SingerDao;
@@ -19,7 +18,7 @@ import com.linor.singer.domain.Singer;
 import lombok.extern.slf4j.Slf4j;
 
 @Transactional
-@Repository
+@Service
 @Slf4j
 public class SingerDaoImpl implements SingerDao {
 	@PersistenceContext
@@ -29,11 +28,14 @@ public class SingerDaoImpl implements SingerDao {
 		return entityManager.unwrap(Session.class);
 	}
 	
-	@Autowired
-	private EntityManagerFactory entityManagerFactory;
+//	@Autowired
+//	private EntityManagerFactory entityManagerFactory;
+//
+//	protected Session getCurrentSession()  {
+//		return entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+//	}
 	
 	@Override
-	@Transactional(readOnly=true)
 	public List<Singer> findAll() {
 		Session session = getCurrentSession();
 		return session

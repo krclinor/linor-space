@@ -18,14 +18,14 @@ public class JdbcApplication {
 		SpringApplication.run(JdbcApplication.class, args);
 	}
 
-	@Autowired
-	private EntityManagerFactory entityManagerFactory;
-
-   @Bean
-   public PlatformTransactionManager transactionManager(){
-      JpaTransactionManager transactionManager
-        = new JpaTransactionManager();
-      transactionManager.setEntityManagerFactory(entityManagerFactory);
-      return transactionManager;
-   }
+//	@Autowired
+//	private EntityManagerFactory entityManagerFactory;
+//
+//   @Bean
+//   public PlatformTransactionManager transactionManager(){
+//      JpaTransactionManager transactionManager
+//        = new JpaTransactionManager();
+//      transactionManager.setEntityManagerFactory(entityManagerFactory);
+//      return transactionManager;
+//   }
 }
