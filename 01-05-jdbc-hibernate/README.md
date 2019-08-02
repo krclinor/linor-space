@@ -55,15 +55,15 @@ src/main/resources/application.yml에 hibernate관련 설정을 추가한다.
         use_sql_comments: true
         jdbc.lob.non_contextual_creation: true
         #temp.use_jdbc_metadata_default: false
-        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+        #current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
 ```
 dialect에 사용하는 데이타베이스가 postgresql이므로 org.hibernate.dialect.PostgreSQLDialect를 설정한다.  
 physical-naming-strategy에 Camel Case로 작성된 객체의 프로퍼티를 Snake Case로 작성된 테이블 칼럼과 매칭될 수 있도록 
 CamelCaseToSnakeCaseNamingStrategy를 설정한다.  
 postgresql을 사용하는 경우 발생하는 오류를 제거하기 위해 jdbc.lob.non_contextual_creation을 true로 설정한다.  
-getCurrentSession을 사용하기 위해서 current_session_context_class에 org.springframework.orm.hibernate5.SpringSessionContext를 
-설정한다.
- 
+show_sql을 true로 설정하면  hibernate가 생성한 sql문을 볼 수 있고,    
+format_sql을 true로 설정하면 sql문을 읽기 쉽도록 만들어 준다.  
+use_sql_comments를 true로 설정하면 sql문에 HQL쿼리를 주석으로 같이 보여준다.  
 
 ### 데이타베이스 초기화 파일 생성
 #### schema.sql
@@ -292,26 +292,31 @@ inverseJoinColumns=@JoinColumn(name="INSTRUMENT_ID"))은 SINGER_INSTRUMENT이라
 @Slf4j
 public class SingerDaoImpl implements SingerDao {
     
-    @Autowired
-    private EntityManagerFactory entityManagerFactory;
+    @PersistenceContext
+    EntityManager entityManager;
+
+    protected Session getCurrentSession()  {
+        return entityManager.unwrap(Session.class);
+    }
     
 ```
 @Transactional은 데이터베이스 트랜잭션을 처리하기 위하여 설정한다.  
 @Repository는 Persistency레이어에서 빈을 정의하기 위해 사용하는 어노테이션이다.  
-인스턴스 생성시 EntityManagerFactory를 주입할 수 있도록 @Autowired어노테이션을 설정한다. 
+인스턴스 생성시 EntityManager를 주입할 수 있도록 @Autowired어노테이션을 설정한다. 
+entityManager를 이용하여 현재 세션을 가져오는 getCurrentSession메서드를 구현한다.
 
 #### findAll 메서드 구현
 ```java
     @Override
     @Transactional(readOnly=true)
     public List<Singer> findAll() {
-        Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+        Session session = getCurrentSession();
         return session
                 .createQuery("from Singer")
                 .list();
     }
 ```
-entityManagerFactory에서 현재 세션을 받아와 session에 대입한다.  
+entityManager에서 현재 세션을 받아와 session에 대입한다.  
 session으로 쿼리문을 실행한다. 여기서 사용되는 쿼리문은 Hibernate Query Language(HQL)로 데이터베이스의 SQL문과 다르다.  
 "from Singer s"는 sql문 "select s from Singer s"와 동일하다.  
 
@@ -331,7 +336,7 @@ public class Singer implements Serializable{
 ```java
     @Override
     public List<Singer> findByFirstName(String firstName) {
-        Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+        Session session = getCurrentSession();
         return session
                 .getNamedQuery("Singer.findByFirstName")
                 .setParameter("firstName", firstName)
@@ -346,7 +351,7 @@ Name 파라미터 설정은 Query.setParameter(), 또는 Query.setParameterList(
 ```java
     @Override
     public void insert(Singer singer) {
-        Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+        Session session = getCurrentSession();
         session.saveOrUpdate(singer);
         log.info("저장된 가수 ID: " + singer.getId());
     }
@@ -357,7 +362,7 @@ Session.saveOrUpdate()를 호출하여 insert와 update처리를 모두 한다. 
 ```java
     @Override
     public void update(Singer singer) {
-        Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+        Session session = getCurrentSession();
         session.update(singer);
     }
 ```
@@ -367,7 +372,7 @@ Session.update()를 호출하거나 Session.saveOrUpdate()를 호출하여 데�
 ```java
     @Override
     public void delete(Integer singerId) {
-        Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+        Session session = getCurrentSession();
         Singer singer = (Singer)session
                 .getNamedQuery("Singer.findById")
                 .setParameter("id", singerId)
@@ -384,7 +389,6 @@ Session.delete()를 호출하여 레코드를 삭제한다.
 Hibernate는 OR매핑툴 중에서 가장 많이 사용되고 있다.  
 장점은 엔터티 클래스에 테이블 및 컬럼정의만 해 놓으면 별도의 sql문 없이도 많은 처리가 가능하다.  
 따라서 데이터베이스 밴더의 영향을 받지 않으면서 시스템 개발이 가능하다.
-단점은 hibernate가 생성한 sql문이 우리가 원하는 sql문이 아닐 수도 있기 때문에 세심한 체크가 필요하며, 
-native sql을 사용하게 되면 어쩔 수 없이 데이터베이스 밴더에 종속적인 시스템이 될 수도 있다.
+단점은 hibernate가 생성한 sql문이 우리가 원하는 sql문이 아닐 수도 있기 때문에 세심한 체크가 필요하다.
 
 

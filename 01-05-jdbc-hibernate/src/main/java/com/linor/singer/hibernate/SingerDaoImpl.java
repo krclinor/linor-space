@@ -2,7 +2,9 @@ package com.linor.singer.hibernate;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -20,6 +22,12 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 @Slf4j
 public class SingerDaoImpl implements SingerDao {
+	@PersistenceContext
+	EntityManager entityManager;
+
+	protected Session getCurrentSession()  {
+		return entityManager.unwrap(Session.class);
+	}
 	
 	@Autowired
 	private EntityManagerFactory entityManagerFactory;
@@ -27,7 +35,7 @@ public class SingerDaoImpl implements SingerDao {
 	@Override
 	@Transactional(readOnly=true)
 	public List<Singer> findAll() {
-		Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+		Session session = getCurrentSession();
 		return session
 				.createQuery("from Singer")
 				.list();
@@ -35,7 +43,7 @@ public class SingerDaoImpl implements SingerDao {
 
 	@Override
 	public List<Singer> findByFirstName(String firstName) {
-		Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+		Session session = getCurrentSession();
 		return session
 				.getNamedQuery("Singer.findByFirstName")
 				.setParameter("firstName", firstName)
@@ -50,7 +58,7 @@ public class SingerDaoImpl implements SingerDao {
 
 	@Override
 	public Singer findById(Integer id) {
-		Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+		Session session = getCurrentSession();
 		return (Singer)session
 				.getNamedQuery("Singer.findById")
 				.setParameter("id", id)
@@ -65,23 +73,20 @@ public class SingerDaoImpl implements SingerDao {
 
 	@Override
 	public void insert(Singer singer) {
-		Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+		Session session = getCurrentSession();
 		session.saveOrUpdate(singer);
 		log.info("저장된 가수 ID: " + singer.getId());
 	}
 
 	@Override
 	public void update(Singer singer) {
-		Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
-		Transaction transaction = session.beginTransaction();
+		Session session = getCurrentSession();
 		session.update(singer);
-		transaction.commit();
 	}
 
 	@Override
 	public void delete(Integer singerId) {
-		Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
-		Transaction transaction = session.beginTransaction();
+		Session session = getCurrentSession();
 		Singer singer = (Singer)session
 				.getNamedQuery("Singer.findById")
 				.setParameter("id", singerId)
@@ -89,13 +94,12 @@ public class SingerDaoImpl implements SingerDao {
 		if(singer != null) {
 			session.remove(singer);
 		}
-		transaction.commit();
 	}
 
 	@Override
 	@Transactional(readOnly=true)
 	public List<Singer> findAllWithAlbums() {
-		Session session = entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
+		Session session = getCurrentSession();
 		
 		return session.getNamedQuery("Singer.findAllWithAlbum").list();
 	}
@@ -104,5 +108,4 @@ public class SingerDaoImpl implements SingerDao {
 	public void insertWithAlbum(Singer singer) {
 		insert(singer);
 	}
-
 }
