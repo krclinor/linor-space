@@ -26,7 +26,6 @@ import lombok.ToString;
 
 @Entity
 //@Table(name="singer")
-@EntityListeners(AuditingEntityListener.class)
 @Data
 public class Singer extends Auditable<String>{
 	@Id
@@ -43,16 +42,16 @@ public class Singer extends Auditable<String>{
 	private LocalDate birthDate;
 	
 	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER)
-	@ToString.Exclude
-	@EqualsAndHashCode.Exclude
+	//@ToString.Exclude
+	//@EqualsAndHashCode.Exclude
 	private Set<Album> albums = new HashSet<>();
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name="singer_instrument", 
 		joinColumns=@JoinColumn(name="singer_id"),
 		inverseJoinColumns=@JoinColumn(name="instrument_id"))
-	@ToString.Exclude
-	@EqualsAndHashCode.Exclude
+	//@ToString.Exclude
+	//@EqualsAndHashCode.Exclude
 	private Set<Instrument> instruments = new HashSet<>();
 	
 	@Version

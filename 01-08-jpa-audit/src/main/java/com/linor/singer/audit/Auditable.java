@@ -31,6 +31,4 @@ public abstract class Auditable<U> {
 	
 	@LastModifiedDate
 	protected LocalDateTime lastModifiedDate;
-	
-	
 }

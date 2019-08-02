@@ -23,7 +23,9 @@ public class Instrument implements Serializable{
 	private String instrumentId;
 
 	@ManyToMany
-	@JoinTable(name = "singer_instrument", joinColumns = @JoinColumn(name = "instrument_id"), inverseJoinColumns = @JoinColumn(name = "singer_id"))
+	@JoinTable(name = "singer_instrument", 
+		joinColumns = @JoinColumn(name = "instrument_id"), 
+		inverseJoinColumns = @JoinColumn(name = "singer_id"))
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	private Set<Singer> singers = new HashSet<>();

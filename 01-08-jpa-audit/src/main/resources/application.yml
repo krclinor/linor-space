@@ -13,16 +13,16 @@ spring:
   datasource:
     platform: postgresql
     driver-class-name: org.postgresql.Driver
-    initialization-mode: always
-    password: spring1234
     url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
-    username: spring
+    username: linor
+    password: linor1234
+    initialization-mode: always
 
     #hikari Connection Pull 설정
-    hikari:
-      maximum-pool-size: 20
-      idle-timeout: 1
-      minimum-idle: 0
+#    hikari:
+#      maximum-pool-size: 20
+#      idle-timeout: 1
+#      minimum-idle: 0
 
   jpa:
     show-sql: true
@@ -32,8 +32,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         physical-naming-strategy: com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy
-        format_sql: true
-        use_sql_comments: true
+        #format_sql: true
+        #use_sql_comments: true
         jdbc.lob.non_contextual_creation: true
         #temp.use_jdbc_metadata_default: false
 
