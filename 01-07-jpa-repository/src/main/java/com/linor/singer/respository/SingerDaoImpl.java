@@ -2,11 +2,9 @@ package com.linor.singer.respository;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.singer.dao.SingerDao;
@@ -15,9 +13,8 @@ import com.linor.singer.domain.Singer;
 import com.linor.singer.domain.SingerSummary;
 
 import lombok.extern.slf4j.Slf4j;
-
-@Transactional
 @Repository
+@Transactional
 @Slf4j
 public class SingerDaoImpl implements SingerDao {
 	
@@ -28,7 +25,6 @@ public class SingerDaoImpl implements SingerDao {
 	private AlbumRespository albumRepository;
 	
 	@Override
-	@Transactional(readOnly=true)
 	public List<Singer> findAll() {
 		return singerRepository.findAll();
 	}

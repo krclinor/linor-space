@@ -6,8 +6,6 @@ import static org.junit.Assert.assertTrue;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
-@Transactional
 public class SingerDaoTests {
 	@Autowired
 	private SingerDao singerDao;
@@ -36,12 +33,6 @@ public class SingerDaoTests {
 		log.info("테스트 findAll----");
 		singers.forEach(singer -> {
 			log.info(singer.toString());
-			singer.getAlbums().forEach(album ->{
-				log.info(album.toString());
-			});
-			singer.getInstruments().forEach(inst ->{
-				log.info(inst.toString());
-			});
 		});
 	}
 
@@ -52,12 +43,6 @@ public class SingerDaoTests {
 		log.info("테스트 : findByFirstName----");
 		singers.forEach(singer -> {
 			log.info(singer.toString());
-			singer.getAlbums().forEach(album ->{
-				log.info(album.toString());
-			});
-			singer.getInstruments().forEach(inst ->{
-				log.info(inst.toString());
-			});
 		});
 	}
 	
@@ -68,12 +53,6 @@ public class SingerDaoTests {
 		log.info("테스트 findByFirstNameAndLastName----");
 		singers.forEach(singer -> {
 			log.info(singer.toString());
-			singer.getAlbums().forEach(album ->{
-				log.info(album.toString());
-			});
-			singer.getInstruments().forEach(inst ->{
-				log.info(inst.toString());
-			});
 		});
 	}
 
@@ -134,9 +113,6 @@ public class SingerDaoTests {
 		log.info(">>> 김조한 추가후");
 		singers.forEach(s -> {
 			log.info(s.toString());
-			s.getAlbums().forEach(album -> {
-				log.info("앨범 >>> " + album.toString());
-			});
 		});
 	}
 	
@@ -145,14 +121,12 @@ public class SingerDaoTests {
 		Singer singerOldSinger = singerDao.findById(1);
 		log.info(">>> 김종서 수정 전 >>>");
 		log.info(singerOldSinger.toString());
-		Singer singer = new Singer();
-		singer.setId(1);
-		singer.setFirstName("종서");
-		singer.setLastName("김");
-		singer.setBirthDate(LocalDate.parse("1977-10-16"));
-		singerDao.update(singer);
-		Singer singerNewSinger = singerDao.findById(1);
+		singerOldSinger.setFirstName("종서");
+		singerOldSinger.setLastName("김");
+		singerOldSinger.setBirthDate(LocalDate.parse("1977-10-16"));
+		singerDao.update(singerOldSinger);
 		log.info(">>> 김종서 수정 후 >>>");
+		Singer singerNewSinger = singerDao.findById(1);
 		log.info(singerNewSinger.toString());
 	}
 
@@ -163,9 +137,6 @@ public class SingerDaoTests {
 		log.info("가수 삭제 후 가수 목록>>>");
 		singers.forEach(s -> {
 			log.info(s.toString());
-			s.getAlbums().forEach(album -> {
-				log.info("앨범 >>> " + album.toString());
-			});
 		});
 	}
 
@@ -196,9 +167,6 @@ public class SingerDaoTests {
 		log.info("가수 및 앨범 추가 후 >>>");
 		singers.forEach(s -> {
 			log.info(s.toString());
-			s.getAlbums().forEach(a -> {
-				log.info("앨범 >>> " + a.toString());
-			});
 		});
 	}
 }

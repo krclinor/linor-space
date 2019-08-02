@@ -1,5 +1,3 @@
-set search_path to new;
-
 drop table if exists singer cascade;
 create table singer(
   id serial primary key,
