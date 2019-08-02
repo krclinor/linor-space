@@ -1,4 +1,6 @@
-# JPA
+# JPA EntityManager
+JPA EntityManager를 이용하여 처리하는 방법을 배워본다.  
+
 JPA로 다대다의 관계를 표현하기 위해 악기테이블을 추가하여 스키마를 구성하여 작업한다.
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
