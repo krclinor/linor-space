@@ -3,6 +3,7 @@ package com.linor.app.config;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.type.JdbcType;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,11 +14,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 @Configuration
-@MapperScan(basePackages = {"com.linor.app.db1.dao"}, sqlSessionFactoryRef = "sqlSessionFactory1")
+@MapperScan(basePackages = {"com.linor.singer.dao1"}, sqlSessionFactoryRef = "sqlSessionFactory1")
 public class Datasource1Config {
 	@Bean
 	@ConfigurationProperties("db.db1.datasource")
@@ -31,19 +33,33 @@ public class Datasource1Config {
 	public SqlSessionFactory sqlSessionFactory1(@Qualifier("dataSource1") DataSource dataSource, ApplicationContext applicationContext) throws Exception{
 		SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
 		sqlSessionFactory.setDataSource(dataSource);
-		sqlSessionFactory.setMapperLocations(applicationContext.getResources("classpath:/**/db1/dao/*.xml"));;
+		sqlSessionFactory.setTypeAliasesPackage("com.linor.singer.domain1");
+		sqlSessionFactory.setMapperLocations(applicationContext.getResources("classpath*:/**/dao1/*.xml"));
+		//sqlSessionFactory.setTransactionFactory(new SpringManagedTransactionFactory());
+		
+		org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+		configuration.setMapUnderscoreToCamelCase(true);
+		configuration.setJdbcTypeForNull(JdbcType.NULL);
+		sqlSessionFactory.setConfiguration(configuration);
+
 		return sqlSessionFactory.getObject();
 	}
-
+	
+	@Primary
+	@Bean
+	public DataSourceTransactionManager txManager1(@Qualifier("dataSource1") DataSource dataSource) {
+		return new DataSourceTransactionManager(dataSource);
+	}
+    
     @Bean
     public DataSourceInitializer dataSourceInitializer1(@Qualifier("dataSource1") DataSource datasource) {
         ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
         resourceDatabasePopulator.addScript(new ClassPathResource("schema-post1.sql"));
         resourceDatabasePopulator.addScript(new ClassPathResource("data-post1.sql"));
 
-            DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
-            dataSourceInitializer.setDataSource(datasource);
-            dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
-            return dataSourceInitializer;
+        DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
+        dataSourceInitializer.setDataSource(datasource);
+        dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
+        return dataSourceInitializer;
     }
 }
