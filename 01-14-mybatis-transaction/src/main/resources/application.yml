@@ -3,9 +3,9 @@ spring:
   datasource:
     initialization-mode: always
     driver-class-name: org.postgresql.Driver
-    password: spring1234
     url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
-    username: spring    
+    username: linor
+    password: linor1234
 
 mybatis:
   mapper-locations: classpath*:/**/dao/*.xml
