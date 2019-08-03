@@ -19,12 +19,14 @@ spring:
     fallback-to-system-locale: true
   datasource: #데이타소스
     driver-class-name: org.postgresql.Driver
-    initialization-mode: always
-    password: spring1234
     url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
-    username: spring
+    username: linor
+    password: linor1234
+    initialization-mode: always
 
 mybatis:
   mapper-locations: classpath*:/**/dao/*.xml
   type-aliases-package: com.linor.singer.domain
   configuration.map-underscore-to-camel-case: true
+  
+welcome.message : 안녕하세요!! 
