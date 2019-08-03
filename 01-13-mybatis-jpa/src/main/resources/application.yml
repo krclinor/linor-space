@@ -1,17 +1,17 @@
 spring:
 #데이타소스
   datasource:
-    initialization-mode: always
     driver-class-name: org.postgresql.Driver
-    password: spring1234
     url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
-    username: spring    
+    username: linor
+    password: linor1234
+    initialization-mode: always
 
-    #hikari Connection Pull 설정
-    hikari:
-      maximum-pool-size: 20
-      idle-timeout: 1
-      minimum-idle: 0
+#    #hikari Connection Pull 설정
+#    hikari:
+#      maximum-pool-size: 20
+#      idle-timeout: 1
+#      minimum-idle: 0
 
 db:
   jpa:

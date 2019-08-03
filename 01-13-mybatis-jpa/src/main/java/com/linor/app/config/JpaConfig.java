@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -36,7 +35,7 @@ public class JpaConfig {
 		hibernateProp.put("hibernate.hbm2ddl.auto", env.getProperty(prefix + ".hibernate.hbm2ddl.auto", "none"));
 		hibernateProp.put("hibernate.format_sql", env.getProperty(prefix + ".hibernate.format_sql", "true"));
 		hibernateProp.put("hibernate.use_sql_comments", env.getProperty(prefix + ".hibernate.use_sql_comments", "true"));
-		hibernateProp.put("hibernate.show_sql", env.getProperty(prefix + ".hibernate.show_sql", "false"));
+		hibernateProp.put("show_sql", env.getProperty(prefix + ".hibernate.show_sql", "false"));
 		hibernateProp.put("hibernate.physical_naming_strategy", env.getProperty(prefix + ".hibernate.physical-naming-strategy", 
 				"com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy"));
 		hibernateProp.put("hibernate.max_fetch_depth", env.getProperty(prefix + ".hibernate.max_fetch_depth","3"));
