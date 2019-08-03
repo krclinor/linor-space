@@ -43,7 +43,7 @@ public class TransactionTests {
 	@Test
 	@Transactional
 	public void test11InsertSinger() {
-		log.info("테스트1-1시작--->>>");
+		log.info("테스트1-1(정상)시작--->>>");
 		List<Singer1> singers1 = singer1Dao.findAll();
 		int singersCount = singers1.size();
 		Singer1 singer1 = new Singer1();
@@ -141,7 +141,7 @@ public class TransactionTests {
 	@Test
 	@Transactional
 	public void test21UpdateSinger() {
-		log.info("테스트2-1시작--->>>");
+		log.info("테스트2-1시작(정상)--->>>");
 		Singer1 singer1 = singer1Dao.findById(1).get();
 		Singer2 singer2 = singer2Dao.findById(1).get();
 		log.info(">>> 김종서 수정 전 >>>");
@@ -232,7 +232,7 @@ public class TransactionTests {
 
 	@Test
 	public void test32DeleteSinger() {
-		log.info("테스트3-1시작--->>>");
+		log.info("테스트3-2시작--->>>");
 		Singer1 singer1 = singer1Dao.findById(10).orElse(null);
 		Singer2 singer2 = singer2Dao.findById(1).orElse(null);
 		try {
@@ -249,7 +249,7 @@ public class TransactionTests {
 	
 	@Test
 	public void test33DeleteSinger() {
-		log.info("테스트3-1시작--->>>");
+		log.info("테스트3-3시작--->>>");
 		Singer1 singer1 = singer1Dao.findById(1).orElse(null);
 		Singer2 singer2 = singer2Dao.findById(10).orElse(null);
 		try {

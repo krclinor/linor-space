@@ -12,17 +12,17 @@ spring:
   profiles: postgres
   datasource:
     platform: postgresql
-    initialization-mode: always
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/spring?currentSchema=new
-    password: spring1234
-    username: spring
+    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+    username: linor
+    password: linor1234
+    initialization-mode: always
 
     #hikari Connection Pull 설정
-    hikari:
-      maximum-pool-size: 20
-      idle-timeout: 1
-      minimum-idle: 0
+#    hikari:
+#      maximum-pool-size: 20
+#      idle-timeout: 1
+#      minimum-idle: 0
 
   jpa:
     show-sql: true
@@ -32,8 +32,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         physical-naming-strategy: com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy
-        format_sql: true
-        use_sql_comments: true
+#        format_sql: true
+#        use_sql_comments: true
         jdbc.lob.non_contextual_creation: true
         #temp.use_jdbc_metadata_default: false
 
@@ -46,14 +46,14 @@ spring:
     initialization-mode: always
 
     #hikari Connection Pull 설정
-    hikari:
-      maximum-pool-size: 20
-      idle-timeout: 1
-      minimum-idle: 0
+#    hikari:
+#      maximum-pool-size: 20
+#      idle-timeout: 1
+#      minimum-idle: 0
 #    url: jdbc:h2:mem:test;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
 #    username: sa
 #    password: ''
-  h2.console.enabled: true
+#  h2.console.enabled: true
   jpa:
 #    show-sql: true
     hibernate:
@@ -64,7 +64,7 @@ spring:
 #        format_sql: true
 #        use_sql_comments: true
         physical-naming-strategy: com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy
-        max_fetch_depth: 3
-        jdbc.batch_size: 10
-        jdbc.patch_size: 50
+#        max_fetch_depth: 3
+#        jdbc.batch_size: 10
+#        jdbc.patch_size: 50
       
