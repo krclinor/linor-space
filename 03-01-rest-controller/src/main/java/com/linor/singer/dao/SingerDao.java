@@ -3,10 +3,14 @@ package com.linor.singer.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.singer.domain.Singer;
 
 @Mapper
+@Repository
+@Transactional
 public interface SingerDao {
 	List<Singer> findAll();
 	List<Singer> findByFirstName(String firstName);
