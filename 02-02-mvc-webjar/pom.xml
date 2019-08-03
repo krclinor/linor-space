@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.4.RELEASE</version>
+		<version>2.1.6.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.linor</groupId>
-	<artifactId>11-mvc-static</artifactId>
+	<artifactId>11-mvc-webjar</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>11-mvc-static</name>
+	<name>11-mvc-webjar</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
