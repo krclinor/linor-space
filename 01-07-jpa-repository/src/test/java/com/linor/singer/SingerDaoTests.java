@@ -29,11 +29,11 @@ public class SingerDaoTests {
 	@Test
 	public void testFindAll() {
 		List<Singer> singers = singerDao.findAll();
-		assertTrue(singers.size() >= 3);
 		log.info("테스트 findAll----");
 		singers.forEach(singer -> {
 			log.info(singer.toString());
 		});
+		assertTrue(singers.size() >= 3);
 	}
 
 	@Test

@@ -1,4 +1,4 @@
-spring.profiles.active: postgres
+spring.profiles.active: h2
 #로거
 logging:
   pattern:
@@ -44,19 +44,19 @@ spring:
     platform: h2 
     driver-class-name: org.h2.Driver
     initialization-mode: always
-    url: jdbc:h2:mem:test;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password: ''
-  h2.console.enabled: true
+#    url: jdbc:h2:mem:test;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#    username: sa
+#    password: ''
+#  h2.console.enabled: true
     #hikari Connection Pull 설정
 #    hikari:
 #      maximum-pool-size: 20
 #      idle-timeout: 1
 #      minimum-idle: 0
   jpa:
-    show-sql: true
-#    hibernate:
-#      ddl-auto: none
+#    show-sql: true
+    hibernate:
+      ddl-auto: none
     properties:
       hibernate: 
         dialect: org.hibernate.dialect.H2Dialect
