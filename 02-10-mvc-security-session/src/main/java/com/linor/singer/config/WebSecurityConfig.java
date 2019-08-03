@@ -49,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/", "/logoutSuccess")
 					.permitAll()
 				.antMatchers("/admin/")
-					.hasAnyRole("ROLE_ADMIN")
+					.hasAuthority("ADMIN")
 				.antMatchers("/user/**")
 					.access("@webSecurity.check(authentication, request)")
 				.anyRequest()

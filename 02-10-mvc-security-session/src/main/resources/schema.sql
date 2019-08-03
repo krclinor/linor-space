@@ -1,4 +1,4 @@
-set search_path to singer;
+--set search_path to singer;
 
 drop table if exists user_role cascade;
 drop table if exists users cascade;

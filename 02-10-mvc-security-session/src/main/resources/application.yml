@@ -4,7 +4,7 @@ server:
     session:
       timeout: 1 #세션 타임아웃 1분
       cookie:
-        http-only: true #브라우저에스 세션 쿠키값을 못보도록 
+        http-only: true #브라우저에서 세션 쿠키값을 못보도록 
         secure: false #true 이면 쿠키값 전송을 https를 통해 전달
 
 #로거
@@ -28,10 +28,10 @@ spring:
     fallback-to-system-locale: true
   datasource: #데이타소스
     driver-class-name: org.postgresql.Driver
-    initialization-mode: always
-    password: spring1234
     url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
-    username: spring
+    username: linor
+    password: linor1234
+    initialization-mode: always
 
 mybatis: #Mybatis 설정
   mapper-locations: classpath*:/**/dao/*.xml
