@@ -26,12 +26,12 @@ public class RequestLogFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		long startMilis = System.currentTimeMillis();
 
-		log.info("Logging Request{}: {} - {} ", startMilis, req.getMethod(), req.getRequestURI());
+		log.info("요청 로그 {}: {} - {} ", startMilis, req.getMethod(), req.getRequestURI());
 
 		chain.doFilter(request, response);
 
-		log.info("Loggin Response {} : {}", startMilis, response.getContentType());
-		log.info("Duration {} : {}", startMilis, System.currentTimeMillis() - startMilis );
+		log.info("응답 로그 {} : {}", startMilis, response.getContentType());
+		log.info("처리시간 {} : {}", startMilis, System.currentTimeMillis() - startMilis );
 	}
 
 }
