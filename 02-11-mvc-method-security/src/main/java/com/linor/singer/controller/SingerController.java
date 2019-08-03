@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class SingerController {
-	@Value("${welcom.message:test}")
+	@Value("${welcome.message:test}")
 	private String message;
 	
 	private final HelloService hellService;
