@@ -1,4 +1,4 @@
-spring.profiles.active: postgres
+spring.profiles.active: h2
 #로거
 logging:
   pattern:
@@ -46,16 +46,16 @@ spring:
     initialization-mode: always
 
     #hikari Connection Pull 설정
-    hikari:
-      maximum-pool-size: 20
-      idle-timeout: 1
-      minimum-idle: 0
+#    hikari:
+#      maximum-pool-size: 20
+#      idle-timeout: 1
+#      minimum-idle: 0
 #    url: jdbc:h2:mem:test;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
 #    username: sa
 #    password: ''
-  h2.console.enabled: true
+#  h2.console.enabled: true
   jpa:
-#    show-sql: true
+    show-sql: true
     hibernate:
       ddl-auto: none
     properties:
@@ -64,7 +64,7 @@ spring:
 #        format_sql: true
 #        use_sql_comments: true
         physical-naming-strategy: com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy
-        max_fetch_depth: 3
-        jdbc.batch_size: 10
-        jdbc.patch_size: 50
+#        max_fetch_depth: 3
+#        jdbc.batch_size: 10
+#        jdbc.patch_size: 50
       
