@@ -10,16 +10,16 @@ import lombok.extern.slf4j.Slf4j;
 public class ScheduleService {
 	@Scheduled(fixedDelay=1000)
 	public void logService1() {
-		log.info("작업 스케줄 테스트");
+		log.info("fixedDelay 작업 스케줄 테스트");
 	}
 
 	@Scheduled(fixedRate=1000)
 	public void logService2() {
-		log.info("작업 스케줄 테스트");
+		log.info("fixedRate 작업 스케줄 테스트");
 	}
 	
 	@Scheduled(cron="0/3 * * * * ?")
 	public void logService3() {
-		log.info("크론 스케줄 테스트");
+		log.info("cron 스케줄 테스트");
 	}
 }
