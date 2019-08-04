@@ -1,7 +1,6 @@
 package com.linor.singer.config;
 
 import java.io.File;
-import java.io.FileWriter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
