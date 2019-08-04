@@ -20,10 +20,10 @@ public class SingerDbWriter implements ItemWriter<Singer> {
 	
 	@Override
 	public void write(List<? extends Singer> items) throws Exception {
-		log.info("저장될 가수:" + items);
+		log.info("저장될 가수: {}", items);
 		items.forEach(singer -> {
 			singerDao.insert(singer);
-			log.info("저당된 가수: " + singer.toString());
+			log.info("저당된 가수: {}", singer.toString());
 		});
 	}
 

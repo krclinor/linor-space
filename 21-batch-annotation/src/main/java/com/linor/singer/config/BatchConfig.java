@@ -110,10 +110,26 @@ public class BatchConfig {
 				.writer(fileWriter(null))
 				.build();
 	}
+
+	@Bean
+	public Job job1() {
+		return jobBuilderFactory.get("ETL-Load1")
+				.incrementer(new RunIdIncrementer())
+				.start(step1())
+				.build();
+	}
 	
 	@Bean
-	public Job job() {
-		return jobBuilderFactory.get("ETL-Load")
+	public Job job2() {
+		return jobBuilderFactory.get("ETL-Load2")
+				.incrementer(new RunIdIncrementer())
+				.start(step2())
+				.build();
+	}
+
+	@Bean
+	public Job job3() {
+		return jobBuilderFactory.get("ETL-Load3")
 				.incrementer(new RunIdIncrementer())
 				.start(step1())
 				.next(step2())

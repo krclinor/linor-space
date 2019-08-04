@@ -42,11 +42,11 @@ spring:
   profiles: dev
   #데이타베이스 설정
   datasource:
-    platform: postgresql
-    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
-    username: spring
-    password: spring1234
     driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+    username: linor
+    password: linor1234
+    initialization-mode: always
 
 #### 서버포트 설정
 server:

@@ -13,7 +13,7 @@ public class SingerFieldSetMapper implements FieldSetMapper<Singer> {
 	@Override
 	public Singer mapFieldSet(FieldSet fieldSet) throws BindException {
 		return Singer.builder()
-				.id(fieldSet.readInt(0))
+//				.id(fieldSet.readInt(0))
 				.firstName(fieldSet.readString(1))
 				.lastName(fieldSet.readString(2))
 				.birthDate(LocalDate.parse(fieldSet.readString(3)))
