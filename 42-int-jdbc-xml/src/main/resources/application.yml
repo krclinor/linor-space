@@ -1,4 +1,4 @@
-spring.profiles.active: h2
+spring.profiles.active: postgres
 #로거
 logging:
   pattern:
@@ -13,16 +13,16 @@ spring:
   datasource:
     platform: postgresql
     driver-class-name: org.postgresql.Driver
-    initialization-mode: always
-    password: spring1234
     url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
-    username: spring
+    username: linor
+    password: linor1234
+    initialization-mode: always
 
-    #hikari Connection Pull 설정
-    hikari:
-      maximum-pool-size: 20
-      idle-timeout: 1
-      minimum-idle: 0
+#    #hikari Connection Pull 설정
+#    hikari:
+#      maximum-pool-size: 20
+#      idle-timeout: 1
+#      minimum-idle: 0
 
 ---
 spring:
@@ -33,10 +33,10 @@ spring:
     initialization-mode: always
 
     #hikari Connection Pull 설정
-    hikari:
-      maximum-pool-size: 20
-      idle-timeout: 1
-      minimum-idle: 0
+#    hikari:
+#      maximum-pool-size: 20
+#      idle-timeout: 1
+#      minimum-idle: 0
 #    url: jdbc:h2:mem:test;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
 #    username: sa
 #    password: ''
