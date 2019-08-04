@@ -10,10 +10,10 @@ logging:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    initialization-mode: always
-    password: spring1234
     url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
-    username: spring
+    username: linor
+    password: linor1234
+    initialization-mode: always
 
 mybatis:
   mapper-locations: classpath*:/**/dao/*.xml
@@ -24,5 +24,5 @@ jwt:
   auth-header: Authorization
   app-name: jwt-demo
   expires-in: 300 #5분
-  secret: linorJwt
+  secret: linorJwt11123456123456awkfvmnajhfakwfhqiekcbkdjfbeasdfghjklzxcvbnm12345678901234567890qwertyuiopasdfgklzxcvbnmqwertyui
   header-prefix: Bearer
