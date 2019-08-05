@@ -11,14 +11,17 @@
 		class="org.springframework.integration.ftp.session.DefaultFtpSessionFactory">
 		<property name="host" value="localhost"></property>
 		<property name="username" value="ftpuser"></property>
-		<property name="password" value="ftpuser"></property>
+		<property name="password" value="init0000"></property>
 	</bean>
 
 	<int:channel id="channel"/>
 	
 	<int-ftp:inbound-channel-adapter session-factory="ftpFactory"
-		channel="channel" remote-directory="/test1/" local-directory="source"
-		delete-remote-files="true">
+		channel="channel" remote-directory="/test1/" 
+		local-directory="source"
+		delete-remote-files="true"
+		preserve-timestamp="true"
+		>
 		<int:poller fixed-rate="5000"/>
 	</int-ftp:inbound-channel-adapter>
 	<int-ftp:outbound-channel-adapter session-factory="ftpFactory"
