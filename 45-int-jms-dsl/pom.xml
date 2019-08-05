@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.4.RELEASE</version>
+		<version>2.1.6.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.linor</groupId>
-	<artifactId>31-integration</artifactId>
+	<artifactId>integration-jms-dsl</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>31-integration</name>
+	<name>integration-jms-dsl</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
