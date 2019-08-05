@@ -44,6 +44,7 @@ public class FtpIntegrationConfig {
 	public FtpInboundFileSynchronizer ftpInboundFileSynchronizer() {
 		FtpInboundFileSynchronizer ftpSynchronizer = new FtpInboundFileSynchronizer(ftpFactory());
 		ftpSynchronizer.setDeleteRemoteFiles(true);
+		ftpSynchronizer.setPreserveTimestamp(true);
 		ftpSynchronizer.setRemoteDirectory("/test1/");
 		return ftpSynchronizer;
 	}
@@ -52,6 +53,7 @@ public class FtpIntegrationConfig {
 	public MessageSource<File> inFtp(){
 		FtpInboundFileSynchronizingMessageSource source = new FtpInboundFileSynchronizingMessageSource(ftpInboundFileSynchronizer());
 		source.setLocalDirectory(new File("source"));
+		source.setAutoCreateLocalDirectory(true);
 		return source;
 	}
 
