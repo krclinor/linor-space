@@ -1,5 +1,5 @@
 ## Active MQ서버 설치
-```bash
+```shell
 $ java -version
 
 $ cd /opt/
