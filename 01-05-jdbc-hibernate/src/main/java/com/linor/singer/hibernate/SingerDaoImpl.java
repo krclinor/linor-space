@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.singer.dao.SingerDao;
+import com.linor.singer.domain.Album;
+import com.linor.singer.domain.Instrument;
 import com.linor.singer.domain.Singer;
 
 import lombok.extern.slf4j.Slf4j;
@@ -110,4 +112,12 @@ public class SingerDaoImpl implements SingerDao {
 	public void insertWithAlbum(Singer singer) {
 		insert(singer);
 	}
+
+	@Override
+	public void insertInstrument(Instrument instrument) {
+		Session session = getCurrentSession();
+		session.saveOrUpdate(instrument);
+	}
+	
+	
 }

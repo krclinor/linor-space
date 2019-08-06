@@ -19,9 +19,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Version;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import net.bytebuddy.asm.Advice.ArgumentHandler.Factory;
 
 @Entity
 //@Table(name="singer")
@@ -76,5 +73,13 @@ public class Singer implements Serializable{
 	}
 	public void reoveAlbum(Album album) {
 		getAlbums().remove(album);
+	}
+
+	public boolean addInstrument(Instrument instrument) {
+		instrument.addSinger(this);
+		return getInstruments().add(instrument);
+	}
+	public void reoveInstrument(Instrument instrument) {
+		getInstruments().remove(instrument);
 	}
 }

@@ -2,6 +2,7 @@ package com.linor.singer.dao;
 
 import java.util.List;
 
+import com.linor.singer.domain.Instrument;
 import com.linor.singer.domain.Singer;
 
 public interface SingerDao {
@@ -15,4 +16,6 @@ public interface SingerDao {
 	void delete(Integer singerId);
 	List<Singer> findAllWithAlbums();
 	void insertWithAlbum(Singer singer);
+	
+	void insertInstrument(Instrument instrument);
 }
