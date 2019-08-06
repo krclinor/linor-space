@@ -384,6 +384,8 @@ Session.update()를 호출하거나 Session.saveOrUpdate()를 호출하여 데�
 ```
 Session.delete()를 호출하여 레코드를 삭제한다.    
 
+## 결과 테스트
+Junit으로 SingerDaoTests를 실행한다.
 
 ## 정리
 Hibernate는 OR매핑툴 중에서 가장 많이 사용되고 있다.  
