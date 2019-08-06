@@ -1,5 +1,15 @@
+## Active MQ서버 설치
+```bash
+$ java -version
+
+$ cd /opt/
+$ sudo wget http://archive.apache.org/dist/activemq/5.15.9/apache-activemq-5.15.9-bin.tar.gz
+$ sudo tar xzvf apache-activemq-5.15.9-bin.tar.gz
+$ sudo ln -s apache-activemq-5.15.9 activemq
+$ sudo vi /etc/systemd/system/activemq.service
+```
+
 ## 사용법
-Active MQ서버가 미리 설치되어 있어야 한다.  
 브라우저로 서버에 접속한다.  
 URL : http://localhost:8161/
 Queues메뉴 클릭  
