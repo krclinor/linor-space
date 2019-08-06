@@ -248,4 +248,11 @@ BatchSqlUpdate.setBatchSize()를 이용하여 배치처리 횟수를 지정한�
 SqlUpdate는 바로바로 실행되지만 BatchSqlUpdate는 배치 사이즈 회수만큼 발생할 때 마다 한꺼번에 처리한다.  
 BatchSqlUpdate.flush()는 배치사이즈에 도달하지 않아 기다리는 sql문을 처리한다.
 
+## 결과 테스트
+Junit으로 SingerDaoTests를 실행한다.
+
+## 정리
+스프링 트랜잭션, 명명된 파라미터등을 지원한다.  
+
+
  
