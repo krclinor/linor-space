@@ -179,6 +179,9 @@ selectKey에서 처리 후 결가 값을 keyProperty에 선언한 id에 저장�
 order를 BEFORE로 선언함으로써 주 쿼리 실행전에 처리하도록 한다.  
 plsql을 처리하기 위해서는 begin end;블록으로 감싸서 처리한다.  
 
+## 결과 테스트
+Junit으로 SingerDaoTests를 실행한다.
+
 ## 정리
 Mybatis는 전자정부프레임워크에서 Persistence레이어를 담당하고 있어 중요하고 좋은 도구이다.  
 SQL문을 잘 다루는 개발자에게 적합하고, 모든 SQL문을 별도의 저장공간에서 관리할 수 있어 편리하다.  
