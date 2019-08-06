@@ -368,7 +368,8 @@ JpaRepository는 기본적으로 다음 메서드를 제공한다.
 findBy다음에는 Entity의 프로퍼티를 입력하면 해당 필드를 검색하여 결과를 리턴한다.  
 sql문의 where절을 메서드 이름으로 전달한다고 생각하면 된다.  
 
-findBy나 countBy다음에 나올 쿼리 메서드레 포함할 수 있는 키워드는 다음과 같다.  
+findBy나 countBy다음에 나올 쿼리 메서드레 포함할 수 있는 키워드는 다음과 같다. 
+```html
 <table class="tableblock frame-all grid-all">
 <thead>
 <tr>
@@ -500,6 +501,7 @@ findBy나 countBy다음에 나올 쿼리 메서드레 포함할 수 있는 키�
 </tr>
 </tbody>
 </table>
+```
 
 ### DAO인터페이스 구현클래스 생성
 ```java
@@ -606,4 +608,10 @@ JpaRepository를 사용하는 경우 테스트케이스에 @Transactional어노�
 JpaRepository는 트랜잭션이 커밋될 때 update sql문을 생성하는 듯 하다.  
 따라서 테스트케이스에서 트랜잭션을 사용하면 테스트가 종료되는 시점에 롤백이 발생하여 update sql문이 만들어 지지 않는다.  
 
+## 결과 테스트
+Junit으로 SingerDaoTests를 실행한다.
 
+## 정리
+ORM 프레임워크중에서 가장 많이 사용되는 프레임워크이다.
+JpaRepository는 Spring에서 제공하는 인터페이스로 JPA를 좀더 쉽게 사용할 수 있도록 한다.
+ 
