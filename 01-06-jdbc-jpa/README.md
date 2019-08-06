@@ -414,4 +414,8 @@ JQPL은 select다음에 new 키워드와 함께 사용자정의 도메인 클래
 ```
 JPQL이 아닌 SQL문을 직접 사용하려면 EntityManager.createNativeQuery()메서드를 사용하여 처리한다.  
 
+## 결과 테스트
+Junit으로 SingerDaoTests를 실행한다.
 
+## 정리
+ORM 프레임워크중에서 가장 많이 사용되는 프레임워크이다.
