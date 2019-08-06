@@ -1,15 +1,16 @@
 # JDBC Todo
 이 프로젝트는 SpringBoot로 실행은 가능하나 테스트케이스는 실행되지 않는다.  
-이 프로젝트는 다음에 진행할 JDBC프로젝트의 기본 구조로 사용된다.  
+이 프로젝트는 다음에 진행할 모든 JDBC프로젝트의 기본 구조로 사용한다.  
+사용하는 DBMS는 postgresql이다.  
 
-Spring Boot JDBC개발을 진행하기 위한 준비과정으로 데이타베이스 설정,  
-lombok설정, dao인터페이스, 테스트케이스를 준비한다.
+Spring Boot JDBC개발을 진행하기 위한 준비과정으로 데이타베이스 설정,    
+lombok설정, dao인터페이스, 테스트케이스를 준비한다.  
 
 ## 이클립스 추가 플러그인 설치
-Spring Tool Suite
-Lombok
+Spring Tool Suite, Lombok
 
 ## 데이타베이스 설정
+postgres계정으로 다음 sql문들을 실행한다.  
 ### 계정 생성
 ```sql
 CREATE USER linor WITH
