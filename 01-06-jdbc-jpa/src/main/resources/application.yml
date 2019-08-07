@@ -1,4 +1,6 @@
-spring.profiles.active: h2
+spring.profiles.active: 
+  - postgres
+  - dev
 #로거
 logging:
   pattern:
@@ -16,7 +18,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
     username: linor
     password: linor1234
-    initialization-mode: always
+#    initialization-mode: always
 
     #hikari Connection Pull 설정
 #    hikari:
@@ -25,9 +27,9 @@ spring:
 #      minimum-idle: 0
 
   jpa:
-    #show-sql: true
-    #hibernate:
-      #ddl-auto: create-drop
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -43,7 +45,7 @@ spring:
   datasource:
     platform: h2 
 #    driver-class-name: org.h2.Driver
-    initialization-mode: always
+#    initialization-mode: always
 
     #hikari Connection Pull 설정
 #    hikari:
@@ -55,9 +57,9 @@ spring:
 #    password: ''
 #  h2.console.enabled: true
   jpa:
-    show-sql: true
+#    show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate: 
         dialect: org.hibernate.dialect.H2Dialect

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.singer.dao.SingerDao;
+import com.linor.singer.domain.Instrument;
 import com.linor.singer.domain.Singer;
 import com.linor.singer.domain.SingerSummary;
 
@@ -103,4 +104,10 @@ public class SingerDaoImpl implements SingerDao {
 		insert(singer);
 	}
 
+	@Override
+	public void insert(Instrument instrument) {
+		entityManager.persist(instrument);
+	}
+
+	
 }
