@@ -23,19 +23,19 @@ public class AppStartupRunner implements ApplicationRunner {
 	public void run(ApplicationArguments args) throws Exception {
 		Instrument instrument = new Instrument();
 		instrument.setInstrumentId("기타");
-		singerDao.insertInstrument(instrument);
+		singerDao.insert(instrument);
 		
 		instrument = new Instrument();
 		instrument.setInstrumentId("피아노");
-		singerDao.insertInstrument(instrument);
+		singerDao.insert(instrument);
 
 		instrument = new Instrument();
 		instrument.setInstrumentId("드럼");
-		singerDao.insertInstrument(instrument);
+		singerDao.insert(instrument);
 
 		instrument = new Instrument();
 		instrument.setInstrumentId("신디사이저");
-		singerDao.insertInstrument(instrument);
+		singerDao.insert(instrument);
 
 		Singer singer = new Singer();
 		singer.setFirstName("종서");

@@ -45,8 +45,8 @@ src/main/resources/application.yml에 hibernate관련 설정을 추가한다.
 ```yml
   jpa:
     show-sql: true
-    #hibernate:
-      #ddl-auto: create-drop
+    hibernate:
+      ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -57,6 +57,7 @@ src/main/resources/application.yml에 hibernate관련 설정을 추가한다.
         #temp.use_jdbc_metadata_default: false
         #current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
 ```
+ddl-auto는 create, create-update, none중 하나를 등록한다.  
 dialect에 사용하는 데이타베이스가 postgresql이므로 org.hibernate.dialect.PostgreSQLDialect를 설정한다.  
 physical-naming-strategy에 Camel Case로 작성된 객체의 프로퍼티를 Snake Case로 작성된 테이블 칼럼과 매칭될 수 있도록 
 CamelCaseToSnakeCaseNamingStrategy를 설정한다.  
@@ -65,78 +66,6 @@ show_sql을 true로 설정하면  hibernate가 생성한 sql문을 볼 수 있�
 format_sql을 true로 설정하면 sql문을 읽기 쉽도록 만들어 준다.  
 use_sql_comments를 true로 설정하면 sql문에 HQL쿼리를 주석으로 같이 보여준다.  
 
-### 데이타베이스 초기화 파일 생성
-#### schema.sql
-```sql
-set search_path to singer;
-
-drop table if exists singer cascade;
-create table singer(
-  id serial primary key,
-  first_name varchar(60) not null,
-  last_name varchar(60) not null,
-  birth_date date,
-  version int default 0,
-  constraint singer_uq_01 unique(first_name, last_name)
-);
-
-drop table if exists album cascade;
-create table album(
-  id serial primary key,
-  singer_id int not null,
-  title varchar(100) not null,
-  release_date date,
-  version int default 0,
-  constraint album_uq_01 unique(singer_id, title),
-  constraint album_fk_01 foreign key (singer_id) references singer(id) on delete cascade
-);
-
-drop table if exists instrument cascade;
-create table instrument(
-  instrument_id varchar(20) not null primary key
-);
-
-drop table if exists singer_instrument cascade;
-create table singer_instrument(
-  singer_id int not null,
-  instrument_id varchar(20) not null,
-  constraint singer_instrument_pk 
-    primary key (singer_id, instrument_id),
-  constraint fk_singer_instrument_fk_01 
-    foreign key(singer_id) 
-    references singer(id) 
-    on delete cascade,
-  constraint fk_singer_instrument_fk_02 
-    foreign key(instrument_id) 
-    references instrument(instrument_id)
-    on delete cascade
-);
-```
-#### data.sql
-```sql
-insert into singer(first_name, last_name, birth_date)
-values 
-('종서','김','1970-12-09'),
-('건모','김','1999-07-12'),
-('용필','조','1978-06-28');
-
-insert into album(singer_id, title, release_date)
-values 
-(1, '아름다운 구속','2019-01-01'),
-(1, '날개를 활짝펴고','2019-02-01'),
-(2, '황혼의 문턱','2019-03-01');
-
-insert into instrument (instrument_id)
-values 
-('기타'), ('피아노'), ('드럼'), ('신디사이저');
-
-insert into singer_instrument(singer_id, instrument_id)
-values 
-(1, '기타'),
-(1, '피아노'),
-(2, '기타'),
-(3, '드럼');
-```
 ### 엔터티 클래스 생성
 #### Singer 엔터티 클래스(일대다, 다대다 관계)
 가수 엔터티 클래스를 생성한다.  

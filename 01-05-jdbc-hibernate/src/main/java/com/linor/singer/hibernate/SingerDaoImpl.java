@@ -114,7 +114,7 @@ public class SingerDaoImpl implements SingerDao {
 	}
 
 	@Override
-	public void insertInstrument(Instrument instrument) {
+	public void insert(Instrument instrument) {
 		Session session = getCurrentSession();
 		session.saveOrUpdate(instrument);
 	}

@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Version;
 
 import lombok.Data;
+import lombok.Singular;
 
 @Entity
 //@Table(name="singer")
@@ -54,6 +55,7 @@ public class Singer implements Serializable{
 	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.EAGER)
 	//@ToString.Exclude
 	//@EqualsAndHashCode.Exclude
+	@Singular
 	private Set<Album> albums = new HashSet<>();
 
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -62,6 +64,7 @@ public class Singer implements Serializable{
 		inverseJoinColumns=@JoinColumn(name="instrument_id"))
 	//@ToString.Exclude
 	//@EqualsAndHashCode.Exclude
+	@Singular
 	private Set<Instrument> instruments = new HashSet<>();
 	
 	@Version

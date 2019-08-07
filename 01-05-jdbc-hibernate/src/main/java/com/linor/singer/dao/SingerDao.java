@@ -17,5 +17,5 @@ public interface SingerDao {
 	List<Singer> findAllWithAlbums();
 	void insertWithAlbum(Singer singer);
 	
-	void insertInstrument(Instrument instrument);
+	void insert(Instrument instrument);
 }
