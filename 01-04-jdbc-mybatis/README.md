@@ -20,6 +20,7 @@ ORM매핑처리를 한다.
 예) FIRST_NAME -> firstName
 
 ## 인터페이스에 mapper어노테이션 추가
+소스 : [SingerDao.java](src/main/java/com/linor/singer/dao/SingerDao.java)
 ```java
 @Mapper
 public interface SingerDao {
