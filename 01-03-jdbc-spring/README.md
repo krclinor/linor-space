@@ -1,8 +1,4 @@
 # Spring JDBC Template을 이용한 구현
-01-01-jdbc-todo프로젝트에 SingerDao인터페이스를 스프링 JDBC로 구현한다.  
-Spring-jdbc를 사용하면 Connection, Statement를 close할 필요가 없다.  
-스프링에서 알아서 처리해 준다. 또한 트랜잭션 관리도 가능하다.  
-하지만 OR매핑을 지원하지 않아 레코드 컬럼과 오브젝트 필드 매핑을 직접 처리해야 한다. 또한 sql문이 자바 클래스 내에 분산되어 있어 관리가 어려울 수 있다. 
  
 ## SingerDao인터페이스 구현
 
@@ -14,7 +10,7 @@ Spring-jdbc를 사용하면 Connection, Statement를 close할 필요가 없다.
 public class SingerDaoImpl implements SingerDao {
 ```
 @Slf4j는 로그를 위한어노테이션으로 lombok에서 제공한다.  
-@Repository는 스프링이 제공하는 어노테이션으로 데이타베이스 저장소를 구현하기 위해 설정한다.  
+@Repository는 스프링이 제공하는 어노테이션으로 데이타베이스 저장소(Persistence layer)를 구현하기 위해 설정한다.  
 @Transactional은 스프링이 제공하는 어노테이션으로 트랜젝션 관리용이다.  
 
 ### 데이타소스 선언 
@@ -80,6 +76,8 @@ JdbcTemplate의 query메서드는 여러 레코드인 배열객체를 리턴하�
 방법1 RowMapper를 이용한 방법은 가장 일반적인 방법이지만 코딩이 약간 길다.  
 방법2 람다함수를 이용한 방법은 RowMapper를 이용한 방법보다 코딩이 줄지만 자바 8이상에서만 가능하다.  
 방법3 BeanPropertyRowMapper를 이용한 방법은 snake case를 camel case로 자동변환까지 가능한 쉽고, 단순하지만 성능면에서 위 2가지 방법보다 떨어질 수 있다.  
+ReadOnly트랜잭션을 타도록 하기 위해 @Transactional(readOnly=true)를 설정한다. 이렇게 하면 해당 메서드에서는   
+insert,update,delete sql문을 사용할 수 없게 된다..
 
 ### findAllWithAlbums 메서드 구현
 #### ResultSetExtractor를 이용한 중첩 도메인 오브젝트 추출
@@ -127,7 +125,8 @@ JdbcTemplate의 query메서드는 여러 레코드인 배열객체를 리턴하�
         }
     }
 ```
-하나의 ResultSet을 하나의 도메인 오브젝트로 매핑하는 경우에는 RowMapper<T>를 사용하면 되지만 복잡한 도메인 오브젝트 매핑은 ResultSetExtractor사용한다. 
+하나의 ResultSet을 하나의 도메인 오브젝트로 매핑하는 경우에는 RowMapper<T>를 사용하면 되지만 복잡한 
+도메인 오브젝트 매핑은 ResultSetExtractor사용한다. 
 
 ### findById 메서드 구현(파라미터 처리)
 #### 방법1. 람다함수를 이용한 방법
@@ -253,6 +252,10 @@ Junit으로 SingerDaoTests를 실행한다.
 
 ## 정리
 스프링 트랜잭션, 명명된 파라미터등을 지원한다.  
+Spring에서 제공하는 JdbcTemplate을 사용하면 Connection, Statement를 close할 필요가 없다.  
+스프링에서 알아서 처리해 준다. 또한 선언적 트랜잭션 관리도 가능하다.  
+하지만 OR매핑을 지원하지 않아 레코드 컬럼과 오브젝트 필드 매핑을 직접 처리해야 한다.  
+또한 sql문이 자바 클래스 내에 분산되어 있어 관리가 어려울 수 있다. 
 
 
  
