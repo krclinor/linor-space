@@ -5,6 +5,7 @@
 
 ## Mybatis 설정
 application.yml파일에 Mybatis를 설정한다.
+[a relative link](src/main/resources/application.yml)
 ```yml
 #마이바티스
 mybatis:
@@ -12,7 +13,7 @@ mybatis:
   type-aliases-package: com.linor.singer.domain
   configuration.map-underscore-to-camel-case: true
 ```
-mapper-locations는 sql문을 처리하는 mybatis mapper파일의 위치를 지정한다.
+mapper-locations는 sql문을 처리하는 mybatis mapper파일의 위치를 지정한다.  
 type-aliases-package를 등록하면 도메인사용시 패키지명을 사용하지 않고도 도메인을 지정할 수 있다.  
 예) com.linor.singer.domain.Album -> Album  
 configuratioins.map-underscore-to-camel-case를 true로 설정하면 테이블 컬럼의 snake case를 camel case로 변환하여 
