@@ -8,12 +8,10 @@
 ```java
 @Slf4j
 @Repository
-@Transactional
 public class SingerDaoImpl implements SingerDao {
 ```
 @Slf4j는 로그를 위한어노테이션으로 lombok에서 제공한다.  
 @Repository는 스프링이 제공하는 어노테이션으로 데이타베이스 저장소를 구현하기 위해 설정한다.  
-@Transactional은 스프링이 제공하는 어노테이션으로 트랜젝션 관리용이다.  
 
 ### 데이타소스 선언 
 ```java
@@ -25,7 +23,6 @@ public class SingerDaoImpl implements SingerDao {
 ### findAll 메서드 구현
 ```java
     @Override
-    @Transactional(readOnly=true)
     public List<Singer> findAll() {
         Connection con = null;
         PreparedStatement stmt = null;
@@ -59,7 +56,6 @@ public class SingerDaoImpl implements SingerDao {
 PreparedStatement를 이용하여 "select * from singer"sql문을 실행한 후  
 결과를 Singer클래스 객체에 담은 리스트객체를 리턴하는 메서드를 구현하였다.  
 @Override어노테이션은 인터페이스로 상속받은 메서드임을 표시한다.  
-@Transactional(readOnly=true)을 표기하여 트랜잭션을 읽기전용으로 설정하였다.  
 @Slf4j어노테이션을 설정하였기 때문에 log.info나 log.error메서드를 사용하여 로그를 뿌릴 수 있다.  
 
 ### insert 메서드 구현
@@ -93,12 +89,11 @@ PreparedStatement를 이용하여 "select * from singer"sql문을 실행한 후
     }
 ```
 insert메서드는 매개변수로 받은 가수 객체를 데이타베이스에 인서트 하는 작업을 수행한다.  
-클래스 단에서 이미 @Transactional어노테이션을 선언하였기 때문에 트랜잰션 선언을 하지 않더라도 트랜잭션을 탄다.
 
 ## 결과 테스트
 Junit으로 SingerDaoTests를 실행한다.
 
 ## 정리
-가장 다루기 힘든 처리방법이며, 스프링 트랜잭션을 사용할 수 없어 트랜잭션을 수작업으로 관리해야 한다.
+가장 다루기 힘든 처리방법이며, 스프링에서 제공하는 선언적 트랜잭션을 사용할 수 없어 트랜잭션을 수작업으로 관리해야 한다.
 
 
