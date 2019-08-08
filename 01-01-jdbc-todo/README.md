@@ -120,7 +120,7 @@ create table album(
 
 ```
 
-[data.sql](src/main/resources/data.sql)
+소스 : [data.sql](src/main/resources/data.sql)
 ```sql
 insert into singer(first_name, last_name, birth_date)
 values
