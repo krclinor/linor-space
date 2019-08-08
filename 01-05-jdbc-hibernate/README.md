@@ -1,4 +1,4 @@
-# Hibernate
+# Hibernate Session
 Hibernate Session을 이용하여 Dao인터페이스를 구현해 본다.
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
