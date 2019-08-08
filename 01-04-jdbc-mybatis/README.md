@@ -4,8 +4,8 @@
 마이바티스 참조 URL : http://www.mybatis.org
 
 ## Mybatis 설정
-application.yml파일에 Mybatis를 설정한다.
-[a relative link](src/main/resources/application.yml)
+application.yml파일에서 Mybatis를 설정한다.  
+[application.yml](src/main/resources/application.yml)
 ```yml
 #마이바티스
 mybatis:
