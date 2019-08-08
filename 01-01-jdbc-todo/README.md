@@ -92,6 +92,9 @@ initialization-mode를 always로 하면 spring boot시작시 schema.sql과 data.
 실행하여 데이타베이스의 테이블을 생성하고 데이타를 로드하여 데이타베이스를 초기화 한다.
 
 ### 데이타베이스 초기화 파일 생성
+프로젝트 실행시 사용할 테이블을 생성하기 한 sql script파일로 application.yml에서     
+spring.datasource.initialization-mode가 always인 경우 실행된다.  
+
 소스 : [schema.sql](src/main/resources/schema.sql)
 ```sql
 drop table if exists singer cascade;
@@ -116,7 +119,6 @@ create table album(
 );
 
 ```
-
 
 [data.sql](src/main/resources/data.sql)
 ```sql
@@ -169,7 +171,8 @@ public class Album {
 ```
 
 ### DAO인터페이스 생성
-데이타베이스를 이용한 처리 인터페이스 선언으로 향후 이 인터페이스를 구현할 예정이다.
+데이타베이스를 이용한 처리 인터페이스 선언으로 향후 이 인터페이스를 구현할 예정이다.  
+
 소스 : [SingerDao.java](src/main/java/com/linor/singer/dao/SingerDao.java)  
 ```java
 public interface SingerDao {
