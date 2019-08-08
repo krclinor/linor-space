@@ -25,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Repository
-@Transactional
 public class SingerDaoImpl implements SingerDao {
 	
 	@Autowired
@@ -33,7 +32,6 @@ public class SingerDaoImpl implements SingerDao {
 	
 
 	@Override
-	@Transactional(readOnly=true)
 	public List<Singer> findAll() {
 		Connection con = null;
 		PreparedStatement stmt = null;
@@ -65,7 +63,6 @@ public class SingerDaoImpl implements SingerDao {
 	}
 
 	@Override
-	@Transactional(readOnly=true)
 	public List<Singer> findByFirstName(String firstName) {
 		Connection con = null;
 		PreparedStatement stmt = null;
@@ -98,7 +95,6 @@ public class SingerDaoImpl implements SingerDao {
 	}
 
 	@Override
-	@Transactional(readOnly=true)
 	public String findNameById(Integer id) {
 		Connection con = null;
 		PreparedStatement stmt = null;
@@ -122,7 +118,6 @@ public class SingerDaoImpl implements SingerDao {
 	}
 
 	@Override
-	@Transactional(readOnly=true)
 	public Singer findById(Integer id) {
 		Connection con = null;
 		PreparedStatement stmt = null;
@@ -153,7 +148,6 @@ public class SingerDaoImpl implements SingerDao {
 	}
 
 	@Override
-	@Transactional(readOnly=true)
 	public String findFirstNameById(Integer id) {
 		Connection con = null;
 		PreparedStatement stmt = null;
