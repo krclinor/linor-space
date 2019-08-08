@@ -2,7 +2,7 @@
 Hibernate Session을 이용하여 Dao인터페이스를 구현해 본다.
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
-Spring Boot -> Spring Starter Project로 생성한다.
+Spring Boot -> Spring Starter Project로 생성한다.  
 추가할 dependency : devtools, lombok, postgresql, jpa, hibernate-types-52
 
 소스 : [pom.xml](pom.xml)
