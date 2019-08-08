@@ -22,9 +22,9 @@ public class SingerDaoImpl implements SingerDao {
 ``` 
  데이타소스를 선언하고 @Autowired어노테이션으로 스프링이 데이타소스를 주입하도록 한다.
 
+### findAll 메서드 구현
 JdbcTemplate의 query메서드는 여러 레코드인 배열객체를 리턴하고, queryForObject메서드는 단일 레코드인 단일객체를 리턴한다.   
 
-### findAll 메서드 구현
 #### 방법1. RowMapper클래스2를 이용한 방법
 ```java
     @Override   
