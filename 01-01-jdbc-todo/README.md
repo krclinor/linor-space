@@ -7,7 +7,7 @@ Spring Boot JDBC개발을 진행하기 위한 준비과정으로 데이타베이
 lombok설정, dao인터페이스, 테스트케이스를 준비한다.  
 
 ## 이클립스 추가 플러그인 설치
-Spring Tool Suite, Lombok
+예제 프로젝트를 정상적으로 연습할 수 있도록 Spring Tool Suite와 Lombok가 설치되어 있어야 한다.  
 
 ## 데이타베이스 설정
 postgres계정으로 다음 sql문들을 실행한다.  
@@ -44,8 +44,9 @@ CREATE SCHEMA singer
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
 Spring Boot -> Spring Starter Project로 생성한다.
-추가할 dependency : devtools, lombok, postgresql, jdbc
-pom.xml파일에 다음 내용을 확인할 수 있다.
+추가할 dependency : devtools, lombok, postgresql, jdbc  
+
+소스 : [pom.xml](pom.xml)
 ```xml
     <dependencies>
         <dependency>
@@ -73,8 +74,9 @@ pom.xml파일에 다음 내용을 확인할 수 있다.
         </dependency>
     </dependencies>
 ```
-### application.yml설정
-src/main/resources/application.yml에 스프링부트에서 사용할 데이타소스를 설정한다.
+### 데이타 소스 설정
+스프링부트에서 사용할 데이타소스를 설정한다.  
+소스 : [application.yml](src/main/resources/application.yml)
 ```yml
 spring:
   datasource:
@@ -84,16 +86,14 @@ spring:
     password: linor1234
     initialization-mode: always
 ```
-yml은 properties파일보다 시스템 설정사항을 효율적으로 관리할 수 있다.
+yml파일이 properties파일보다 시스템 설정사항을 효율적으로 관리할 수 있다.
 datasource 설정에 필요한 속성은 driver-class-name, url, username, password이다.
 initialization-mode를 always로 하면 spring boot시작시 schema.sql과 data.sql파일을 
 실행하여 데이타베이스의 테이블을 생성하고 데이타를 로드하여 데이타베이스를 초기화 한다.
 
 ### 데이타베이스 초기화 파일 생성
-#### schema.sql
+소스 : [schema.sql](src/main/resources/schema.sql)
 ```sql
-set search_path to singer;
-
 drop table if exists singer cascade;
 
 create table singer(
@@ -116,7 +116,9 @@ create table album(
 );
 
 ```
-#### data.sql
+
+
+[data.sql](src/main/resources/data.sql)
 ```sql
 insert into singer(first_name, last_name, birth_date)
 values
@@ -133,16 +135,9 @@ values
 ```
 ### Domain 클래스 생성
 도메인 클래스는 보통 테이블에 대응되는 엔터티 클래스로 Singer와 Album클래스를 생성한다.  
-파일명: com.linor.singer.domain.Singer.java
+  
+소스[Singer.java](/src/main/java/com/linor/singer/domain/Singer.java)
 ```java
-package com.linor.singer.domain;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import lombok.Data;
-
 @Data
 public class Singer {
     private Integer id;
@@ -162,14 +157,8 @@ public class Singer {
 Data어노테이션은 Lombok에서 제공하는 것으로 자동으로 get/set메서드를 생성하여 코딩을 깔끔하게 작성할 수 있다.
 
 
-파일명: com.linor.singer.domain.Album.java
+소스[Album.java](/src/main/java/com/linor/singer/domain/Album.java)
 ```java
-package com.linor.singer.domain;
-
-import java.time.LocalDate;
-
-import lombok.Data;
-
 @Data
 public class Album {
     private Integer id;
@@ -180,15 +169,9 @@ public class Album {
 ```
 
 ### DAO인터페이스 생성
-데이타베이스를 이용한 처리 인터페이스 선언으로 향후 이 인터페이스를 구현할 예정이다.  
-파일명 :com.linor.singer.dao.SingerDao.java
+데이타베이스를 이용한 처리 인터페이스 선언으로 향후 이 인터페이스를 구현할 예정이다.
+소스 : [SingerDao.java](src/main/java/com/linor/singer/dao/SingerDao.java)  
 ```java
-package com.linor.singer.dao;
-
-import java.util.List;
-
-import com.linor.singer.domain.Singer;
-
 public interface SingerDao {
     List<Singer> findAll();
     List<Singer> findByFirstName(String firstName);
@@ -204,28 +187,9 @@ public interface SingerDao {
 ```
 
 ## Test Case 생성
-파일명: com.linor.singer.SingerDaoTests.java
+Dao인터페이스를 테스트 할 테스트케이스를 생성한다.  
+소스 : [SinerDaoTests.java](src/test/java/com/linor/singer/SingerDaoTests.java)
 ```java
-package com.linor.singer;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import com.linor.singer.dao.SingerDao;
-import com.linor.singer.domain.Singer;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @RequiredArgsConstructor
@@ -233,10 +197,6 @@ import lombok.extern.slf4j.Slf4j;
 public class SingerDaoTests {
     @Autowired
     private SingerDao singerDao;
-    
-    @Test
-    public void contextLoads() {
-    }
     
     @Test
     public void testFindNameById() {
@@ -319,3 +279,5 @@ public class SingerDaoTests {
 }
 
 ```
+테스트 케이스는 Junit 테스트 케이스로 현재 프로젝트에서는 인터페이스 구현체가 없어서 실행되지 않지만 나머지 프로젝트에서   
+구현채를 생성 후 Junit을 실행하면 모두 실행되도록 하였다.
