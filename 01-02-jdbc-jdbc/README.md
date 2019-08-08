@@ -4,6 +4,8 @@
 ## SingerDao인터페이스 구현
 
 ### 클래스에 선언한 어노테이션
+SinerDao인터페이스에서 선언한 모든 메서드를 구현한다.  
+
 소스 : [SingerDaoImpl.java](src/main/java/com/linor/singer/jdbc/SingerDaoImpl.java)
 ```java
 @Slf4j
