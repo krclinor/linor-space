@@ -1,7 +1,9 @@
 # Spring JDBC Template을 이용한 구현
  
 ## SingerDao인터페이스 구현
+Spring에서 제공하는 JdbcTemplate을 이용하여 SingerDao인터페이스를 구현한다.
 
+소스 : [SingerDaoImpl.java](src/main/java/com/linor/singer/spring/SingerDaoImpl.java)
 ### 클래스에 선언한 어노테이션
 ```java
 @Slf4j
@@ -9,9 +11,9 @@
 @Transactional
 public class SingerDaoImpl implements SingerDao {
 ```
-@Slf4j는 로그를 위한어노테이션으로 lombok에서 제공한다.  
+@Slf4j는 로그를 위한 어노테이션으로 lombok에서 제공한다.  
 @Repository는 스프링이 제공하는 어노테이션으로 데이타베이스 저장소(Persistence layer)를 구현하기 위해 설정한다.  
-@Transactional은 스프링이 제공하는 어노테이션으로 트랜젝션 관리용이다.  
+@Transactional은 스프링이 제공하는 어노테이션으로 트랜잭션 관리용이다.  
 
 ### 데이타소스 선언 
 ```java
