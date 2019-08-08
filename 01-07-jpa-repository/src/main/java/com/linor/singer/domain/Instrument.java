@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -22,10 +23,17 @@ public class Instrument implements Serializable{
 	//@Column(name = "instrument_id")
 	private String instrumentId;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "singer_instrument", joinColumns = @JoinColumn(name = "instrument_id"), inverseJoinColumns = @JoinColumn(name = "singer_id"))
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	private Set<Singer> singers = new HashSet<>();
+
+	public boolean addSinger(Singer singer) {
+		return getSingers().add(singer);
+	}
+	public void reoveSinger(Singer singer) {
+		getSingers().remove(singer);
+	}
 
 }

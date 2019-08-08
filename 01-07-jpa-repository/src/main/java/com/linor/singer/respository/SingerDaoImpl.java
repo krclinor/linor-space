@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.singer.dao.SingerDao;
 import com.linor.singer.domain.Album;
+import com.linor.singer.domain.Instrument;
 import com.linor.singer.domain.Singer;
 import com.linor.singer.domain.SingerSummary;
 
@@ -22,7 +23,10 @@ public class SingerDaoImpl implements SingerDao {
 	
 	@Autowired
 	private AlbumRespository albumRepository;
-	
+
+	@Autowired
+	private InstrumentRepository instrumentRepository;
+
 	@Override
 	public List<Singer> findAll() {
 		return singerRepository.findAll();
@@ -99,6 +103,9 @@ public class SingerDaoImpl implements SingerDao {
 	public List<SingerSummary> listAllSingersSummary() {
 		return singerRepository.listAllSingersSummary();
 	}
-	
-	
+
+	@Override
+	public void insert(Instrument instrument) {
+		instrumentRepository.save(instrument);
+	}
 }

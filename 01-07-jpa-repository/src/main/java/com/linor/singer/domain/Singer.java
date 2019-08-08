@@ -24,7 +24,6 @@ import lombok.ToString;
 
 @Entity
 //@Table(name="singer")
-@Data
 @NamedQueries({
 	@NamedQuery(name="Singer.findById",
 			query="select distinct s from Singer s " +
@@ -34,8 +33,12 @@ import lombok.ToString;
 	@NamedQuery(name="Singer.findAllWithAlbum",
 			query="select distinct s from Singer s \n"
 					+ "left join fetch s.albums a \n"
-					+ "left join fetch s.instruments i")
+					+ "left join fetch s.instruments i"),
+	@NamedQuery(name="Singer.findByFirstName",
+	query="select distinct s from Singer s \n"
+			+ "where s.firstName = :firstName")
 })
+@Data
 public class Singer implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,17 +53,13 @@ public class Singer implements Serializable{
 	//@Column(name="birth_date")
 	private LocalDate birthDate;
 	
-	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER)
-	//@ToString.Exclude
-	//@EqualsAndHashCode.Exclude
+	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.EAGER)
 	private Set<Album> albums = new HashSet<>();
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name="singer_instrument", 
 		joinColumns=@JoinColumn(name="singer_id"),
 		inverseJoinColumns=@JoinColumn(name="instrument_id"))
-	//@ToString.Exclude
-	//@EqualsAndHashCode.Exclude
 	private Set<Instrument> instruments = new HashSet<>();
 	
 	@Version
@@ -72,5 +71,13 @@ public class Singer implements Serializable{
 	}
 	public void reoveAlbum(Album album) {
 		getAlbums().remove(album);
+	}
+
+	public boolean addInstrument(Instrument instrument) {
+		instrument.addSinger(this);
+		return getInstruments().add(instrument);
+	}
+	public void reoveInstrument(Instrument instrument) {
+		getInstruments().remove(instrument);
 	}
 }

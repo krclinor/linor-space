@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.repository.query.Param;
 
 import com.linor.singer.domain.Album;
+import com.linor.singer.domain.Instrument;
 import com.linor.singer.domain.Singer;
 import com.linor.singer.domain.SingerSummary;
 
@@ -27,4 +28,6 @@ public interface SingerDao {
 	void delete(Integer singerId);
 	void insertWithAlbum(Singer singer);
 	public List<SingerSummary> listAllSingersSummary();
+
+	void insert(Instrument instrument);
 }

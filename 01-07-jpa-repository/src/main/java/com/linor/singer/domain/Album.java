@@ -29,7 +29,7 @@ public class Album implements Serializable{
 	//@Column(name = "release_date")
 	private LocalDate releaseDate;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "singer_id")
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
