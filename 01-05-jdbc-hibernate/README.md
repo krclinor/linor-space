@@ -132,11 +132,11 @@ public class Singer implements Serializable{
 }
 ```
 @Entity는 해당 클레스가 엔터티 클래스임을 표시한다.  
-@Table은 매핑될 데이터베이스 테블을 설정한다. @Table(name = "singer")은 데이터베이스의 SINGER테이블과 매핑한다.   
+@Table은 매핑될 데이터베이스 테이블명을 설정한다. @Table(name = "singer")은 데이터베이스의 SINGER테이블과 매핑한다.   
 클래스명과 테이블 명이 동일할 경우 생략 가능하다.  
 @Id는 주키를 표시한다. @GeneratedValue는 자동생성되는 값을 설정하기 위해 사용한다.   
-@GeneratedValue는 주키의 값을 위한 자동 생성 전략을 명시하는데 사용한다.  
-선택적 속성으로 generator와 strategy가 있다.  
+@GeneratedValue는 주키의 값을 위한 자동생성 전략을 명시하는데 사용한다.  
+선택 속성으로 generator와 strategy가 있다.  
 strategy는 persistence provider가 엔티티의 주키를 생성할 때 사용해야 하는 주키생성 전략을 의미한다.  
 디폴트 값은 AUTO이다.  
 generator는 SequenceGenerator나 TableGenerator 애노테이션에서 명시된 주키 생성자를 재사용할 때 쓰인다. 디폴트 값은 공백문자("")이다. 
@@ -149,25 +149,26 @@ generator는 SequenceGenerator나 TableGenerator 애노테이션에서 명시된
 @Column은 매핑할 테이블을 칼럼을 표시한다.  
 @Column(name="first_name")는 데이터베이스 테이블의 칼럼이 first_name이다.  
 application.yml설정에서 physical-naming-strategy를 설정하였기 때문에 @Column어노테이션을 사용하지 않더라도 
-firstName프로퍼티를 first_name칼럼과 매핑된다.  
+firstName프로퍼티는 first_name칼럼으로 매핑된다(CamelCase -> SnakeCase).  
 
-@OneToMany는 1대다를 표현하기 위해 사용한다.  
+@OneToMany는 1대다 관계를 표현하기 위해 사용한다.  
 mappedBy="singer"는 Album클래스에서 Singer를 나타내는 프로퍼티이다.   
 @OneToMany 프로퍼티
 - targetEntity : 연결을 맺는 상대 엔티티
-- cascade : 관계 엔티티의 읽기 전략을 설정.
+- fetch : 관계 엔티티의 읽기 전략을 설정
+- cascade : 현재 엔터티의 변경에 대해 관련 엔터티에 대한 변경 전략을 정의(ALL, PERSIST, MERGE, REMOVE, REFRESH, DETACH)
 - mappedBy : 양뱡향 관계에서 주체가 되는 쪽(Many쪽, 외래키가 있는 쪽)을 정의
-- orphanRemoval : 연관 관례에 있는 엔티티에서 변경이 일어난 경우 DB 변경을 같이 할지 결정.
-  Cascade는 JPA 레이어의 정의이고 이 속성은 DB레이어에서 직접 처리한다. 기본은 false
+- orphanRemoval : 연관 관례에 있는 엔티티에서 변경이 일어난 경우 DB 변경을 같이 할지 결정. cascade는 JPA 레이어의 정의이고 orphanRemoval은 DB레이어에서 직접 처리한다. 기본은 false
 
-@Version은 엔티티가 수정될때 자동으로 버전이 하나씩 증가하게 된다. 엔티티를 수정할 때 조회 시점의 버전과 수정 시점의 버전이 다르면 예외가 발생한다.  
+@Version은 엔티티가 수정될 때 자동으로 값을 하나씩 증가하게 된다. 엔티티를 수정할 때 조회 시점의 버전과 수정 시점의 버전이 다르면 예외가 발생한다.  
 예를 들어 트랜잭션 1이 조회한 엔티티를 수정하고 있는데 트랜잭션 2에서 같은 엔티티를 수정하고 커밋해서 버전이 증가해버리면 트랜잭션 1이 커밋할 때 버전 정보가 다르므로 예외가 발생한다.
 
 #### Album 엔터티 클래스(다대일 관계)
-앨범 엔터티는 가수 엔터티와 다대일 관계이다.    
+앨범 엔터티는 가수 엔터티와 다대일 관계를 표현한다.    
+
+소스 : [Album.java](src/main/java/com/linor/singer/domain/Album.java)
 ```java
 @Entity
-//@Table(name = "album")
 @Data
 public class Album implements Serializable{
     @Id
@@ -176,7 +177,6 @@ public class Album implements Serializable{
 
     private String title;
 
-    //@Column(name = "release_date")
     private LocalDate releaseDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -196,7 +196,9 @@ public class Album implements Serializable{
 그렇지 않으면 toString메서드가 무한루프에 빠져 오류가 발생한다. @EqualsAndHashCode.Exclude또한 마찬가지 이다.
    
 #### Instrument 엔터티 클래스(다대다 관계)
-악기 엔터티는 가수 엔터티와 다대다 관계이다.    
+악기 엔터티는 가수 엔터티와 다대다 관계이다.
+    
+소스 : [Instrument.java](src/main/java/com/linor/singer/domain/Instrument.java)
 ```java
 @Entity
 //@Table(name = "instrument")
@@ -220,6 +222,8 @@ inverseJoinColumns=@JoinColumn(name="INSTRUMENT_ID"))은 SINGER_INSTRUMENT이라
 조인테이블에 칼럼이 SINGER_ID이고 상대 조인컬럼은 INSTRUMENT_ID임을 나타낸다.
 
 ### DAO인터페이스 구현클래스 생성
+
+소스 : [SingerDaoImpl.java](src/main/java/com/linor/singer/hibernate/SingerDaoImpl.java)
 ```java
 @Transactional
 @Repository
