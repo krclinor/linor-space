@@ -13,7 +13,7 @@ public class SingerDaoImpl implements SingerDao {
 ```
 @Slf4j는 로그를 위한 어노테이션으로 lombok에서 제공한다.  
 @Repository는 스프링이 제공하는 어노테이션으로 데이타베이스 저장소(Persistence layer)를 구현하기 위해 설정한다.  
-@Transactional은 스프링이 제공하는 어노테이션으로 트랜잭션 관리용이다.  
+@Transactional은 스프링이 제공하는 어노테이션으로 트랜잭션을 사용함을 선언한다.  
 
 ### 데이타소스 선언 
 ```java
@@ -75,9 +75,10 @@ JdbcTemplate의 query메서드는 여러 레코드인 배열객체를 리턴하�
         return template.query(sql, new BeanPropertyRowMapper<Singer>(Singer.class));
     }
 ```
-방법1 RowMapper를 이용한 방법은 가장 일반적인 방법이지만 코딩이 약간 길다.  
-방법2 람다함수를 이용한 방법은 RowMapper를 이용한 방법보다 코딩이 줄지만 자바 8이상에서만 가능하다.  
+방법1 RowMapper를 이용한 방법은 가장 일반적인 방법이지만 코딩 길이가 약간 길다.  
+방법2 람다함수를 이용한 방법은 RowMapper를 이용한 방법보다 코딩 길이가 줄지만 자바 8이상에서만 가능하다.  
 방법3 BeanPropertyRowMapper를 이용한 방법은 snake case를 camel case로 자동변환까지 가능한 쉽고, 단순하지만 성능면에서 위 2가지 방법보다 떨어질 수 있다.  
+
 ReadOnly트랜잭션을 타도록 하기 위해 @Transactional(readOnly=true)를 설정한다. 이렇게 하면 해당 메서드에서는   
 insert,update,delete sql문을 사용할 수 없게 된다..
 
@@ -180,18 +181,6 @@ jdbcTemplate은 NamedParameterJdbctTemplate클래스로 생성한다.
 ### insert 메서드 구현
 #### SqlUpdate이용한 자료 수정
 ```java
-    @Override
-    public void insert(Singer singer) {
-        InsertSinger insertSinger = new InsertSinger(dataSource);
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("first_name", singer.getFirstName());
-        paramMap.put("last_name", singer.getLastName());
-        paramMap.put("birth_date", singer.getBirthDate());
-        KeyHolder keyHolder =new GeneratedKeyHolder();
-        insertSinger.updateByNamedParam(paramMap, keyHolder);
-        singer.setId(keyHolder.getKey().intValue());
-        log.info("추가된 가수ID: {}",singer.getId() );
-    }
     private static final class InsertSinger extends SqlUpdate{
         private static final String sql = "insert into singer (first_name, last_name, birth_date)\n"+
                 "values(:first_name, :last_name, :birth_date)";
@@ -203,6 +192,19 @@ jdbcTemplate은 NamedParameterJdbctTemplate클래스로 생성한다.
             setGeneratedKeysColumnNames(new String[] {"id"});
             setReturnGeneratedKeys(true);
         }
+    }
+
+    @Override
+    public void insert(Singer singer) {
+        InsertSinger insertSinger = new InsertSinger(dataSource);
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("first_name", singer.getFirstName());
+        paramMap.put("last_name", singer.getLastName());
+        paramMap.put("birth_date", singer.getBirthDate());
+        KeyHolder keyHolder =new GeneratedKeyHolder();
+        insertSinger.updateByNamedParam(paramMap, keyHolder);
+        singer.setId(keyHolder.getKey().intValue());
+        log.info("추가된 가수ID: {}",singer.getId() );
     }
 ```
 SqlUpdate클래스를 상속받아 InsertSinger클래스를 생성한다.
