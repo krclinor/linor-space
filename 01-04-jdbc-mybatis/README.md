@@ -130,6 +130,8 @@ sql문에서 사용하는 파라미터는 #{ }로 감싸서 표현한다. 파라
     </where>
 </select>
 ```
+파라미터 값이 null인 경우 where절이 사라져서 findAllWithAlbums메서드와 동일하게 처리되고, 파라미터에 값이 존재하면 where절이 
+만들어진다.  
 파라미터가 단일인 변수명은 value가 디폴트이다.(다르게 명명해도 상관 없음) value값에 따라 sql 문이 달라진다.  
 value에 값이 없을 경우 findAll과 동일한 효과가 나타난다.
 
