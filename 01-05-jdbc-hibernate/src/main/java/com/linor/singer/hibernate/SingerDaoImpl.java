@@ -3,17 +3,13 @@ package com.linor.singer.hibernate;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.singer.dao.SingerDao;
-import com.linor.singer.domain.Album;
 import com.linor.singer.domain.Instrument;
 import com.linor.singer.domain.Singer;
 

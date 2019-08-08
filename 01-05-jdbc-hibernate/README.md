@@ -1,10 +1,11 @@
 # Hibernate
-Hibernate로 다대다의 관계를 표현하기 위해 악기테이블을 추가하여 스키마를 구성하여 작업한다.
+Hibernate Session을 이용하여 Dao인터페이스를 구현해 본다.
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
 Spring Boot -> Spring Starter Project로 생성한다.
 추가할 dependency : devtools, lombok, postgresql, jpa, hibernate-types-52
-pom.xml파일에 다음 내용을 확인할 수 있다.
+
+소스 : [pom.xml](pom.xml)
 ```xml
     <dependencies>
         <dependency>
@@ -41,7 +42,9 @@ pom.xml파일에 다음 내용을 확인할 수 있다.
     </dependencies>
 ```
 ### application.yml설정
-src/main/resources/application.yml에 hibernate관련 설정을 추가한다.
+hibernate관련 설정을 추가한다.  
+
+소스 : [application.yml](src/main/resources/application.yml)
 ```yml
   jpa:
     show-sql: true
