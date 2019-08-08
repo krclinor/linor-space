@@ -62,8 +62,8 @@ hibernate관련 설정을 추가한다.
 ```
 ddl-auto는 create, create-update, none중 하나를 등록한다.  
 dialect에 사용하는 데이타베이스가 postgresql이므로 org.hibernate.dialect.PostgreSQLDialect를 설정한다.  
-physical-naming-strategy에 Camel Case로 작성된 객체의 프로퍼티를 Snake Case로 작성된 테이블 칼럼과 매칭될 수 있도록 
-CamelCaseToSnakeCaseNamingStrategy를 설정한다.  
+physical-naming-strategy에 Camel Case로 작성된 객체의 프로퍼티를 Snake Case로 작성된 테이블 칼럼과 매핑될 수 있도록 
+CamelCaseToSnakeCaseNamingStrategy로 설정한다.  
 postgresql을 사용하는 경우 발생하는 오류를 제거하기 위해 jdbc.lob.non_contextual_creation을 true로 설정한다.  
 show_sql을 true로 설정하면  hibernate가 생성한 sql문을 볼 수 있고,    
 format_sql을 true로 설정하면 sql문을 읽기 쉽도록 만들어 준다.  
@@ -73,6 +73,8 @@ use_sql_comments를 true로 설정하면 sql문에 HQL쿼리를 주석으로 같
 #### Singer 엔터티 클래스(일대다, 다대다 관계)
 가수 엔터티 클래스를 생성한다.  
 가수 엔터티는 앨범 엔터티와 일대다, 악기 엔터티와 다대다의 관계이다.  
+
+소스 : [Singer.java](src/main/java/com/linor/singer/domain/Singer.java)
 ```java
 @Entity
 //@Table(name="singer")
