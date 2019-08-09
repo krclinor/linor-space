@@ -345,6 +345,96 @@ Session.delete()를 호출하여 레코드를 삭제한다.
 
 ## 결과 테스트
 ### 초기데이타 로딩 
+개발용 시스템으로 시작시 초기데이타를 로딩한다.   
+
+소스 : [AppStartupRunner.java](src/main/java/com/linor/singer/config/AppStartupRunner.java)
+```java
+@Profile("dev")
+@Component
+public class AppStartupRunner implements ApplicationRunner {
+    @Autowired
+    private SingerDao singerDao;
+    
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        Instrument instrument = new Instrument();
+        instrument.setInstrumentId("기타");
+        singerDao.insert(instrument);
+        
+        instrument = new Instrument();
+        instrument.setInstrumentId("피아노");
+        singerDao.insert(instrument);
+
+        instrument = new Instrument();
+        instrument.setInstrumentId("드럼");
+        singerDao.insert(instrument);
+
+        instrument = new Instrument();
+        instrument.setInstrumentId("신디사이저");
+        singerDao.insert(instrument);
+
+        Singer singer = new Singer();
+        singer.setFirstName("종서");
+        singer.setLastName("김");
+        singer.setBirthDate(LocalDate.parse("1970-12-09"));
+        
+        Album album = new Album();
+        album.setTitle("아름다운 구속");
+        album.setReleaseDate(LocalDate.parse("2019-01-01"));
+        singer.addAlbum(album);
+
+        album = new Album();
+        album.setTitle("날개를 활짝펴고");
+        album.setReleaseDate(LocalDate.parse("2019-02-01"));
+        singer.addAlbum(album);
+        
+        instrument = new Instrument();
+        instrument.setInstrumentId("기타");
+        singer.addInstrument(instrument);
+        instrument = new Instrument();
+        instrument.setInstrumentId("피아노");
+        singer.addInstrument(instrument);
+        
+        singerDao.insertWithAlbum(singer);
+        
+        singer = new Singer();
+        singer.setFirstName("건모");
+        singer.setLastName("김");
+        singer.setBirthDate(LocalDate.parse("1999-07-12"));
+        
+        album = new Album();
+        album.setTitle("황혼의 문턱");
+        album.setReleaseDate(LocalDate.parse("2019-03-01"));
+        singer.addAlbum(album);
+
+        instrument = new Instrument();
+        instrument.setInstrumentId("기타");
+        singer.addInstrument(instrument);
+
+        singerDao.insertWithAlbum(singer);
+
+        singer = new Singer();
+        singer.setFirstName("용필");
+        singer.setLastName("조");
+        singer.setBirthDate(LocalDate.parse("1978-06-28"));
+        
+        instrument = new Instrument();
+        instrument.setInstrumentId("드럼");
+        singer.addInstrument(instrument);
+
+        singerDao.insertWithAlbum(singer);
+    }
+}
+```
+@Profile("dev") : 프로파일이 dev를 포함하는 경우 실행되도록 한다.  
+application.yml에서 다음과 같이 프로파일을 등록한다.
+```yml
+spring.profiles.active: [postgres, dev]
+```
+
+빈으로 등록하기 위해 @Component를 선언한다.  
+
+ApplicationRunner인터페이스를 상속받아 run메서드를 구현한다.  
 
 ### Junit 테스팅
 Junit으로 SingerDaoTests를 실행한다.
