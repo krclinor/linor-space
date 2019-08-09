@@ -71,11 +71,11 @@ spring:
         #temp.use_jdbc_metadata_default: false
         #current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
 ```
-데이타소스 설정  
+#### 데이타소스 설정  
 initialization-mode를 never로 설정하여 schema.sql과 data.sql 스크립트가 실행되지 않도록 한다.  
 테이블 생성은 Hibernate가 알아서 만들도록 설정한다.  
 
-JPA 설정  
+#### JPA 설정  
 ddl-auto는 시스템 시작시 스키마 생성 규칙을 정의하는 것으로 create, create-update, update, none중 하나를 등록한다.
 - create : 기존에 존재하면 drop하고 테이블을 새로 생성한다.
 - update : 기존에 존재하면 modify하고 없으면 새로 생헝한다.
