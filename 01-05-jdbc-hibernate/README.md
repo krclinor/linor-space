@@ -83,6 +83,7 @@ spring:
         use_sql_comments: true
         jdbc.lob.non_contextual_creation: true
 ```
+profiles에 postgres를 선언하여 액티브 프로파일에 postgres가 지정되면 여기에 선언된 데이타소스를 생성한다.  
 platform을 postgres로 설정하고, initialization-model가 always이면 schema-postgre.sql과 data-postgres.sql 스크립트를 실행한다.
 데이타베이스 스키마 생성을 스크립트로 하려면 다음에 나오는 ddl-auto를 none으로 설정해야 한다.  
 
