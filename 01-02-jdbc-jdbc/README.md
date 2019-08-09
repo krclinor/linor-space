@@ -1,12 +1,33 @@
 # Native JDBC를 이용한 구현
 01-01-jdbc-todo프로젝트에 SingerDao인터페이스를 일반적인 JDBC프로그램으로 구현한다.  
 
+### 사용 라이브러리
+todo 프로젝트와 동일하게 설정한다.  
+소스 : [pom.xml](pom.xml)
+
+### 데이타 소스 설정
+todo 프로젝트와 동일하게 설정한다.  
+소스 : [application.yml](src/main/resources/application.yml)
+
+### 데이타베이스 초기화 파일 생성
+todo 프로젝트와 동일하게 설정한다.  
+
+소스 : [schema.sql](src/main/resources/schema.sql)
+소스 : [data.sql](src/main/resources/data.sql)
+
+### Domain 클래스 생성
+소스[Singer.java](/src/main/java/com/linor/singer/domain/Singer.java)
+소스[Album.java](/src/main/java/com/linor/singer/domain/Album.java)
+
+### DAO인터페이스 생성
+todo 프로젝트와 동일하게 구현.  
+소스 : [SingerDao.java](src/main/java/com/linor/singer/dao/SingerDao.java)  
+
 ## SingerDao인터페이스 구현
+SinerDao인터페이스에서 선언한 모든 메서드를 구현한다.  
+소스 : [SingerDaoImpl.java](src/main/java/com/linor/singer/jdbc/SingerDaoImpl.java)  
 
 ### 클래스에 선언한 어노테이션
-SinerDao인터페이스에서 선언한 모든 메서드를 구현한다.  
-
-소스 : [SingerDaoImpl.java](src/main/java/com/linor/singer/jdbc/SingerDaoImpl.java)
 ```java
 @Slf4j
 @Repository
@@ -96,5 +117,5 @@ insert메서드는 매개변수로 받은 가수 객체를 데이타베이스에
 Junit으로 SingerDaoTests를 실행한다.
 
 ## 정리
-가장 다루기 힘든 처리방법이며, 스프링에서 제공하는 선언적 트랜잭션을 사용할 수 없어 트랜잭션을 수작업으로 관리해야 한다.  
+가장 다루기 힘든 처리방법이며, 스프링에서 제공하는 선언적 트랜잭션을 사용할 수 없다.  
 사용한 Resultset, Statement, Connection은 메서드 종료전에 모두 닫아야 한다. 그렇지 않으면 메모리 누수가 발생할 수 있다.
