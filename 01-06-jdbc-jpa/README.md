@@ -130,7 +130,7 @@ EntityManager.remove()를 호출하여 레코드를 삭제한다.
     }
 ```
 JPQL에서 명시적으로 컬럼을 지정하면 JPA는 Iterator<Object[]>를 리턴한다.  
-JQPL은 select다음에 new 키워드와 함께 사용자정의 도메인 클래스를 선언하고, 생성자의 매개변수에 조회결과를 대입한다.    
+JPQL은 select다음에 new 키워드와 함께 사용자정의 도메인 클래스를 선언하고, 생성자의 매개변수에 조회결과를 대입한다.    
 
 #### findAllByNativeQuery 메서드 구현(Native SQL)
 ```java
