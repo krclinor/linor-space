@@ -427,7 +427,8 @@ public class AppStartupRunner implements ApplicationRunner {
 }
 ```
 @Profile("dev") : 프로파일이 dev를 포함하는 경우 실행되도록 한다.  
-application.yml에서 다음과 같이 프로파일을 등록한다.
+프로파일 등록은 설정에서 등록한다.  
+소스 : [application.yml](src/main/resources/application.yml)
 ```yml
 spring.profiles.active: [postgres, dev]
 ```
