@@ -1,23 +1,23 @@
 # Native JDBC를 이용한 구현
 01-01-jdbc-todo프로젝트에 SingerDao인터페이스를 일반적인 JDBC프로그램으로 구현한다.  
 
-### 사용 라이브러리
+### 의존성 라이브러리
 todo 프로젝트와 동일하게 설정한다.  
 소스 : [pom.xml](pom.xml)
 
 ### 데이타 소스 설정
 todo 프로젝트와 동일하게 설정한다.  
-소스 : [application.yml](src/main/resources/application.yml)
+소스 : [application.yml](src/main/resources/application.yml)  
 
 ### 데이타베이스 초기화 파일 생성
 todo 프로젝트와 동일하게 설정한다.  
 
-소스 : [schema.sql](src/main/resources/schema.sql)
-소스 : [data.sql](src/main/resources/data.sql)
+소스 : [schema.sql](src/main/resources/schema.sql)  
+소스 : [data.sql](src/main/resources/data.sql)  
 
 ### Domain 클래스 생성
-소스[Singer.java](/src/main/java/com/linor/singer/domain/Singer.java)
-소스[Album.java](/src/main/java/com/linor/singer/domain/Album.java)
+소스[Singer.java](/src/main/java/com/linor/singer/domain/Singer.java)  
+소스[Album.java](/src/main/java/com/linor/singer/domain/Album.java)  
 
 ### DAO인터페이스 생성
 todo 프로젝트와 동일하게 구현.  
