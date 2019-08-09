@@ -94,7 +94,7 @@ ddl-auto는 시스템 시작시 스키마 생성 규칙을 정의하는 것으�
 - create-drop : 기존에 존재하면 drop하고 테이블을 새로 생성하며, 시스템 종료시 drop한다.  
 - none : 스키마 작업을 하지 않는다.  
 
-dialect에 사용하는 데이타베이스가 postgresql이므로 org.hibernate.dialect.PostgreSQLDialect를 설정한다.  
+dialect는 사용하는 데이타베이스가 postgresql이므로 org.hibernate.dialect.PostgreSQLDialect를 설정한다.  
 physical-naming-strategy에 Camel Case로 작성된 객체의 프로퍼티를 Snake Case로 작성된 테이블 칼럼과 매핑될 수 있도록 
 CamelCaseToSnakeCaseNamingStrategy로 설정한다.  
 postgresql을 사용하는 경우 발생하는 오류를 제거하기 위해 jdbc.lob.non_contextual_creation을 true로 설정한다.  
@@ -128,7 +128,7 @@ spring:
         physical-naming-strategy: com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy
 ```
 드라이버 클래스를 설정하지 않으면 스프링은 디폴트로 h2데이타베이스 드라이버를 설정한다.  
-dialect에 사용하는 데이타베이스가 h2이므로 org.hibernate.dialect.H2Dialect를 설정한다.  
+dialect는 사용하는 데이타베이스가 h2이므로 org.hibernate.dialect.H2Dialect를 설정한다.  
 
 ### 엔터티 클래스 생성
 #### Singer 엔터티 클래스(일대다, 다대다 관계)
@@ -383,7 +383,6 @@ Session.update()를 호출하거나 Session.saveOrUpdate()를 호출하여 데�
 ```
 Session.delete()를 호출하여 레코드를 삭제한다.    
 
-
 ## 결과 테스트
 ### 초기데이타 로딩 
 개발용 시스템으로 시작시 초기데이타를 로딩한다.   
@@ -481,6 +480,9 @@ Junit으로 SingerDaoTests를 실행한다.
 Hibernate는 OR매핑툴 중에서 가장 많이 사용되고 있다.  
 장점은 엔터티 클래스에 테이블 및 컬럼정의만 해 놓으면 별도의 sql문 없이도 많은 처리가 가능하다.  
 따라서 데이터베이스 밴더의 영향을 받지 않으면서 시스템 개발이 가능하다.
-단점은 hibernate가 생성한 sql문이 우리가 원하는 sql문이 아닐 수도 있기 때문에 세심한 체크가 필요하다.
+단점은 hibernate가 생성한 sql문이 우리가 원하는 sql문이 아닐 수도 있기 때문에 세심한 체크가 필요하다.  
+Hibernate는 엔터티클래스를 이용하여 테이블을 생성할 수 있지만 가능하면 sql스크립트를 만들어서 사용하는 것이 좋다.  
+테이블 스페이스 등 각종 물리적 스키마 내역을 다루기어렵기 때문이다.
+
 
 
