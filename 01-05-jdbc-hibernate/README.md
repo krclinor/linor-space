@@ -80,7 +80,7 @@ ddl-auto는 시스템 시작시 스키마 생성 규칙을 정의하는 것으�
 - create : 기존에 존재하면 drop하고 테이블을 새로 생성한다.
 - update : 기존에 존재하면 modify하고 없으면 새로 생헝한다.
 - create-drop : 기존에 존재하면 drop하고 테이블을 새로 생성하며, 시스템 종료시 drop한다.  
-- none : 스키마 작업을 하지 않는다.
+- none : 스키마 작업을 하지 않는다.  
 dialect에 사용하는 데이타베이스가 postgresql이므로 org.hibernate.dialect.PostgreSQLDialect를 설정한다.  
 physical-naming-strategy에 Camel Case로 작성된 객체의 프로퍼티를 Snake Case로 작성된 테이블 칼럼과 매핑될 수 있도록 
 CamelCaseToSnakeCaseNamingStrategy로 설정한다.  
