@@ -75,6 +75,9 @@ use_sql_comments를 true로 설정하면 sql문에 HQL쿼리를 주석으로 같
 
 #### SingerSummary 엔터티 클래스(사용자 정의 결과 타입)
 JPQL을 통해 생성한 쿼리에 사용할 사용자 정의 엔터티를 생성한다.    
+
+커스텀 쿼리를 위해 다음 도메인 객체를 추가한다.  
+[SingerSummary.java](src/main/java/com/linor/singer/domain/SingerSummary.java)
 ```java
 @Data
 @AllArgsConstructor
