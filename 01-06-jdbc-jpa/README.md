@@ -4,132 +4,13 @@ TopLink등이 있다.
 JPA EntityManager를 이용하여 처리하는 방법을 배워본다.  
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
-Spring Boot -> Spring Starter Project로 생성한다.  
-추가할 dependency : devtools, lombok, postgresql, jpa, hibernate-types-52 
+### 사용 라이브러리
+Hibernate 프로젝트와 동일하게 설정.  
 
-소스 : [pom.xml](pom.xml)
-```xml
-    <dependencies>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        
-        <!-- Hibernate CamelCase를 SnakeCase로 변경 -->
-        <dependency>
-            <groupId>com.vladmihalcea</groupId>
-            <artifactId>hibernate-types-52</artifactId>
-            <version>2.5.0</version>
-        </dependency>
-    </dependencies>
-```
 ### application.yml 설정
 hibernate관련 설정을 추가한다.  
 
-소스 : [application.yml](src/main/resources/application.yml)
-#### 프로파일 설정
-```yml
-#사용 프로파일 설정
-spring.profiles.active: [postgres, dev]
-```
-프로파일은 여러개를 설정할 수 있다.  
-사용 프로파일을 postgres와 dev를 설정한다.  
-h2데이타베이스로 테스트하려면 postgres를 h2로 변경한다.  
-개발용으로 테스트자료를 로딩하기 위해 dev프로파일을 등록하여 사용한다.  
-
-#### postgreSql 데이타 소스 및 JPA 설정
-```yml
-#데이타소스
-spring: 
-  profiles: postgres
-  datasource:
-    platform: postgresql
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
-    username: linor
-    password: linor1234
-    initialization-mode: never
-
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        physical-naming-strategy: com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy
-        format_sql: true
-        use_sql_comments: true
-        jdbc.lob.non_contextual_creation: true
-```
-profiles에 postgres를 선언하여 액티브 프로파일에 postgres가 지정되면 여기에 선언된 데이타소스를 생성한다.  
-platform을 postgres로 설정하고, initialization-model가 always이면 schema-postgre.sql과 data-postgres.sql 스크립트를 실행한다.
-데이타베이스 스키마 생성을 스크립트로 하려면 다음에 나오는 ddl-auto를 none으로 설정해야 한다.  
-
-initialization-mode를 never로 설정하여 schema.sql과 data.sql 스크립트가 실행되지 않도록 한다.  
-테이블 생성은 ddl-auto를 create로 설정하여 Hibernate가 만들도록 설정한다.  
-ddl-auto는 시스템 시작시 스키마 생성 규칙을 정의하는 것으로 create, create-update, update, none중 하나를 등록한다.
-- create : 기존에 존재하면 drop하고 테이블을 새로 생성한다.
-- update : 기존에 존재하면 modify하고 없으면 새로 생헝한다.
-- create-drop : 기존에 존재하면 drop하고 테이블을 새로 생성하며, 시스템 종료시 drop한다.  
-- none : 스키마 작업을 하지 않는다.  
-
-dialect는 사용하는 데이타베이스가 postgresql이므로 org.hibernate.dialect.PostgreSQLDialect를 설정한다.  
-physical-naming-strategy에 Camel Case로 작성된 객체의 프로퍼티를 Snake Case로 작성된 테이블 칼럼과 매핑될 수 있도록 
-CamelCaseToSnakeCaseNamingStrategy로 설정한다.  
-postgresql을 사용하는 경우 발생하는 오류를 제거하기 위해 jdbc.lob.non_contextual_creation을 true로 설정한다.  
-show_sql을 true로 설정하면  hibernate가 생성한 sql문을 볼 수 있고,    
-format_sql을 true로 설정하면 sql문을 읽기 쉽도록 만들어 준다.  
-use_sql_comments를 true로 설정하면 sql문에 HQL쿼리를 주석으로 같이 보여준다.  
-
-#### h2 데이타 소스 및 JPA 설정
-```yml
-#데이타소스
-spring:
-  profiles: h2
-  datasource:
-    platform: h2 
-#    driver-class-name: org.h2.Driver
-#    url: jdbc:h2:mem:test;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-#    username: sa
-#    password: ''
-#    initialization-mode: always
-#  h2.console.enabled: true
-
-  jpa:
-#    show-sql: true
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate: 
-        dialect: org.hibernate.dialect.H2Dialect
-#        format_sql: true
-#        use_sql_comments: true
-        physical-naming-strategy: com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy
-```
-드라이버 클래스를 설정하지 않으면 스프링은 디폴트로 h2데이타베이스 드라이버를 설정한다.  
-dialect는 사용하는 데이타베이스가 h2이므로 org.hibernate.dialect.H2Dialect를 설정한다.  
-
+Hibernate프로젝트에서 생성한 설정과 동일하게 설정한다.  
 
 ### 엔터티 클래스 생성
 생성한 Singer, Album, Instrument 엔터티 클래스는 hibernate프로젝트에서 생성한 엔터티 클래스와 동일하다.  
@@ -269,4 +150,4 @@ JPQL이 아닌 SQL문을 직접 사용하려면 EntityManager.createNativeQuery(
 Junit으로 SingerDaoTests를 실행한다.
 
 ## 정리
-JPA를 이용하면 Hibernate뿐 아니라 다른 구현체로 대체가 가능하다.  
+JPA는 표준스팩이므로 Hibernate뿐 아니라 다른 구현체로 대체가 가능하다.  
