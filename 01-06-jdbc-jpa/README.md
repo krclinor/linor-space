@@ -1,5 +1,5 @@
 # JPA EntityManager
-JPA는 EJB 3.0에서 ORM 기술에 대한 API 표준 스팩이며, 이 스팩을 구현한 구현체가 Hibernate, OpenJPA, EclipseLink, 
+JPA는 EJB 3.0에서 ORM 기술에 대한 API 표준스펙이며, 이 스팩을 구현한 구현체가 Hibernate, OpenJPA, EclipseLink, 
 TopLink등이 있다.  
 JPA EntityManager를 이용하여 처리하는 방법을 배워본다.  
 
@@ -76,7 +76,7 @@ public class Singer implements Serializable{
     @Override
     public List<Singer> findByFirstName(String firstName) {
         return entityManager.createNamedQuery("Singer.findByFirstName", Singer.class)
-                .setParameter("firstName", firstName)
+                .setParameter("firtstName", firstName)
                 .getResultList();
     }
 ```
