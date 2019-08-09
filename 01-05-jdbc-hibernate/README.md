@@ -1,9 +1,10 @@
 # Hibernate Session
-Hibernate Session을 이용하여 Dao인터페이스를 구현해 본다.
-
+Hibernate Session을 이용하여 Dao인터페이스를 구현해 본다.  
+데이타베이스는 postgresql과 h2 둘 다 되는 시스템을 구현한다. 
+  
 ## Spring Boot Starter를 이용한 프로젝트 생성
 Spring Boot -> Spring Starter Project로 생성한다.  
-추가할 dependency : devtools, lombok, postgresql, jpa, hibernate-types-52
+추가할 dependency : devtools, lombok, postgresql, h2, jpa, hibernate-types-52
 
 소스 : [pom.xml](pom.xml)
 ```xml
@@ -41,14 +42,24 @@ Spring Boot -> Spring Starter Project로 생성한다.
         </dependency>
     </dependencies>
 ```
-### application.yml설정
+추가한 h2는 내장 데이타베이스로 h2데이타베이스와 postgresql데이타베이스에서 테스트하기 위해 추가한다. 
+
+### application.yml 설정
 hibernate관련 설정을 추가한다.  
 
 소스 : [application.yml](src/main/resources/application.yml)
+#### 프로파일 설정
 ```yml
 #사용 프로파일 설정
 spring.profiles.active: [postgres, dev]
+```
+프로파일은 여러개를 설정할 수 있다.  
+사용 프로파일을 postgres와 dev를 설정한다.  
+h2데이타베이스로 테스트하려면 postgres를 h2로 변경한다.  
+개발용으로 테스트자료를 로딩하기 위해 dev프로파일을 등록하여 사용한다.  
 
+#### postgreSql 데이타 소스 및 JPA 설정
+```yml
 #데이타소스
 spring: 
   profiles: postgres
@@ -71,19 +82,12 @@ spring:
         format_sql: true
         use_sql_comments: true
         jdbc.lob.non_contextual_creation: true
-        #temp.use_jdbc_metadata_default: false
-        #current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
 ```
-#### 프로파일 설정
-spring.profiles.active에 사용할 프로파일을 등록한다.  
-프로파일은 여러 값을 등록할 수 있다.  
-데이타베이스를 postgres로 사용하기 위하여 postgres와, 개발용으로 테스트자료를 로딩하기 위해 dev프로파일을 등록하여 사용한다.  
+platform을 postgres로 설정하고, initialization-model가 always이면 schema-postgre.sql과 data-postgres.sql 스크립트를 실행한다.
+데이타베이스 스키마 생성을 스크립트로 하려면 다음에 나오는 ddl-auto를 none으로 설정해야 한다.  
 
-#### 데이타소스 설정  
 initialization-mode를 never로 설정하여 schema.sql과 data.sql 스크립트가 실행되지 않도록 한다.  
-테이블 생성은 Hibernate가 알아서 만들도록 설정한다.  
-
-#### Hibernate 설정  
+테이블 생성은 ddl-auto를 create로 설정하여 Hibernate가 만들도록 설정한다.  
 ddl-auto는 시스템 시작시 스키마 생성 규칙을 정의하는 것으로 create, create-update, update, none중 하나를 등록한다.
 - create : 기존에 존재하면 drop하고 테이블을 새로 생성한다.
 - update : 기존에 존재하면 modify하고 없으면 새로 생헝한다.
@@ -97,6 +101,34 @@ postgresql을 사용하는 경우 발생하는 오류를 제거하기 위해 jdb
 show_sql을 true로 설정하면  hibernate가 생성한 sql문을 볼 수 있고,    
 format_sql을 true로 설정하면 sql문을 읽기 쉽도록 만들어 준다.  
 use_sql_comments를 true로 설정하면 sql문에 HQL쿼리를 주석으로 같이 보여준다.  
+
+#### h2 데이타 소스 및 JPA 설정
+```yml
+#데이타소스
+spring:
+  profiles: h2
+  datasource:
+    platform: h2 
+#    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:mem:test;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#    username: sa
+#    password: ''
+#    initialization-mode: always
+#  h2.console.enabled: true
+
+  jpa:
+#    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate: 
+        dialect: org.hibernate.dialect.H2Dialect
+#        format_sql: true
+#        use_sql_comments: true
+        physical-naming-strategy: com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy
+```
+드라이버 클래스를 설정하지 않으면 스프링은 디폴트로 h2데이타베이스 드라이버를 설정한다.  
+dialect에 사용하는 데이타베이스가 h2이므로 org.hibernate.dialect.H2Dialect를 설정한다.  
 
 ### 엔터티 클래스 생성
 #### Singer 엔터티 클래스(일대다, 다대다 관계)
@@ -435,12 +467,7 @@ public class AppStartupRunner implements ApplicationRunner {
     }
 }
 ```
-@Profile("dev") : 프로파일이 dev를 포함하는 경우 실행되도록 한다.  
-프로파일 등록은 설정에서 등록한다.  
-소스 : [application.yml](src/main/resources/application.yml)
-```yml
-spring.profiles.active: [postgres, dev]
-```
+@Profile("dev") : 프로파일이 dev를 포함된는 경우 실행되도록 한다.  
 
 빈으로 등록하기 위해 @Component를 선언한다.  
 
