@@ -46,10 +46,21 @@ hibernate관련 설정을 추가한다.
 
 소스 : [application.yml](src/main/resources/application.yml)
 ```yml
+#데이타소스
+spring: 
+  profiles: postgres
+  datasource:
+    platform: postgresql
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+    username: linor
+    password: linor1234
+    initialization-mode: never
+
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -60,7 +71,16 @@ hibernate관련 설정을 추가한다.
         #temp.use_jdbc_metadata_default: false
         #current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
 ```
-ddl-auto는 create, create-update, none중 하나를 등록한다.  
+데이타소스 설정  
+initialization-mode를 never로 설정하여 schema.sql과 data.sql 스크립트가 실행되지 않도록 한다.  
+테이블 생성은 Hibernate가 알아서 만들도록 설정한다.  
+
+JPA 설정  
+ddl-auto는 시스템 시작시 스키마 생성 규칙을 정의하는 것으로 create, create-update, update, none중 하나를 등록한다.
+- create : 기존에 존재하면 drop하고 테이블을 새로 생성한다.
+- update : 기존에 존재하면 modify하고 없으면 새로 생헝한다.
+- create-drop : 기존에 존재하면 drop하고 테이블을 새로 생성하며, 시스템 종료시 drop한다.  
+- none : 스키마 작업을 하지 않는다.
 dialect에 사용하는 데이타베이스가 postgresql이므로 org.hibernate.dialect.PostgreSQLDialect를 설정한다.  
 physical-naming-strategy에 Camel Case로 작성된 객체의 프로퍼티를 Snake Case로 작성된 테이블 칼럼과 매핑될 수 있도록 
 CamelCaseToSnakeCaseNamingStrategy로 설정한다.  
@@ -322,8 +342,13 @@ Session.update()를 호출하거나 Session.saveOrUpdate()를 호출하여 데�
 ```
 Session.delete()를 호출하여 레코드를 삭제한다.    
 
+
 ## 결과 테스트
+### 초기데이타 로딩 
+
+### Junit 테스팅
 Junit으로 SingerDaoTests를 실행한다.
+
 
 ## 정리
 Hibernate는 OR매핑툴 중에서 가장 많이 사용되고 있다.  
