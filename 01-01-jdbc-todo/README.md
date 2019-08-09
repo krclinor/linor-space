@@ -43,9 +43,10 @@ CREATE SCHEMA singer
 마지막으로 singer라는 스키마를 생성하고 소유자는 linor로 한다.
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
-Spring Boot -> Spring Starter Project로 생성한다.
+Spring Boot -> Spring Starter Project로 생성한다.  
 
-추가 라이브러리 : devtools, lombok, postgresql, jdbc  
+### 의존성 라이브러리
+의존성 라이브러리 : devtools, lombok, postgresql, jdbc  
 
 소스 : [pom.xml](pom.xml)
 ```xml
