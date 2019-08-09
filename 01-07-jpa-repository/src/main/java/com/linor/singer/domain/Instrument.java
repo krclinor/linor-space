@@ -23,7 +23,7 @@ public class Instrument implements Serializable{
 	//@Column(name = "instrument_id")
 	private String instrumentId;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "singer_instrument", joinColumns = @JoinColumn(name = "instrument_id"), inverseJoinColumns = @JoinColumn(name = "singer_id"))
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude

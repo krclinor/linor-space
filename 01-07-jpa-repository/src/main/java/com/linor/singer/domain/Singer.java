@@ -53,10 +53,10 @@ public class Singer implements Serializable{
 	//@Column(name="birth_date")
 	private LocalDate birthDate;
 	
-	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true)
 	private Set<Album> albums = new HashSet<>();
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name="singer_instrument", 
 		joinColumns=@JoinColumn(name="singer_id"),
 		inverseJoinColumns=@JoinColumn(name="instrument_id"))
