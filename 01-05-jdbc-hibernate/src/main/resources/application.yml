@@ -46,21 +46,22 @@ spring:
   datasource:
     platform: h2 
 #    driver-class-name: org.h2.Driver
-#    initialization-mode: always
-
-    #hikari Connection Pull 설정
-    hikari:
-      maximum-pool-size: 20
-      idle-timeout: 1
-      minimum-idle: 0
 #    url: jdbc:h2:mem:test;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
 #    username: sa
 #    password: ''
+#    initialization-mode: always
 #  h2.console.enabled: true
+
+#    #hikari Connection Pull 설정
+#    hikari:
+#      maximum-pool-size: 20
+#      idle-timeout: 1
+#      minimum-idle: 0
+
   jpa:
 #    show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
     properties:
       hibernate: 
         dialect: org.hibernate.dialect.H2Dialect
