@@ -1,4 +1,6 @@
+#사용 프로파일
 spring.profiles.active: [postgres, dev]
+
 #로거
 logging:
   pattern:

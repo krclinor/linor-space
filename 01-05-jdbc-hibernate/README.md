@@ -46,6 +46,9 @@ hibernate관련 설정을 추가한다.
 
 소스 : [application.yml](src/main/resources/application.yml)
 ```yml
+#사용 프로파일 설정
+spring.profiles.active: [postgres, dev]
+
 #데이타소스
 spring: 
   profiles: postgres
@@ -71,11 +74,16 @@ spring:
         #temp.use_jdbc_metadata_default: false
         #current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
 ```
+#### 프로파일 설정
+spring.profiles.active에 사용할 프로파일을 등록한다.  
+프로파일은 여러 값을 등록할 수 있다.  
+데이타베이스를 postgres로 사용하기 위하여 postgres와, 개발용으로 테스트자료를 로딩하기 위해 dev프로파일을 등록하여 사용한다.  
+
 #### 데이타소스 설정  
 initialization-mode를 never로 설정하여 schema.sql과 data.sql 스크립트가 실행되지 않도록 한다.  
 테이블 생성은 Hibernate가 알아서 만들도록 설정한다.  
 
-#### JPA 설정  
+#### Hibernate 설정  
 ddl-auto는 시스템 시작시 스키마 생성 규칙을 정의하는 것으로 create, create-update, update, none중 하나를 등록한다.
 - create : 기존에 존재하면 drop하고 테이블을 새로 생성한다.
 - update : 기존에 존재하면 modify하고 없으면 새로 생헝한다.
@@ -174,7 +182,7 @@ firstName프로퍼티는 first_name칼럼으로 매핑된다(CamelCase -> SnakeC
 
 @OneToMany는 1대다 관계를 표현하기 위해 사용한다.  
 mappedBy="singer"는 Album클래스에서 Singer를 나타내는 프로퍼티이다.   
-@OneToMany 프로퍼티
+@OneToMany 프로퍼티  
 - targetEntity : 연결을 맺는 상대 엔티티
 - fetch : 관계 엔티티의 읽기 전략을 설정
 - cascade : 현재 엔터티의 변경에 대해 관련 엔터티에 대한 변경 전략을 정의(ALL, PERSIST, MERGE, REMOVE, REFRESH, DETACH)
@@ -243,7 +251,7 @@ inverseJoinColumns=@JoinColumn(name="INSTRUMENT_ID"))은 SINGER_INSTRUMENT이라
 조인테이블에 칼럼이 SINGER_ID이고 상대 조인컬럼은 INSTRUMENT_ID임을 나타낸다.
 
 ### DAO인터페이스 구현클래스 생성
-
+SingerDao인터페이스를 Hibernate가 제공하는 Session을 이용하여 구현한다.
 소스 : [SingerDaoImpl.java](src/main/java/com/linor/singer/hibernate/SingerDaoImpl.java)
 ```java
 @Transactional
