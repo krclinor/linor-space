@@ -1,4 +1,6 @@
 # JPA EntityManager
+JPA는 EJB 3.0에서 ORM 기술에 대한 API 표준 스팩이며, 이 스팩을 구현한 구현체가 Hibernate, OpenJPA, EclipseLink, 
+TopLink등이 있다.  
 JPA EntityManager를 이용하여 처리하는 방법을 배워본다.  
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
@@ -203,4 +205,4 @@ JPQL이 아닌 SQL문을 직접 사용하려면 EntityManager.createNativeQuery(
 Junit으로 SingerDaoTests를 실행한다.
 
 ## 정리
-ORM 프레임워크중에서 가장 많이 사용되는 프레임워크이다.
+JPA를 이용하면 Hibernate뿐 아니라 다른 구현체로 대체가 가능하다.  
