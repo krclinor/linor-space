@@ -8,8 +8,6 @@ JPA EntityManager를 이용하여 처리하는 방법을 배워본다.
 Hibernate 프로젝트와 동일하게 설정.  
 
 ### application.yml 설정
-hibernate관련 설정을 추가한다.  
-
 Hibernate프로젝트에서 생성한 설정과 동일하게 설정한다.  
 
 ### 엔터티 클래스 생성
