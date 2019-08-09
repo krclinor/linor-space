@@ -5,8 +5,6 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,13 +14,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import com.linor.singer.audit.Auditable;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 @Entity
 //@Table(name="singer")
@@ -41,12 +35,12 @@ public class Singer extends Auditable<String>{
 	//@Column(name="birth_date")
 	private LocalDate birthDate;
 	
-	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true)
 	//@ToString.Exclude
 	//@EqualsAndHashCode.Exclude
 	private Set<Album> albums = new HashSet<>();
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name="singer_instrument", 
 		joinColumns=@JoinColumn(name="singer_id"),
 		inverseJoinColumns=@JoinColumn(name="instrument_id"))
@@ -63,5 +57,12 @@ public class Singer extends Auditable<String>{
 	}
 	public void reoveAlbum(Album album) {
 		getAlbums().remove(album);
+	}
+	public boolean addInstrument(Instrument instrument) {
+		instrument.addSinger(this);
+		return getInstruments().add(instrument);
+	}
+	public void reoveInstrument(Instrument instrument) {
+		getInstruments().remove(instrument);
 	}
 }

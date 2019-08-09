@@ -30,4 +30,10 @@ public class Instrument implements Serializable{
 	@EqualsAndHashCode.Exclude
 	private Set<Singer> singers = new HashSet<>();
 
+	public boolean addSinger(Singer singer) {
+		return getSingers().add(singer);
+	}
+	public void reoveSinger(Singer singer) {
+		getSingers().remove(singer);
+	}
 }

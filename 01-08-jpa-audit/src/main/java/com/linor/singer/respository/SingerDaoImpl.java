@@ -2,17 +2,14 @@ package com.linor.singer.respository;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.singer.dao.SingerDao;
 import com.linor.singer.domain.Album;
+import com.linor.singer.domain.Instrument;
 import com.linor.singer.domain.Singer;
-import com.linor.singer.domain.SingerSummary;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,6 +24,9 @@ public class SingerDaoImpl implements SingerDao {
 	@Autowired
 	private AlbumRespository albumRepository;
 	
+	@Autowired
+	private InstrumentRepository instrumentRepository;
+
 	@Override
 	@Transactional(readOnly=true)
 	public List<Singer> findAll() {
@@ -59,5 +59,10 @@ public class SingerDaoImpl implements SingerDao {
 	
 	public void save(Singer singer) {
 		singerRepository.save(singer);
+	}
+
+	@Override
+	public void insert(Instrument instrument) {
+		instrumentRepository.save(instrument);
 	}
 }
