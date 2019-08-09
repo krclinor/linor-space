@@ -148,4 +148,4 @@ JPQL이 아닌 SQL문을 직접 사용하려면 EntityManager.createNativeQuery(
 Junit으로 SingerDaoTests를 실행한다.
 
 ## 정리
-JPA는 표준스팩이므로 Hibernate뿐 아니라 다른 구현체로 대체가 가능하다.  
+JPA는 표준스펙이므로 Hibernate뿐 아니라 다른 구현체로 대체가 가능하다.  
