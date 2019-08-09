@@ -44,7 +44,8 @@ CREATE SCHEMA singer
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
 Spring Boot -> Spring Starter Project로 생성한다.
-추가할 dependency : devtools, lombok, postgresql, jdbc  
+
+추가 라이브러리 : devtools, lombok, postgresql, jdbc  
 
 소스 : [pom.xml](pom.xml)
 ```xml
