@@ -324,7 +324,7 @@ public class Instrument implements Serializable{
 악기는 가수와 다대다 매핑이지만 악기를 이용하여 가수를 조회할 필요가 없는 경우 악기에서는 다대다를 표현할 필요는 없다.  
 
 ### DAO인터페이스 구현클래스 생성
-SingerDao인터페이스를 Hibernate가 제공하는 Session을 이용하여 구현한다.
+SingerDao인터페이스를 Hibernate가 제공하는 Session을 이용하여 구현한다.  
 소스 : [SingerDaoImpl.java](src/main/java/com/linor/singer/hibernate/SingerDaoImpl.java)
 ```java
 @Transactional
