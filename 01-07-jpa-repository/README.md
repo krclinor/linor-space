@@ -103,138 +103,138 @@ JpaRepository는 기본적으로 다음 메서드를 제공한다.
         <td>쿼리결과 레코드 수를 요청하는 메서드임을 알림</td>
     </tr>
 </table>
-findBy다음에는 Entity의 프로퍼티를 입력하면 해당 필드를 검색하여 결과를 리턴한다.  
+findBy다음에는 Entity의 멤버변수를 입력하면 해당 필드를 검색하여 결과를 리턴한다.  
 sql문의 where절을 메서드 이름으로 전달한다고 생각하면 된다.  
 
-findBy나 countBy다음에 나올 쿼리 메서드레 포함할 수 있는 키워드는 다음과 같다. 
-<table class="tableblock frame-all grid-all">
+findBy나 countBy다음에 나올 쿼리 메서드에 포함할 수 있는 키워드는 다음과 같다. 
+<table>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Keyword</th>
-<th class="tableblock halign-left valign-top">Sample</th>
-<th class="tableblock halign-left valign-top">JPQL snippet</th>
+<th>Keyword</th>
+<th>Sample</th>
+<th>JPQL snippet</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>And</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByLastnameAndFirstname</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.lastname = ?1 and x.firstname = ?2</code></p></td>
+<td><p><code>And</code></p></td>
+<td><p><code>findByLastnameAndFirstname</code></p></td>
+<td><p><code>… where x.lastname = ?1 and x.firstname = ?2</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Or</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByLastnameOrFirstname</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.lastname = ?1 or x.firstname = ?2</code></p></td>
+<td><p><code>Or</code></p></td>
+<td><p><code>findByLastnameOrFirstname</code></p></td>
+<td><p><code>… where x.lastname = ?1 or x.firstname = ?2</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Is,Equals</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByFirstname</code>,<code>findByFirstnameIs</code>,<code>findByFirstnameEquals</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.firstname = ?1</code></p></td>
+<td><p><code>Is,Equals</code></p></td>
+<td><p><code>findByFirstname</code>,<code>findByFirstnameIs</code>,<code>findByFirstnameEquals</code></p></td>
+<td><p><code>… where x.firstname = ?1</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Between</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByStartDateBetween</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.startDate between ?1 and ?2</code></p></td>
+<td><p><code>Between</code></p></td>
+<td><p><code>findByStartDateBetween</code></p></td>
+<td><p><code>… where x.startDate between ?1 and ?2</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LessThan</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAgeLessThan</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age &lt; ?1</code></p></td>
+<td><p><code>LessThan</code></p></td>
+<td><p><code>findByAgeLessThan</code></p></td>
+<td><p><code>… where x.age &lt; ?1</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LessThanEqual</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAgeLessThanEqual</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age ⇐ ?1</code></p></td>
+<td><p><code>LessThanEqual</code></p></td>
+<td><p><code>findByAgeLessThanEqual</code></p></td>
+<td><p><code>… where x.age ⇐ ?1</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GreaterThan</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAgeGreaterThan</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age &gt; ?1</code></p></td>
+<td><p><code>GreaterThan</code></p></td>
+<td><p><code>findByAgeGreaterThan</code></p></td>
+<td><p><code>… where x.age &gt; ?1</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GreaterThanEqual</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAgeGreaterThanEqual</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age &gt;= ?1</code></p></td>
+<td><p><code>GreaterThanEqual</code></p></td>
+<td><p><code>findByAgeGreaterThanEqual</code></p></td>
+<td><p><code>… where x.age &gt;= ?1</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>After</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByStartDateAfter</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.startDate &gt; ?1</code></p></td>
+<td><p><code>After</code></p></td>
+<td><p><code>findByStartDateAfter</code></p></td>
+<td><p><code>… where x.startDate &gt; ?1</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Before</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByStartDateBefore</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.startDate &lt; ?1</code></p></td>
+<td><p><code>Before</code></p></td>
+<td><p><code>findByStartDateBefore</code></p></td>
+<td><p><code>… where x.startDate &lt; ?1</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IsNull</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAgeIsNull</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age is null</code></p></td>
+<td><p><code>IsNull</code></p></td>
+<td><p><code>findByAgeIsNull</code></p></td>
+<td><p><code>… where x.age is null</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IsNotNull,NotNull</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAge(Is)NotNull</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age not null</code></p></td>
+<td><p><code>IsNotNull,NotNull</code></p></td>
+<td><p><code>findByAge(Is)NotNull</code></p></td>
+<td><p><code>… where x.age not null</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Like</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByFirstnameLike</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.firstname like ?1</code></p></td>
+<td><p><code>Like</code></p></td>
+<td><p><code>findByFirstnameLike</code></p></td>
+<td><p><code>… where x.firstname like ?1</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NotLike</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByFirstnameNotLike</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.firstname not like ?1</code></p></td>
+<td><p><code>NotLike</code></p></td>
+<td><p><code>findByFirstnameNotLike</code></p></td>
+<td><p><code>… where x.firstname not like ?1</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>StartingWith</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByFirstnameStartingWith</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.firstname like ?1</code> (parameter bound with appended <code>%</code>)</p></td>
+<td><p><code>StartingWith</code></p></td>
+<td><p><code>findByFirstnameStartingWith</code></p></td>
+<td><p><code>… where x.firstname like ?1</code> (parameter bound with appended <code>%</code>)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EndingWith</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByFirstnameEndingWith</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.firstname like ?1</code> (parameter bound with prepended <code>%</code>)</p></td>
+<td><p><code>EndingWith</code></p></td>
+<td><p><code>findByFirstnameEndingWith</code></p></td>
+<td><p><code>… where x.firstname like ?1</code> (parameter bound with prepended <code>%</code>)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Containing</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByFirstnameContaining</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.firstname like ?1</code> (parameter bound wrapped in <code>%</code>)</p></td>
+<td><p><code>Containing</code></p></td>
+<td><p><code>findByFirstnameContaining</code></p></td>
+<td><p><code>… where x.firstname like ?1</code> (parameter bound wrapped in <code>%</code>)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OrderBy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAgeOrderByLastnameDesc</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age = ?1 order by x.lastname desc</code></p></td>
+<td><p><code>OrderBy</code></p></td>
+<td><p><code>findByAgeOrderByLastnameDesc</code></p></td>
+<td><p><code>… where x.age = ?1 order by x.lastname desc</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Not</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByLastnameNot</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.lastname &lt;&gt; ?1</code></p></td>
+<td><p><code>Not</code></p></td>
+<td><p><code>findByLastnameNot</code></p></td>
+<td><p><code>… where x.lastname &lt;&gt; ?1</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>In</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAgeIn(Collection&lt;Age&gt; ages)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age in ?1</code></p></td>
+<td><p><code>In</code></p></td>
+<td><p><code>findByAgeIn(Collection&lt;Age&gt; ages)</code></p></td>
+<td><p><code>… where x.age in ?1</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NotIn</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByAgeNotIn(Collection&lt;Age&gt; age)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.age not in ?1</code></p></td>
+<td><p><code>NotIn</code></p></td>
+<td><p><code>findByAgeNotIn(Collection&lt;Age&gt; age)</code></p></td>
+<td><p><code>… where x.age not in ?1</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>True</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByActiveTrue()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.active = true</code></p></td>
+<td><p><code>True</code></p></td>
+<td><p><code>findByActiveTrue()</code></p></td>
+<td><p><code>… where x.active = true</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>False</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByActiveFalse()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where x.active = false</code></p></td>
+<td><p><code>False</code></p></td>
+<td><p><code>findByActiveFalse()</code></p></td>
+<td><p><code>… where x.active = false</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IgnoreCase</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findByFirstnameIgnoreCase</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>… where UPPER(x.firstame) = UPPER(?1)</code></p></td>
+<td><p><code>IgnoreCase</code></p></td>
+<td><p><code>findByFirstnameIgnoreCase</code></p></td>
+<td><p><code>… where UPPER(x.firstame) = UPPER(?1)</code></p></td>
 </tr>
 </tbody>
 </table>
