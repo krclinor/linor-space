@@ -60,8 +60,8 @@ JpaRepository는 기본적으로 다음 메서드를 제공한다.
 <table>
     <thead>
         <tr>
-            <th>method</td>
-            <th>기능</td>
+            <th>method</th>
+            <th>기능</th>
         </tr>
     </thead>
     <tbody>
@@ -91,8 +91,8 @@ JpaRepository는 기본적으로 다음 메서드를 제공한다.
 또한 Query메소드를 작성할 수 있으며 다음 규칙에 따라 작성하여 스프링이 구현하도록 할 수 있다.    
 <table>
     <tr>
-        <td>메서드</td>
-        <td>설명</td>
+        <th>메서드</th>
+        <th>설명</th>
     </tr>
     <tr>
         <td>findBy로 시작</td>
