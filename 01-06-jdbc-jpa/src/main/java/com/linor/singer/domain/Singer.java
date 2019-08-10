@@ -86,7 +86,7 @@ public class Singer implements Serializable{
 	public boolean addInstrument(Instrument instrument) {
 		return getInstruments().add(instrument);
 	}
-	public void reoveInstrument(Instrument instrument) {
+	public void removeInstrument(Instrument instrument) {
 		getInstruments().remove(instrument);
 	}
 }
