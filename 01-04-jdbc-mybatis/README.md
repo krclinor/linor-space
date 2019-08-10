@@ -88,11 +88,9 @@ public interface SingerDao {
 ```
 todo프로젝트에서 만든 dao인터페이스에 @Mapper어노테이션을 추가하여 매퍼용 인터페이스임을 알린다.  
 해당 인터페이스는 Mybatis Mapper에서 XML로 구현할 수도 있고, 현 인터페이스에 어노테이션으로 추가할 수 있다.  
-여기서는 xml방식으로 구현한다.  
 
 ## SingerDao인터페이스 구현
-Mybatis Mapper인터페이스 구현은 인터페이스 내에 어노테이션으로 처리할 수도 있고 별도 XML파일로 처리할 수도 있다.  
-여기에서는 XML로 처리하는 방법을 설명한다.  
+Mybatis Mapper인터페이스를 XML파일로 구현한다.  
 
 소스 : [SingerDao.xml](src/main/resources/com/linor/singer/dao/SingerDao.xml)  
 
