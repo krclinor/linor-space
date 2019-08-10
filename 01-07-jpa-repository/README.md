@@ -54,14 +54,17 @@ public interface SingerRepository extends JpaRepository<Singer, Integer> {
     public List<Singer> findAllByNativeQuery();
 }
 ```
-JpaRepository를 상속하여 생성한다. 이 때 사용될 엔터티와 주키를 제공해야 한다.  
+JpaRepository를 상속하여 클래스가 아닌 인터페이스를 생성한다. 이 인터페이스의 구현체는 스프링이 알아서 처리한다.  
+이 때 엔터티와 주키를 제공해야 한다.  
 JpaRepository는 기본적으로 다음 메서드를 제공한다.
 <table>
-    <tbody>
+    <thead>
         <tr>
-            <td>method</td>
-            <td>기능</td>
+            <th>method</td>
+            <th>기능</td>
         </tr>
+    </thead>
+    <tbody>
         <tr>
             <td>save()</td>
             <td>레코드 저장 (insert, update)</td>
