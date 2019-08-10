@@ -51,15 +51,26 @@ mybatis:
   type-aliases-package: com.linor.singer.domain
   configuration.map-underscore-to-camel-case: true
 ```
-mapper-locations는 sql문을 처리하는 mybatis mapper파일의 위치를 지정한다.  
+mapper-locations는 sql문을 처리하는 mybatis mapper xml파일의 위치를 지정한다.  
 type-aliases-package를 등록하면 도메인사용시 패키지명을 사용하지 않고도 도메인을 지정할 수 있다.  
 예) com.linor.singer.domain.Album -> Album  
 configuratioins.map-underscore-to-camel-case를 true로 설정하면 테이블 컬럼의 snake case를 camel case로 변환하여 
 ORM매핑처리를 한다.  
 예) FIRST_NAME -> firstName
 
-## 인터페이스에 mapper어노테이션 추가
-소스 : [SingerDao.java](src/main/java/com/linor/singer/dao/SingerDao.java)
+### 데이타베이스 초기화 파일 생성
+todo 프로젝트와 동일하게 설정한다.  
+
+소스 : [schema.sql](src/main/resources/schema.sql)  
+소스 : [data.sql](src/main/resources/data.sql)  
+
+## Domain 클래스 생성
+소스 : [Singer.java](src/main/java/com/linor/singer/domain/Singer.java)  
+소스 : [Album.java](src/main/java/com/linor/singer/domain/Album.java)  
+
+## DAO인터페이스 생성
+
+소스 : [SingerDao.java](src/main/java/com/linor/singer/dao/SingerDao.java)  
 ```java
 @Mapper
 public interface SingerDao {
@@ -75,8 +86,9 @@ public interface SingerDao {
     void insertWithAlbum(Singer singer);
 }
 ```
-dao인터페이스에 @Mapper어노테이션을 추가하여 매퍼용 인터페이스임을 알린다.  
-해당 인터페이스는 Mybatis Mapper에서 XML로 구현한다.
+todo프로젝트에서 만든 dao인터페이스에 @Mapper어노테이션을 추가하여 매퍼용 인터페이스임을 알린다.  
+해당 인터페이스는 Mybatis Mapper에서 XML로 구현할 수도 있고, 현 인터페이스에 어노테이션으로 추가할 수 있다.  
+여기서는 xml방식으로 구현한다.  
 
 ## SingerDao인터페이스 구현
 Mybatis Mapper인터페이스 구현은 인터페이스 내에 어노테이션으로 처리할 수도 있고 별도 XML파일로 처리할 수도 있다.  
