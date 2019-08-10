@@ -87,7 +87,7 @@ public class Singer implements Serializable{
 ```
 EntityManager.createNamedQuery()를 이용하여 호출한다.  
 Name 파라미터 설정은 Query.setParameter(), 또는 Query.setParameterList()를 사용하여 설정한다.    
-단일 레코드를 리턴하기 위해 Query.uniqueResult()를 사용하고, 여러 레코드를 리터하려면 Query.getResultList()를 사용한다.  
+단일 레코드를 리턴하기 위해 Query.uniqueResult()를 사용하고, 여러 레코드를 리턴하려면 Query.getResultList()를 사용한다.  
 
 #### insert 메서드 구현
 ```java
