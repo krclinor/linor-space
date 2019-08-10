@@ -150,6 +150,11 @@ JPQL은 select다음에 new 키워드와 함께 사용자정의 도메인 클래
 JPQL이 아닌 SQL문을 직접 사용하려면 EntityManager.createNativeQuery()메서드를 사용하여 처리한다.  
 
 ## 결과 테스트
+### 초기데이타 로딩 
+개발용 시작시 초기데이타를 로딩한다.   
+소스 : [AppStartupRunner.java](src/main/java/com/linor/singer/config/AppStartupRunner.java)
+
+### Junit 테스팅
 Junit으로 SingerDaoTests를 실행한다.
 
 ## 정리
