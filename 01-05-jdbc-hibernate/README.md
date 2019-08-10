@@ -1,10 +1,12 @@
 # Hibernate Session
 Hibernate Session을 이용하여 Dao인터페이스를 구현해 본다.  
-데이타베이스는 postgresql과 h2 둘 다 되는 시스템을 구현한다. 
+데이타베이스는 postgresql과 h2 둘 다 되는 시스템을 구현해 본다.   
   
 ## Spring Boot Starter를 이용한 프로젝트 생성
 Spring Boot -> Spring Starter Project로 생성한다.  
-추가할 dependency : devtools, lombok, postgresql, h2, jpa, hibernate-types-52
+
+### 의존성 라이브러리
+todo 프로젝트 의존성 라이브러리에 jpa와 hibernate-types-52를 추가한다.  
 
 소스 : [pom.xml](pom.xml)
 ```xml
@@ -32,7 +34,11 @@ Spring Boot -> Spring Starter Project로 생성한다.
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
         <!-- Hibernate CamelCase를 SnakeCase로 변경 -->
         <dependency>
             <groupId>com.vladmihalcea</groupId>
@@ -43,7 +49,7 @@ Spring Boot -> Spring Starter Project로 생성한다.
 ```
 추가한 h2는 내장 데이타베이스로 h2데이타베이스와 postgresql데이타베이스에서 테스트하기 위해 추가한다. 
 
-### application.yml 설정
+### 어플리케이션 설정
 hibernate관련 설정을 추가한다.  
 
 소스 : [application.yml](src/main/resources/application.yml)
@@ -57,7 +63,7 @@ spring.profiles.active: [postgres, dev]
 h2데이타베이스로 테스트하려면 postgres를 h2로 변경한다.  
 개발용으로 테스트자료를 로딩하기 위해 dev프로파일을 등록하여 사용한다.  
 
-#### postgreSql 데이타 소스 및 JPA 설정
+#### postgreSql 데이타베이스용 데이타 소스 및 JPA 설정
 ```yml
 #데이타소스
 spring: 
@@ -95,7 +101,7 @@ ddl-auto는 시스템 시작시 스키마 생성 규칙을 정의하는 것으�
 - none : 스키마 작업을 하지 않는다.  
 
 dialect는 사용하는 데이타베이스가 postgresql이므로 org.hibernate.dialect.PostgreSQLDialect를 설정한다.  
-physical-naming-strategy에 Camel Case로 작성된 객체의 프로퍼티를 Snake Case로 작성된 테이블 칼럼과 매핑될 수 있도록 
+physical-naming-strategy에 Camel Case로 작성된 객체의 맴버변수를 Snake Case로 작성된 테이블 칼럼과 매핑될 수 있도록 
 CamelCaseToSnakeCaseNamingStrategy로 설정한다.  
 postgresql을 사용하는 경우 발생하는 오류를 제거하기 위해 jdbc.lob.non_contextual_creation을 true로 설정한다.  
 show_sql을 true로 설정하면  hibernate가 생성한 sql문을 볼 수 있고,    
@@ -131,6 +137,8 @@ spring:
 dialect는 사용하는 데이타베이스가 h2이므로 org.hibernate.dialect.H2Dialect를 설정한다.  
 
 ### 엔터티 클래스 생성
+도메인 클래스라 불리던 클래스가 JPA에서는 주로 엔터티라고 부른다.  
+
 #### Singer 엔터티 클래스(일대다, 다대다 관계)
 가수 엔터티 클래스를 생성한다.  
 가수 엔터티는 앨범 엔터티와 일대다, 악기 엔터티와 다대다의 관계이다.  
@@ -138,7 +146,7 @@ dialect는 사용하는 데이타베이스가 h2이므로 org.hibernate.dialect.
 소스 : [Singer.java](src/main/java/com/linor/singer/domain/Singer.java)
 ```java
 @Entity
-//@Table(name="singer")
+@Table(name="singer", uniqueConstraints = {@UniqueConstraint(name = "singer_uq_01", columnNames = {"firstName", "lastName"})})
 @NamedQueries({
     @NamedQuery(name="Singer.findById",
             query="select distinct s from Singer s " +
@@ -160,24 +168,28 @@ public class Singer implements Serializable{
     private Integer id;
     
     //@Column(name="first_name")
+    @Column(length = 60)
     private String firstName;
     
-    //@Column(name="last_name")
+    @Column(length = 60)
     private String lastName;
     
     //@Column(name="birth_date")
     private LocalDate birthDate;
     
-    @OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.LAZY)
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true)
+    //@ToString.Exclude
+    //@EqualsAndHashCode.Exclude
+    @Singular
     private Set<Album> albums = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name="singer_instrument", 
-        joinColumns=@JoinColumn(name="singer_id"),
-        inverseJoinColumns=@JoinColumn(name="instrument_id"))
-    @EqualsAndHashCode.Exclude
+        joinColumns=@JoinColumn(name="singer_id",foreignKey = @ForeignKey(name="fk_singer_instrument_fk_01")),
+        inverseJoinColumns=@JoinColumn(name="instrument_id",foreignKey = @ForeignKey(name="fk_singer_instrument_fk_02")))
+    //@ToString.Exclude
+    //@EqualsAndHashCode.Exclude
+    @Singular
     private Set<Instrument> instruments = new HashSet<>();
     
     @Version
@@ -189,6 +201,14 @@ public class Singer implements Serializable{
     }
     public void reoveAlbum(Album album) {
         getAlbums().remove(album);
+    }
+
+    public boolean addInstrument(Instrument instrument) {
+        instrument.addSinger(this);
+        return getInstruments().add(instrument);
+    }
+    public void reoveInstrument(Instrument instrument) {
+        getInstruments().remove(instrument);
     }
 }
 ```
