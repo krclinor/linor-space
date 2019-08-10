@@ -36,5 +36,4 @@ public class Instrument implements Serializable{
 //	public void removeSinger(Singer singer) {
 //		getSingers().remove(singer);
 //	}
-
 }

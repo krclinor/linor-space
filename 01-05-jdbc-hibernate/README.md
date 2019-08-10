@@ -306,18 +306,22 @@ public class Instrument implements Serializable{
     //@Column(name = "instrument_id")
     private String instrumentId;
 
-    @ManyToMany
-    @JoinTable(name = "singer_instrument", joinColumns = @JoinColumn(name = "instrument_id"), inverseJoinColumns = @JoinColumn(name = "singer_id"))
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private Set<Singer> singers = new HashSet<>();
+//  @ManyToMany
+//  @JoinTable(name = "singer_instrument", joinColumns = @JoinColumn(name = "instrument_id"), inverseJoinColumns = @JoinColumn(name = "singer_id"))
+//  @ToString.Exclude
+//  @EqualsAndHashCode.Exclude
+//  @Singular
+//  private Set<Singer> singers = new HashSet<>();
+//  
+//  public boolean addSinger(Singer singer) {
+//      return getSingers().add(singer);
+//  }
+//  public void removeSinger(Singer singer) {
+//      getSingers().remove(singer);
+//  }
 }
 ```
-@ManyToMany는 다대다 매핑을 의미한다.  
-@JoinTable은 다대다 매핑에 사용되는 테이블을 정의한다.  
-@JoinTable(name="singer_instrument", joinColumns = @JoinColumn(name="SINGER_ID"), 
-inverseJoinColumns=@JoinColumn(name="INSTRUMENT_ID"))은 SINGER_INSTRUMENT이라는 
-조인테이블에 칼럼이 SINGER_ID이고 상대 조인컬럼은 INSTRUMENT_ID임을 나타낸다.
+악기는 가수와 다대다 매핑이지만 악기를 이용하여 가수를 조회할 필요가 없는 경우 악기에서는 다대다를 표현할 필요는 없다.  
 
 ### DAO인터페이스 구현클래스 생성
 SingerDao인터페이스를 Hibernate가 제공하는 Session을 이용하여 구현한다.
