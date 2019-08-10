@@ -109,15 +109,13 @@
 	<selectKey keyProperty="id" resultType="int" order="BEFORE">
 		Select nextval(pg_get_serial_sequence('singer', 'id'))
 	</selectKey>
-	begin;
-		insert into singer(id, first_name, last_name, birth_date)
-		values(#{id}, #{firstName}, #{lastName}, #{birthDate});
-		<if test="albums != null">
-			<foreach collection="albums" item="album">
-				insert into album (singer_id, title, release_date)
-				values (#{id}, #{album.title}, #{album.releaseDate});
-			</foreach>
-		</if>
-	end;
+	insert into singer(id, first_name, last_name, birth_date)
+	values(#{id}, #{firstName}, #{lastName}, #{birthDate});
+	<if test="albums != null">
+		<foreach collection="albums" item="album">
+			insert into album (singer_id, title, release_date)
+			values (#{id}, #{album.title}, #{album.releaseDate});
+		</foreach>
+	</if>
 </insert>
 </mapper>

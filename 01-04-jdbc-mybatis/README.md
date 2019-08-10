@@ -221,22 +221,19 @@ insert문 실행 후 mybatis가 singer객체의 id에 값을 대입한다.
     <selectKey keyProperty="id" resultType="int" order="BEFORE">
         Select nextval(pg_get_serial_sequence('singer', 'id'))
     </selectKey>
-    begin;
-        insert into singer(id, first_name, last_name, birth_date)
-        values(#{id}, #{firstName}, #{lastName}, #{birthDate});
-        <if test="albums != null">
-            <foreach collection="albums" item="album">
-                insert into album (singer_id, title, release_date)
-                values (#{id}, #{album.title}, #{album.releaseDate});
-            </foreach>
-        </if>
-    end;
+    insert into singer(id, first_name, last_name, birth_date)
+    values(#{id}, #{firstName}, #{lastName}, #{birthDate});
+    <if test="albums != null">
+        <foreach collection="albums" item="album">
+            insert into album (singer_id, title, release_date)
+            values (#{id}, #{album.title}, #{album.releaseDate});
+        </foreach>
+    </if>
 </insert>
 ```
 주요 sql문을 처리하기 전에 sql문을 처리할 수 있는 selectKey를 제공한다.  
 selectKey에서 처리 후 결가 값을 keyProperty에 선언한 id에 저장하는에 이 id는 Singer클래스의 프로퍼티로 선언되어 있어야 한다.  
-order를 BEFORE로 선언함으로써 주 쿼리 실행전에 처리하도록 한다.  
-plsql을 처리하기 위해서는 begin end;블록으로 감싸서 처리한다.  
+order를 BEFORE로 선언함으로써 주 쿼리 실행전에 처리하도록 한다.   
 
 ## 결과 테스트
 Junit으로 SingerDaoTests를 실행한다.
