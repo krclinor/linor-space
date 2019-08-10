@@ -77,10 +77,15 @@ public class SingerDaoImpl implements SingerDao {
         }
     }
 ```
-PreparedStatement를 이용하여 "select * from singer"sql문을 실행한 후  
-결과를 Singer클래스 객체에 담은 리스트객체를 리턴하는 메서드를 구현하였다.  
 @Override어노테이션은 인터페이스로 상속받은 메서드임을 표시한다.  
 @Slf4j어노테이션을 설정하였기 때문에 log.info나 log.error메서드를 사용하여 로그를 뿌릴 수 있다.  
+
+Native JDBC를 이용하여 구현할 때 적용되는 전형적이 방식으로 데이타소스에서 Connection을 받고, 
+Connection.prepareStatement()로 SQL문을 파라미터값으로 전달하여 Statement를 생성한 다음 
+PreparedStatement.executeQuery()를 실행하여 결과를 ResultSet으로 받아와서 
+결과가 배열인 경우 ResultSet.next()가 참인동안 
+각각의 결과를 ResultSet.getString(), ResultSet.getInt()등을 이용하여 객체에 담는다.  
+조회가 완료되면 사용했던 ResultSet, PreparedStatement, Connection을 모두 닫는다.  
 
 ### insert 메서드 구현
 ```java
