@@ -91,7 +91,7 @@ todo프로젝트에서 만든 dao인터페이스에 @Mapper어노테이션을 �
 
 ## SingerDao인터페이스 구현
 Mybatis Mapper인터페이스를 XML파일로 구현한다.  
-
+eclipse Marketplace에서 Mybatipse플러그인을 설치하면 Mybatis Mapper xml파일을 쉽게 생성할 수 있다.  
 소스 : [SingerDao.xml](src/main/resources/com/linor/singer/dao/SingerDao.xml)  
 
 ### Mapper 선언부
