@@ -25,8 +25,8 @@ spring:
 #      minimum-idle: 0
 
   jpa:
-#    show-sql: true
-    open-in-view: false  #Entity Join시 fetch타입이 디폴트인 LAZY가 가능하도록 
+    show-sql: true
+#    open-in-view: false  #Entity Join시 fetch타입이 디폴트인 LAZY가 가능하도록 
     hibernate:
       ddl-auto: create
     properties:
@@ -57,7 +57,7 @@ spring:
 #      minimum-idle: 0
   jpa:
 #    show-sql: true
-    open-in-view: false  #Entity Join시 fetch타입이 디폴트인 LAZY가 가능하도록 
+#    open-in-view: false  #Entity Join시 fetch타입이 디폴트인 LAZY가 가능하도록 
     hibernate:
       ddl-auto: create
     properties:

@@ -2,16 +2,16 @@
 ## Spring Boot Starter를 이용한 프로젝트 생성
 스프링이 제공하는 JpaRepository인터페이스를 이용하여 개발해 본다.  
 
-### 사용 라이브러리
+## Spring Boot Starter를 이용한 프로젝트 생성
+### 의존성 라이브러리
 Hibernate 프로젝트와 동일하게 설정한다.  
-
-### application.yml설정
-설정은 hibernate프로젝트와 동일하게 설정한 후 다음 내용을 수정한다.  
+소스 : [pom.xml](pom.xml)
+### 어플리케이션 설정
+hibernate프로젝트와 동일하게 설정한 다음 아래 내용을 수정한다  .    
 소스 : [application.yml](src/main/resources/application.yml)
 ```yml
   jpa:
 #    show-sql: true
-    open-in-view: false  #Entity Join시 fetch타입이 디폴트인 LAZY가 가능하도록 
     hibernate:
       ddl-auto: create
     properties:
@@ -24,11 +24,15 @@ Hibernate 프로젝트와 동일하게 설정한다.
         enable_lazy_load_no_trans: true #일대다 매핑에서 fetch를 Lazy로하는 경우 오류 막음
         #temp.use_jdbc_metadata_default: false
 ```
-open-in-view를 false로 설정하고, enable_lazy_load_no_trans를 true로 설정하여 엔터티 매핑의 
+enable_lazy_load_no_trans를 true로 설정하여 엔터티 매핑의 
 fetch 속성의 디폴트 값인 Lazy모드에 발생하는 오류를 막는다.  
 
 ### 엔터티 클래스 생성
-jpa 프로젝트에서 생성한 Singer, Album, Instrument, SingerSummary를 그대로 사용한다.  
+생성한 Singer, Album, Instrument 엔터티 및 SingerSummary 도메인 클래스 jpa 프로젝트와 동일하다.  
+소스 : [Singer.java](src/main/java/com/linor/singer/domain/Singer.java)  
+소스 : [Album.java](src/main/java/com/linor/singer/domain/Album.java)  
+소스 : [Instrument.java](src/main/java/com/linor/singer/domain/Instrument.java)  
+소스 : [SingerSummary.java](src/main/java/com/linor/singer/domain/SingerSummary.java)
 
 ### SingerRepository 인터페이스 생성
 소스 : [SingerRepository.java](src/main/java/com/linor/singer/repository/SingerRepository.java)
