@@ -140,7 +140,7 @@ values
 ### Domain 클래스 생성
 도메인 클래스는 보통 테이블에 대응되는 엔터티 클래스로 Singer와 Album클래스를 생성한다.  
   
-소스[Singer.java](/src/main/java/com/linor/singer/domain/Singer.java)
+소스 : [Singer.java](/src/main/java/com/linor/singer/domain/Singer.java)
 ```java
 @Data
 public class Singer {
@@ -161,7 +161,7 @@ public class Singer {
 Data어노테이션은 Lombok에서 제공하는 것으로 자동으로 get/set메서드를 생성하여 코딩을 깔끔하게 작성할 수 있다.
 
 
-소스[Album.java](/src/main/java/com/linor/singer/domain/Album.java)
+소스 : [Album.java](/src/main/java/com/linor/singer/domain/Album.java)
 ```java
 @Data
 public class Album {
