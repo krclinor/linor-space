@@ -1,4 +1,4 @@
-package com.linor.singer.respository;
+package com.linor.singer.repository;
 
 import java.util.List;
 
