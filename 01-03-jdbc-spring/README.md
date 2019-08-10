@@ -75,7 +75,7 @@ insert,update,delete sql문을 사용할 수 없게 된다.
 데이타소스를 파라미터로 전달하여 JdbcTemplate객체를 생성한다.  
 JdbcTemplate.query()에 SQL문과, RowMapper인터페이스 구현객체를 생성하여 파라미터로 전달한다.  
 JdbcTemplate.query()는 여러 레코드인 배열객체를 리턴하고, JdbcTemplate.queryForObject()는 단일 레코드인 단일객체를 리턴한다.   
-RowMapper인터페이스 구현체로 mapRow()를 구현해서 사용하는데 매개변수로 ResultSet과, 레코드 번호가 넘어온다.  
+RowMapper인터페이스 구현체로 mapRow()를 구현해서 사용하며, 매개변수로 ResultSet과, 레코드 번호가 넘어온다.  
 SQL문에 의해 추출된 ResultSet값을 객체에 매핑하여 결과객체를 리턴한다.  
 
 RowMapper를 이용한 방법은 가장 일반적인 방법이지만 코딩 길이가 약간 길다.  
@@ -157,8 +157,8 @@ RowMapper를 이용한 방법은 가장 일반적인 방법이지만 코딩 길�
         }
     }
 ```
-하나의 ResultSet을 하나의 도메인 오브젝트로 매핑하는 경우에는 RowMapper<T>를 사용하면 되지만 복잡한 
-도메인 오브젝트 매핑은 ResultSetExtractor사용한다. 
+하나의 ResultSet을 하나의 도메인 객체로 매핑하는 경우에는 RowMapper<T>를 사용하면 되지만 복잡한 
+도메인 객체 매핑은 ResultSetExtractor사용한다. 
 
 ### findById 메서드 구현(파라미터 처리)
 #### 방법1. 람다함수를 이용한 방법
@@ -178,6 +178,8 @@ RowMapper를 이용한 방법은 가장 일반적인 방법이지만 코딩 길�
         });
     }
 ```
+파라미터 값을 전달하기 위해 Object배열 객체를 사용한다.  
+
 #### 방법2. BeanPropertyRowMapper를 이용한 방법
 ```java
     @Override
@@ -188,9 +190,8 @@ RowMapper를 이용한 방법은 가장 일반적인 방법이지만 코딩 길�
         return (Singer)jdbcTemplate.queryForObject(sql, new Object[] {id}, new BeanPropertyRowMapper<Singer>(Singer.class));
     }
 ```
-파라미터 값을 전달하기 위해 Object배열 객체를 사용한다.  
 
-### findNameById 메서드 구현
+### findNameById 메서드 구현(명명된 파라미터)
 #### 이름이 부여된 파라미터 처리
 ```java
     @Override
@@ -205,7 +206,7 @@ RowMapper를 이용한 방법은 가장 일반적인 방법이지만 코딩 길�
 ```
 이름이 부여된 파라미터를 처리하기 위해서 sql문에 :(콜론)을 이용하여 파라미터에 이름을 부여한다.  
 jdbcTemplate은 NamedParameterJdbctTemplate클래스로 생성한다.  
-파라미터는 맵객체를 이용하여 전달한다.  
+파라미터는 Map객체를 이용하여 전달한다.  
 
 ### insert 메서드 구현
 #### SqlUpdate이용한 자료 수정
@@ -236,10 +237,11 @@ jdbcTemplate은 NamedParameterJdbctTemplate클래스로 생성한다.
         log.info("추가된 가수ID: {}",singer.getId() );
     }
 ```
-SqlUpdate클래스를 상속받아 InsertSinger클래스를 생성한다.
+SqlUpdate클래스를 상속받아 InsertSinger클래스를 생성한다.  
 InsertSinger클래스의 생성자에서 데이타소스와 sql문을 설정하고, 이름이 부여된 파라미터를 매칭하기 위하여 declareParameter메서드에 
 SqlParamter클래스 객체로 파라미터명과 타입을 선언한다.     
 setGeneratedKeysColumnNames메서드를 이용하여 자동으로 생성되는 키칼럼을 설정한다.    
+
 인서트시 자동으로 생성된 키값은 KeyHolder를 이용하여 받아온다.  
 
 ### insertWithAlbum 메서드 구현
