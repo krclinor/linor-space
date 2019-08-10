@@ -4,11 +4,13 @@ TopLink등이 있다.
 JPA EntityManager를 이용하여 처리하는 방법을 배워본다.  
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
-### 사용 라이브러리
+### 의존성 라이브러리
 Hibernate 프로젝트와 동일하게 설정.  
+소스 : [pom.xml](pom.xml)
 
-### application.yml 설정
-Hibernate프로젝트에서 생성한 설정과 동일하게 설정한다.  
+### 어플리케이션 설정
+hibernate프로젝트와 동일하게 설정.    
+소스 : [application.yml](src/main/resources/application.yml)
 
 ### 엔터티 클래스 생성
 생성한 Singer, Album, Instrument 엔터티 클래스는 hibernate프로젝트에서 생성한 엔터티 클래스와 동일하다.  
