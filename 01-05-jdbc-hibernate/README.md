@@ -340,8 +340,8 @@ public class SingerDaoImpl implements SingerDao {
     }
     
 ```
-@Transactional은 데이터베이스 트랜잭션을 처리하기 위하여 설정한다.  
-@Repository는 Persistency레이어에서 빈을 정의하기 위해 사용하는 어노테이션이다.  
+@Transactional은 선언적인 트랜잭션을 사용하기 위하여 설정한다.  
+@Repository는 Persistency레이어용 빈으로 선언한다.  
 인스턴스 생성시 EntityManager를 주입할 수 있도록 @Autowired어노테이션을 설정한다. 
 entityManager를 이용하여 현재 세션을 가져오는 getCurrentSession메서드를 구현한다.
 
@@ -358,10 +358,11 @@ entityManager를 이용하여 현재 세션을 가져오는 getCurrentSession메
 ```
 entityManager에서 현재 세션을 받아와 session에 대입한다.  
 session으로 쿼리문을 실행한다. 여기서 사용되는 쿼리문은 Hibernate Query Language(HQL)로 데이터베이스의 SQL문과 다르다.  
-"from Singer s"는 sql문 "select s from Singer s"와 동일하다.  
+"from Singer s"는 JPQL문 "select s from Singer s"와 동일하다.  
 
 #### findByFirstName 메서드 구현(NamedQuery)
-NamedQuery를 사용하기 위해 먼저 엔터티 클래스에서 NamedQuery를 작성한다.
+NamedQuery를 사용하기 위해 먼저 엔터티 클래스에서 NamedQuery를 작성한다.  
+Singer 엔터티 클래스에 선언한 내용이다.
 ```java
 @NamedQueries({
     @NamedQuery(name="Singer.findByFirstName",
@@ -426,7 +427,7 @@ Session.delete()를 호출하여 레코드를 삭제한다.
 
 ## 결과 테스트
 ### 초기데이타 로딩 
-개발용 시스템으로 시작시 초기데이타를 로딩한다.   
+개발용 시작시 초기데이타를 로딩한다.   
 
 소스 : [AppStartupRunner.java](src/main/java/com/linor/singer/config/AppStartupRunner.java)
 ```java
@@ -507,7 +508,7 @@ public class AppStartupRunner implements ApplicationRunner {
     }
 }
 ```
-@Profile("dev") : 프로파일이 dev를 포함된는 경우 실행되도록 한다.  
+@Profile("dev") : 설정에서 액티브 프로파일이 dev를 포함된는 경우 실행되도록 한다.  
 
 빈으로 등록하기 위해 @Component를 선언한다.  
 
@@ -515,7 +516,6 @@ ApplicationRunner인터페이스를 상속받아 run메서드를 구현한다.
 
 ### Junit 테스팅
 Junit으로 SingerDaoTests를 실행한다.
-
 
 ## 정리
 Hibernate는 OR매핑툴 중에서 가장 많이 사용되고 있다.  
