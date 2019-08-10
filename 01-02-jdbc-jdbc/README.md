@@ -19,8 +19,8 @@ todo 프로젝트와 동일하게 설정한다.
 소스 : [data.sql](src/main/resources/data.sql)  
 
 ### Domain 클래스 생성
-소스 : [Singer.java](/src/main/java/com/linor/singer/domain/Singer.java)  
-소스 : [Album.java](/src/main/java/com/linor/singer/domain/Album.java)  
+소스 : [Singer.java](src/main/java/com/linor/singer/domain/Singer.java)  
+소스 : [Album.java](src/main/java/com/linor/singer/domain/Album.java)  
 
 ### DAO인터페이스 생성
 todo 프로젝트와 동일하게 구현.  
