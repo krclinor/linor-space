@@ -1,7 +1,18 @@
 # Spring JDBC Template을 이용한 구현
- 
-## SingerDao인터페이스 구현
 Spring에서 제공하는 JdbcTemplate을 이용하여 SingerDao인터페이스를 구현한다.
+
+## Spring Boot Starter를 이용한 프로젝트 생성
+Spring Boot -> Spring Starter Project로 생성한다.  
+
+### 의존성 라이브러리
+todo 프로젝트와 동일하게 설정한다.  
+소스 : [pom.xml](pom.xml)
+
+### 데이타 소스 설정
+todo 프로젝트와 동일하게 설정한다.  
+소스 : [application.yml](src/main/resources/application.yml)  
+
+## SingerDao인터페이스 구현
 
 소스 : [SingerDaoImpl.java](src/main/java/com/linor/singer/spring/SingerDaoImpl.java)
 ### 클래스에 선언한 어노테이션
