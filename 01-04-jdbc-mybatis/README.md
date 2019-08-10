@@ -1,7 +1,7 @@
 # Mybatis를 이용한 구현
 SingerDao인터페이스를 Mybatis로 구현한다.  
 
-마이바티스 참조 URL : http://www.mybatis.org
+마이바티스 홈페이지 : http://www.mybatis.org
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
 Spring Boot -> Spring Starter Project로 생성한다.  
