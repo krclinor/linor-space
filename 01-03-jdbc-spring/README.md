@@ -48,8 +48,6 @@ public class SingerDaoImpl implements SingerDao {
  데이타소스를 선언하고 @Autowired어노테이션으로 스프링이 데이타소스를 주입하도록 한다.
 
 ### findAll 메서드 구현
-JdbcTemplate의 query메서드는 여러 레코드인 배열객체를 리턴하고, queryForObject메서드는 단일 레코드인 단일객체를 리턴한다.   
-
 #### 방법1. RowMapper클래스2를 이용한 방법
 ```java
     @Override   
@@ -71,7 +69,17 @@ JdbcTemplate의 query메서드는 여러 레코드인 배열객체를 리턴하�
         });
     }
 ```
-#### 방법2. 람다 함수를 이용한 방법
+ReadOnly트랜잭션을 타도록 하기 위해 @Transactional(readOnly=true)를 설정한다. 이렇게 하면 해당 메서드에서는   
+insert,update,delete sql문을 사용할 수 없게 된다.
+
+데이타소스를 파라미터로 전달하여 JdbcTemplate객체를 생성한다.  
+JdbcTemplate.query()에 SQL문과, RowMapper인터페이스 구현객체를 생성하여 파라미터로 전달한다.  
+JdbcTemplate.query()는 여러 레코드인 배열객체를 리턴하고, JdbcTemplate.queryForObject()는 단일 레코드인 단일객체를 리턴한다.   
+RowMapper인터페이스 구현체로 mapRow()를 구현해서 사용하는데 매개변수로 ResultSet과, 레코드 번호가 넘어온다.  
+SQL문에 의해 추출된 ResultSet값을 객체에 매핑하여 결과객체를 리턴한다.  
+
+RowMapper를 이용한 방법은 가장 일반적인 방법이지만 코딩 길이가 약간 길다.  
+#### 방법2. 람다 함수를 이용한 RowMapper 구현방법
 ```java
     @Override   
     @Transactional(readOnly=true)
@@ -89,6 +97,7 @@ JdbcTemplate의 query메서드는 여러 레코드인 배열객체를 리턴하�
         });
     }
 ```
+이 방법은 코딩 길이가 줄지만 자바 8이상에서만 가능하다.
 #### 방법3. BeanPropertyRowMapper를 이용한 방법
 ```java
     @Override   
@@ -100,12 +109,7 @@ JdbcTemplate의 query메서드는 여러 레코드인 배열객체를 리턴하�
         return template.query(sql, new BeanPropertyRowMapper<Singer>(Singer.class));
     }
 ```
-방법1 RowMapper를 이용한 방법은 가장 일반적인 방법이지만 코딩 길이가 약간 길다.  
-방법2 람다함수를 이용한 방법은 RowMapper를 이용한 방법보다 코딩 길이가 줄지만 자바 8이상에서만 가능하다.  
-방법3 BeanPropertyRowMapper를 이용한 방법은 snake case를 camel case로 자동변환까지 가능한 쉽고, 단순하지만 성능면에서 위 2가지 방법보다 떨어질 수 있다.  
-
-ReadOnly트랜잭션을 타도록 하기 위해 @Transactional(readOnly=true)를 설정한다. 이렇게 하면 해당 메서드에서는   
-insert,update,delete sql문을 사용할 수 없게 된다..
+이 방법은 snake case를 camel case로 자동변환까지 가능한 쉽고, 단순하지만 성능면에서 위 2가지 방법보다 떨어질 수 있다.  
 
 ### findAllWithAlbums 메서드 구현
 #### ResultSetExtractor를 이용한 중첩 도메인 오브젝트 추출
