@@ -76,6 +76,7 @@ Spring Boot -> Spring Starter Project로 생성한다.
         </dependency>
     </dependencies>
 ```
+## 설정
 ### 데이타 소스 설정
 스프링부트에서 사용할 데이타소스를 설정한다.  
 소스 : [application.yml](src/main/resources/application.yml)
@@ -137,7 +138,8 @@ values
 (1, '날개를 활짝펴고','20190201'),
 (2, '황혼의 문턱','20190301');
 ```
-### Domain 클래스 생성
+
+## Domain 클래스 생성
 도메인 클래스는 보통 테이블에 대응되는 엔터티 클래스로 Singer와 Album클래스를 생성한다.  
   
 소스 : [Singer.java](src/main/java/com/linor/singer/domain/Singer.java)
@@ -172,7 +174,7 @@ public class Album {
 }
 ```
 
-### DAO인터페이스 생성
+## DAO인터페이스 생성
 데이타베이스를 이용한 처리 인터페이스 선언으로 향후 이 인터페이스를 구현할 예정이다.  
 
 소스 : [SingerDao.java](src/main/java/com/linor/singer/dao/SingerDao.java)  
