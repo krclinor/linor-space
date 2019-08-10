@@ -93,7 +93,7 @@ platform을 postgres로 설정하고, initialization-model가 always이면 어�
 schema-postgre.sql과 data-postgres.sql 스크립트를 실행한다.
 데이타베이스 스키마 생성을 스크립트로 하려면 다음에 나오는 ddl-auto를 none으로 설정해야 한다.  
 
-initialization-mode를 never로 설정하여 schema.sql과 data.sql 스크립트가 실행되지 않도록 한다.  
+initialization-mode를 never로 설정하면 schema-postgre.sql과 data-postgres.sql 스크립트가 실행되지 않는다.  
 테이블 생성은 ddl-auto를 create로 설정하여 Hibernate가 만들도록 설정한다.  
 ddl-auto는 시스템 시작시 스키마 생성 규칙을 정의하는 것으로 create, create-update, update, none중 하나를 등록한다.
 - create : 기존에 존재하면 drop하고 테이블을 새로 생성한다.
