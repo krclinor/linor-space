@@ -2,7 +2,6 @@
 ## Spring Boot Starter를 이용한 프로젝트 생성
 스프링이 제공하는 JpaRepository인터페이스를 이용하여 개발해 본다.  
 
-## Spring Boot Starter를 이용한 프로젝트 생성
 ### 의존성 라이브러리
 Hibernate 프로젝트와 동일하게 설정한다.  
 소스 : [pom.xml](pom.xml)
