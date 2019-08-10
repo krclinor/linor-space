@@ -110,7 +110,7 @@ namespace에 구현할 인터페이스명을 등록한다.
     select * from singer
 </select>
 ```
-select는 쿼리 작업을 수행하는 데 사용하며, id는 인터페이스의 메서드에 해당하며 매서드 명과 동일해야 한다.  
+select는 쿼리 작업을 수행하는 데 사용하며, id는 인터페이스의 메서드에 해당하며 메서드 명과 동일해야 한다.  
 sql문을 실행 후 칼럼명을 snake case에서 camel case로 변환하여 Singer객체의 각 프로퍼티에 매핑하여 
 배열객체(List<Singer>)로 리턴한다.
 
@@ -130,7 +130,7 @@ sql문을 실행 후 칼럼명을 snake case에서 camel case로 변환하여 Si
     where   singer_id = #{id}
 </select>
 ```
-앨범을 포함한 가수 목록을 조회하기 위해 resultMap에서 가수에 대한 앨범목록 가져오기 위하여 
+앨범을 포함한 가수 목록을 조회하고, resultMap에서 가수에 대한 앨범목록 가져오기 위하여 
 collection에서 select속성에 앨범을 조회하는 selectAlbumsForSinger를 등록한다.
 
 #### 방법2. 중첩 Result를 이용한 조회
