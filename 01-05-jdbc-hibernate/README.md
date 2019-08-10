@@ -264,18 +264,21 @@ Singer의 배열 맴버변수인 albums와 instruments를 쉽게 추가/삭제 �
 소스 : [Album.java](src/main/java/com/linor/singer/domain/Album.java)
 ```java
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(name = "album_uq_01", columnNames = {"singer_id", "title"})})
 @Data
 public class Album implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(length = 100)
     private String title;
 
+    //@Column(name = "release_date")
     private LocalDate releaseDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "singer_id")
+    @ManyToOne
+    @JoinColumn(name = "singer_id", foreignKey = @ForeignKey(name="album_fk_01"))
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Singer singer;
