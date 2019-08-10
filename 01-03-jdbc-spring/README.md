@@ -12,9 +12,23 @@ todo 프로젝트와 동일하게 설정한다.
 todo 프로젝트와 동일하게 설정한다.  
 소스 : [application.yml](src/main/resources/application.yml)  
 
-## SingerDao인터페이스 구현
+### 데이타베이스 초기화 파일 생성
+todo 프로젝트와 동일하게 설정한다.  
 
-소스 : [SingerDaoImpl.java](src/main/java/com/linor/singer/spring/SingerDaoImpl.java)
+소스 : [schema.sql](src/main/resources/schema.sql)  
+소스 : [data.sql](src/main/resources/data.sql)  
+
+### Domain 클래스 생성
+소스[Singer.java](/src/main/java/com/linor/singer/domain/Singer.java)  
+소스[Album.java](/src/main/java/com/linor/singer/domain/Album.java)  
+
+### DAO인터페이스 생성
+todo 프로젝트와 동일하게 구현.  
+소스 : [SingerDao.java](src/main/java/com/linor/singer/dao/SingerDao.java)  
+
+## SingerDao인터페이스 구현
+소스 : [SingerDaoImpl.java](src/main/java/com/linor/singer/spring/SingerDaoImpl.java)  
+
 ### 클래스에 선언한 어노테이션
 ```java
 @Slf4j
