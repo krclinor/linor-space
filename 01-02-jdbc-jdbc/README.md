@@ -1,7 +1,10 @@
 # Native JDBC를 이용한 구현
 01-01-jdbc-todo프로젝트에 SingerDao인터페이스를 일반적인 JDBC프로그램으로 구현한다.  
 
-### 의존성 라이브러리
+## Spring Boot Starter를 이용한 프로젝트 생성
+Spring Boot -> Spring Starter Project로 생성한다.  
+
+## 의존성 라이브러리
 todo 프로젝트와 동일하게 설정한다.  
 소스 : [pom.xml](pom.xml)
 
