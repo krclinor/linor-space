@@ -1,4 +1,4 @@
-# JPA Repository
+# Spring JPA Repository
 ## Spring Boot Starter를 이용한 프로젝트 생성
 스프링이 제공하는 JpaRepository인터페이스를 이용하여 개발해 본다.  
 
