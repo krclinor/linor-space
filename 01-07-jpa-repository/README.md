@@ -353,6 +353,15 @@ JpaRepository를 사용하는 경우 테스트케이스에 @Transactional어노�
 JpaRepository는 트랜잭션이 커밋될 때 update sql문을 생성하는 듯 하다.  
 따라서 테스트케이스에서 트랜잭션을 사용하면 테스트가 종료되는 시점에 롤백이 발생하여 update sql문이 만들어 지지 않는다.  
 
+소스 : [SingerDaoTests.java](src/test/java/com/linor/singer/SingerDaoTests.java)    
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest
+//@Transactional
+@Slf4j
+public class SingerDaoTests {
+```
+
 ## 정리
 JpaRepository는 Spring에서 제공하는 인터페이스로 JPA를 좀더 쉽게 사용할 수 있도록 한다.
  
