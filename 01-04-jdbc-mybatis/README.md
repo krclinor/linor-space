@@ -1,10 +1,49 @@
 # Mybatis를 이용한 구현
-01-01-jdbc-todo프로젝트에 SingerDao인터페이스를 Mybatis로 구현한다.  
+SingerDao인터페이스를 Mybatis로 구현한다.  
 
 마이바티스 참조 URL : http://www.mybatis.org
 
-## Mybatis 설정
-소스 : [application.yml](src/main/resources/application.yml)
+## Spring Boot Starter를 이용한 프로젝트 생성
+Spring Boot -> Spring Starter Project로 생성한다.  
+
+### 의존성 라이브러리
+todo 프로젝트 의존성 라이브러리에 mybatis-spring-boot-starter를 추가한다.  
+소스 : [pom.xml](pom.xml)
+```xml
+    <dependencies>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+    </dependencies>
+```
+## 설정
+소스 : [application.yml](src/main/resources/application.yml)  
+
+### 데이타 소스 설정
+todo 프로젝트와 동일하게 설정한다.  
+
+### Mybatis 설정
 ```yml
 #마이바티스
 mybatis:
