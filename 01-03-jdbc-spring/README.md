@@ -8,6 +8,7 @@ Spring Boot -> Spring Starter Project로 생성한다.
 todo 프로젝트와 동일하게 설정한다.  
 소스 : [pom.xml](pom.xml)
 
+## 설정
 ### 데이타 소스 설정
 todo 프로젝트와 동일하게 설정한다.  
 소스 : [application.yml](src/main/resources/application.yml)  
@@ -18,11 +19,11 @@ todo 프로젝트와 동일하게 설정한다.
 소스 : [schema.sql](src/main/resources/schema.sql)  
 소스 : [data.sql](src/main/resources/data.sql)  
 
-### Domain 클래스 생성
+## Domain 클래스 생성
 소스 : [Singer.java](src/main/java/com/linor/singer/domain/Singer.java)  
 소스 : [Album.java](src/main/java/com/linor/singer/domain/Album.java)  
 
-### DAO인터페이스 생성
+## DAO인터페이스 생성
 todo 프로젝트와 동일하게 구현.  
 소스 : [SingerDao.java](src/main/java/com/linor/singer/dao/SingerDao.java)  
 
