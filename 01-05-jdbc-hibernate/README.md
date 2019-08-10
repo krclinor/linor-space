@@ -216,7 +216,7 @@ public class Singer implements Serializable{
 @Entity는 해당 클레스가 엔터티 클래스임을 표시한다.  
 @Table은 매핑될 데이터베이스 테이블명을 설정한다. @Table(name = "singer")은 데이터베이스의 SINGER테이블과 매핑한다.   
 클래스명과 테이블 명이 동일할 경우 생략 가능하다.  
-@Id는 주키를 표시한다. @GeneratedValue는 자동생성되는 값을 설정하기 위해 사용한다.   
+@Id는 주키를 표시한다.     
 @GeneratedValue는 주키의 값을 위한 자동생성 전략을 명시하는데 사용한다.  
 선택 속성으로 generator와 strategy가 있다.  
 strategy는 persistence provider가 엔티티의 주키를 생성할 때 사용해야 하는 주키생성 전략을 의미한다.  
