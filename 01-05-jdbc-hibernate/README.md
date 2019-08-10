@@ -256,6 +256,8 @@ inverseJoinColumns=@JoinColumn(name="INSTRUMENT_ID"))은 SINGER_INSTRUMENT이라
 @Version은 엔티티가 수정될 때 자동으로 값을 하나씩 증가한다. 엔티티를 수정할 때 조회 시점의 버전과 수정 시점의 버전이 다르면 예외가 발생한다.  
 예를 들어 트랜잭션 1이 조회한 엔티티를 수정하고 있는데 트랜잭션 2에서 같은 엔티티를 수정하고 커밋해서 버전이 증가해버리면 트랜잭션 1이 커밋할 때 버전 정보가 다르므로 예외가 발생한다.
 
+Singer의 배열 맴버변수인 albums와 instruments를 쉽게 추가/삭제 할 수 있도록 addAlbum(), removeAlbum(), addInstrument(), removeInstrument()를 추가한다. 
+
 #### Album 엔터티 클래스(다대일 관계)
 앨범 엔터티는 가수 엔터티와 다대일 관계를 표현한다.    
 

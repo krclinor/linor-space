@@ -84,7 +84,6 @@ public class Singer implements Serializable{
 	}
 
 	public boolean addInstrument(Instrument instrument) {
-		instrument.addSinger(this);
 		return getInstruments().add(instrument);
 	}
 	public void reoveInstrument(Instrument instrument) {
