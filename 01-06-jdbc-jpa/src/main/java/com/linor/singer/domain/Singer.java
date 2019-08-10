@@ -5,8 +5,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,14 +18,15 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.Singular;
 
 @Entity
-//@Table(name="singer")
+@Table(name="singer", uniqueConstraints = {@UniqueConstraint(name = "singer_uq_01", columnNames = {"firstName", "lastName"})})
 @NamedQueries({
 	@NamedQuery(name="Singer.findById",
 			query="select distinct s from Singer s " +
@@ -45,21 +48,28 @@ public class Singer implements Serializable{
 	private Integer id;
 	
 	//@Column(name="first_name")
+	@Column(length = 60)
 	private String firstName;
 	
-	//@Column(name="last_name")
+	@Column(length = 60)
 	private String lastName;
 	
 	//@Column(name="birth_date")
 	private LocalDate birthDate;
 	
-	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true)
+	//@ToString.Exclude
+	//@EqualsAndHashCode.Exclude
+	@Singular
 	private Set<Album> albums = new HashSet<>();
 
 	@ManyToMany
 	@JoinTable(name="singer_instrument", 
-		joinColumns=@JoinColumn(name="singer_id"),
-		inverseJoinColumns=@JoinColumn(name="instrument_id"))
+		joinColumns=@JoinColumn(name="singer_id",foreignKey = @ForeignKey(name="fk_singer_instrument_fk_01")),
+		inverseJoinColumns=@JoinColumn(name="instrument_id",foreignKey = @ForeignKey(name="fk_singer_instrument_fk_02")))
+	//@ToString.Exclude
+	//@EqualsAndHashCode.Exclude
+	@Singular
 	private Set<Instrument> instruments = new HashSet<>();
 	
 	@Version
@@ -74,7 +84,6 @@ public class Singer implements Serializable{
 	}
 
 	public boolean addInstrument(Instrument instrument) {
-		instrument.addSinger(this);
 		return getInstruments().add(instrument);
 	}
 	public void reoveInstrument(Instrument instrument) {

@@ -12,6 +12,7 @@ import javax.persistence.ManyToMany;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Singular;
 import lombok.ToString;
 
 @Entity
@@ -22,17 +23,17 @@ public class Instrument implements Serializable{
 	//@Column(name = "instrument_id")
 	private String instrumentId;
 
-	@ManyToMany
-	@JoinTable(name = "singer_instrument", joinColumns = @JoinColumn(name = "instrument_id"), inverseJoinColumns = @JoinColumn(name = "singer_id"))
-	@ToString.Exclude
-	@EqualsAndHashCode.Exclude
-	private Set<Singer> singers = new HashSet<>();
-
-	public boolean addSinger(Singer singer) {
-		return getSingers().add(singer);
-	}
-	public void reoveSinger(Singer singer) {
-		getSingers().remove(singer);
-	}
-
+//	@ManyToMany
+//	@JoinTable(name = "singer_instrument", joinColumns = @JoinColumn(name = "instrument_id"), inverseJoinColumns = @JoinColumn(name = "singer_id"))
+//	@ToString.Exclude
+//	@EqualsAndHashCode.Exclude
+//	@Singular
+//	private Set<Singer> singers = new HashSet<>();
+//	
+//	public boolean addSinger(Singer singer) {
+//		return getSingers().add(singer);
+//	}
+//	public void removeSinger(Singer singer) {
+//		getSingers().remove(singer);
+//	}
 }

@@ -14,6 +14,9 @@ hibernate프로젝트와 동일하게 설정.
 
 ### 엔터티 클래스 생성
 생성한 Singer, Album, Instrument 엔터티 클래스는 hibernate프로젝트에서 생성한 엔터티 클래스와 동일하다.  
+소스 : [Singer.java](src/main/java/com/linor/singer/domain/Singer.java)
+소스 : [Album.java](src/main/java/com/linor/singer/domain/Album.java)
+소스 : [Instrument.java](src/main/java/com/linor/singer/domain/Instrument.java)
 
 #### SingerSummary 엔터티 클래스(사용자 정의 결과 타입)
 JPQL을 통해 생성한 쿼리에 사용할 사용자 정의 엔터티를 생성한다.    
