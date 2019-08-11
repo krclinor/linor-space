@@ -90,7 +90,7 @@ findAllCamelCaseMap()은 findAll()과 동일한 기능을 하며  List<Singer>�
     select * from singer
 </select>
 ```
-기존 findAll을 복사하여 id와 resultType만 수정한다.  
+기존 findAll을 복사하여 id는 findAllCamelCaseMap, resultType은 CamelCaseMap으로 수정한다.  
 
 ## 결과 테스트
 Junit으로 SingerDaoTests를 실행한다.
