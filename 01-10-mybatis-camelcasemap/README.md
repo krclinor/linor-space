@@ -96,7 +96,7 @@ findAllCamelCaseMap()은 findAll()과 동일한 기능을 하며  List<Singer>�
 Junit으로 SingerDaoTests를 실행한다.
 테스트 케이스이 findAllCamelCaseMap()을 시험하도록 다음을 추가한다.
 
-소스 : [SingerDaoTest.java](src/test/java/com/linor/singer/SingerDaoTest.java)
+소스 : [SingerDaoTests.java](src/test/java/com/linor/singer/SingerDaoTests.java)
 ```java
     @Test
     public void testFindAllCamelCaseMap(){
