@@ -1,4 +1,4 @@
-package com.linor.singer.audit;
+package com.linor.singer.domain;
 
 import java.time.LocalDateTime;
 
@@ -11,13 +11,11 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@Getter
-@Setter
+@Data
 public abstract class Auditable<U> {
 
 	@CreatedBy

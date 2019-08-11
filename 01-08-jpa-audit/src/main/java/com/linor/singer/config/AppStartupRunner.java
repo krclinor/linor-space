@@ -59,7 +59,7 @@ public class AppStartupRunner implements ApplicationRunner {
 		instrument.setInstrumentId("피아노");
 		singer.addInstrument(instrument);
 		
-		singerDao.save(singer);
+		singerDao.insertWithAlbum(singer);
 		
 		singer = new Singer();
 		singer.setFirstName("건모");
@@ -75,7 +75,7 @@ public class AppStartupRunner implements ApplicationRunner {
 		instrument.setInstrumentId("기타");
 		singer.addInstrument(instrument);
 
-		singerDao.save(singer);
+		singerDao.insertWithAlbum(singer);
 
 		singer = new Singer();
 		singer.setFirstName("용필");
@@ -86,7 +86,7 @@ public class AppStartupRunner implements ApplicationRunner {
 		instrument.setInstrumentId("드럼");
 		singer.addInstrument(instrument);
 
-		singerDao.save(singer);
+		singerDao.insertWithAlbum(singer);
 	}
 
 }

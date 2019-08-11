@@ -11,16 +11,36 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
-import com.linor.singer.audit.Auditable;
-
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
-//@Table(name="singer")
+@Table(name="singer", uniqueConstraints = {@UniqueConstraint(name = "singer_uq_01", columnNames = {"firstName", "lastName"})})
+@NamedQueries({
+	@NamedQuery(name="Singer.findById",
+			query="select distinct s from Singer s " +
+			"left join fetch s.albums a " +
+			"left join fetch s.instruments i " +
+			"where s.id = :id"),
+	@NamedQuery(name="Singer.findAllWithAlbum",
+			query="select distinct s from Singer s \n"
+					+ "left join fetch s.albums a \n"
+					+ "left join fetch s.instruments i"),
+	@NamedQuery(name="Singer.findByFirstName",
+	query="select distinct s from Singer s \n"
+			+ "where s.firstName = :firstName")
+})
 @Data
+@EqualsAndHashCode(callSuper=false)
+@ToString(callSuper = true)
 public class Singer extends Auditable<String>{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,7 +79,6 @@ public class Singer extends Auditable<String>{
 		getAlbums().remove(album);
 	}
 	public boolean addInstrument(Instrument instrument) {
-		instrument.addSinger(this);
 		return getInstruments().add(instrument);
 	}
 	public void reoveInstrument(Instrument instrument) {
