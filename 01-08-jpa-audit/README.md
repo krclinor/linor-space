@@ -1,4 +1,4 @@
-# JPA Audit
+# Spring JPA Audit
 JPA Audit(감사)기능에 대해 알아본다.
 Audit은 테이블 레코드의 생성자, 생성일시, 수정자, 수정일시등의 내역을 테이블에 기록하도록 한다.  
 
