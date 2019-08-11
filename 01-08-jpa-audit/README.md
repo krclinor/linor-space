@@ -118,9 +118,9 @@ Auditable클래스를 상속받은 가수 엔터티 클래스를 생성한다.
 
 ### 엔터티별 JpaRepository인터페이스 생성 
 Repository 인터페이스는 기존 jpa-repository프로젝트와 동일한다.  
-소스 : [SingerRepository.java](src/main/java/com/linor/singer/repository/SingerRepository.java)
-소스 : [AlbumRepository.java](src/main/java/com/linor/singer/repository/AlbumRepository.java)
-소스 : [InstrumentRepository.java](src/main/java/com/linor/singer/repository/InstrumentRepository.java)
+소스 : [SingerRepository.java](src/main/java/com/linor/singer/repository/SingerRepository.java)  
+소스 : [AlbumRepository.java](src/main/java/com/linor/singer/repository/AlbumRepository.java)  
+소스 : [InstrumentRepository.java](src/main/java/com/linor/singer/repository/InstrumentRepository.java)  
 
 ### DAO인터페이스 구현클래스 생성
 Repository 인터페이스는 기존 jpa-repository프로젝트와 동일한다.  
