@@ -1,11 +1,11 @@
-package com.linor.app.dao;
+package com.linor.singer.dao;
 
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.linor.app.domain.CamelCaseMap;
-import com.linor.app.domain.Singer;
+import com.linor.singer.domain.CamelCaseMap;
+import com.linor.singer.domain.Singer;
 
 @Mapper
 public interface SingerDao {

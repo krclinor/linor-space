@@ -1,4 +1,4 @@
-package com.linor.app.domain;
+package com.linor.singer.domain;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

@@ -17,5 +17,5 @@ spring:
 
 mybatis:
   mapper-locations: classpath*:/**/dao/*.xml
-  type-aliases-package: com.linor.app.domain
+  type-aliases-package: com.linor.singer.domain
   configuration.map-underscore-to-camel-case: true
