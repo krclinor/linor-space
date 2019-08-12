@@ -252,6 +252,6 @@ Junit으로 SingerDaoTests를 실행한다.
 1,2번 둘 다 테스트 [SingerDaoTests3.java](src/test/java/com/linor/singer/SingerDaoTests3.java)  
 
 ## 정리
-데이타 소스 각각을 별개로 사용할 경우 트랜잭션에 문가 발생하지 않으나, 2개의 데이타소스를 혼합해서 처리하는 경우 Primary로 지정하지 않은 2번 데이타소스의 
+데이타 소스 각각을 별개로 사용할 경우 트랜잭션에 문가 발생하지 않으나, 2개의 데이타소스를 동시에 사용하는 경우 Primary로 지정하지 않은 2번 데이타소스의 
 트랜잭션은 롤백되지 않는 단점이 있다.  
 이를 해결하려면 JTA트랜잭션을 사용해야 한다.  
