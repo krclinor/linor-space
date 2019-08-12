@@ -247,9 +247,11 @@ public interface SingerDao1 {
 
 ## 결과 테스트
 Junit으로 SingerDaoTests를 실행한다.
+1번 데이타소스용 테스트 [SingerDaoTests1.java](src/test/java/com/linor/singer/SingerDaoTests1.java)  
+2번 데이타소스용 테스트 [SingerDaoTests2.java](src/test/java/com/linor/singer/SingerDaoTests2.java)  
+1,2번 둘 다 테스트 [SingerDaoTests3.java](src/test/java/com/linor/singer/SingerDaoTests3.java)  
 
 ## 정리
-Mybatis는 전자정부프레임워크에서 Persistence레이어로 사용하고 있다.  
-SQL문을 잘 다루는 개발자에게 적합하고, 모든 SQL문을 별도의 공간에서 관리할 수 있어 편리하다.  
-단점은 SQL문을 개발자가 직접 구현해야 하며, 데이터베이스가 바뀔 경우 해당 데이타베이스에 맞게 SQL문을 수정해 주어야 한다.
-
+데이타 소스 각각을 별개로 사용할 경우 트랜잭션에 문가 발생하지 않으나, 2개의 데이타소스를 혼합해서 처리하는 경우 Primary로 지정하지 않은 2번 데이타소스의 
+트랜잭션은 롤백되지 않는 단점이 있다.  
+이를 해결하려면 JTA트랜잭션을 사용해야 한다.  
