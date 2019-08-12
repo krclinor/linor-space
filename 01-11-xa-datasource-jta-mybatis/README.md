@@ -218,4 +218,4 @@ Junit으로 SingerDaoTests를 실행한다.
 소스 : [SingerDaoTests.java](src/test/java/com/linor/singer/SingerDaoTests.java)  
 
 ## 정리
-JTA를 이용하면 여러데이타베이스의 트랜잭션을 묶어서 처리할 수 있다.  
+JTA를 이용하면 여러 데이타베이스의 트랜잭션을 묶어서 처리할 수 있다.  
