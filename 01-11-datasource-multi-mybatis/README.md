@@ -1,6 +1,9 @@
 # Mybatis에서 여러 데이타소스를 통한 구현
 기존 mybatis프로젝트를 2개의 데이타소스를 만들어서 구현해 본다.  
 
+singer와 public스키마로 2개의 데이타소스를 만들고, 각 스키마에 singer와 album테이블을 만든다.  
+기존 mybatis에서 만든 SingerDao인터페이스를 SingerDao1, SingerDao2로 만들어서 각 데이타소스에서 구현한다.    
+
 ## Spring Boot Starter를 이용한 프로젝트 생성
 Spring Boot -> Spring Starter Project로 생성한다.  
 
@@ -162,7 +165,7 @@ public class Datasource2Config {
         return sqlSessionFactory.getObject();
     }
 ```
-1번 데이타베이스이 SqlSessionFactory와 적용방법은 같고, 사용할 DataSource, TypeAliasesPackage, MapperLocations의 
+1번 데이타베이스의 SqlSessionFactory와 적용방법은 같고, 사용할 DataSource, TypeAliasesPackage, MapperLocations의 
 값만 다르게 설정한다.  
  
 #### 트랜잭션관리 빈 설정
