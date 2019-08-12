@@ -246,7 +246,7 @@ public interface SingerDao1 {
 소스 : [SingerDao2.xml](src/main/resources/com/linor/singer/dao2/SingerDao2.xml)  
 
 ## 결과 테스트
-Junit으로 SingerDaoTests를 실행한다.
+Junit으로 SingerDaoTests를 실행한다.  
 1번 데이타소스용 테스트 [SingerDaoTests1.java](src/test/java/com/linor/singer/SingerDaoTests1.java)  
 2번 데이타소스용 테스트 [SingerDaoTests2.java](src/test/java/com/linor/singer/SingerDaoTests2.java)  
 1,2번 둘 다 테스트 [SingerDaoTests3.java](src/test/java/com/linor/singer/SingerDaoTests3.java)  
