@@ -8,7 +8,7 @@ spring:
 db:
   db1: 
     datasource:
-      unique-resource-name: dataSourceOne
+      unique-resource-name: dataSource1
       max-pool-size: 5
       min-pool-size: 1
       max-life-time: 20000
@@ -20,7 +20,7 @@ db:
         URL: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
   db2: 
     datasource:
-      unique-resource-name: dataSourceTwo
+      unique-resource-name: dataSource2
       max-pool-size: 5
       min-pool-size: 1
       max-life-time: 20000

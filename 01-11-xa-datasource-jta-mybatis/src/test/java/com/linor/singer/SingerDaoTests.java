@@ -1,4 +1,4 @@
-package com.linor.app;
+package com.linor.singer;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;

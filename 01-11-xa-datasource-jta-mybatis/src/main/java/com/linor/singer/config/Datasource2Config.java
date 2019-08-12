@@ -1,4 +1,4 @@
-package com.linor.app.config;
+package com.linor.singer.config;
 
 import javax.sql.DataSource;
 
