@@ -1,4 +1,4 @@
-# Mybatis + atomikos JTA를 이용한 멀티 데이타소스 트랜젝션
+# Mybatis + atomikos JTA를 이용한 멀티 데이타소스 트랜잭션
 datasource-multi-mybatis 프로젝트에서 데이타소스를 atomikos JTA로 변경하여 2개의 데이타소스를 트랜잭션 처리한다.   
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
