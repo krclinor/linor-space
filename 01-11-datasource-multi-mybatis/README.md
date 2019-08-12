@@ -9,25 +9,116 @@ mybatis 프로젝트 와 동일.
 소스 : [pom.xml](pom.xml)
 
 ## 설정
+### 어플리케이션 설정
 소스 : [application.yml](src/main/resources/application.yml)  
-
-### 데이타 소스 설정
-todo 프로젝트와 동일하게 설정한다.  
-
-### Mybatis 설정
-```yml
-#마이바티스
-mybatis:
-  mapper-locations: classpath*:/**/dao/*.xml
-  type-aliases-package: com.linor.singer.domain
-  configuration.map-underscore-to-camel-case: true
+```xml
+  datasource:
+    initialization-mode: always
+db:
+  db1: 
+    datasource:
+      driverClassName: org.postgresql.Driver
+      jdbcUrl: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+      username: linor
+      password: linor1234
+  db2: 
+    datasource:
+      driverClassName: org.postgresql.Driver
+      jdbcUrl: jdbc:postgresql://localhost:5432/spring?currentSchema=public
+      username: linor
+      password: linor1234
 ```
-mapper-locations는 sql문을 처리하는 mybatis mapper xml파일의 위치를 지정한다.  
-type-aliases-package를 등록하면 도메인사용시 패키지명을 사용하지 않고도 도메인을 지정할 수 있다.  
+datasource.initialization-mode를 always로 하여 스키마 생성과 데이타 로드를 스크립트 파일로 처리하도록 한다.  
+동일 데이타베이스에 대하여 스키마를 달리한 2개의 데이타소스를 설정한다.  
+db.db1의 데이타소스는 singer스키마를 사용하고, db.d2의 데이타소스는 public스키마를 사용하도록 한다.  
+이 설정값들은 스프링이 알아서 사용할 수 없기 때문에 이 값들을 이용하여 데이타소스를 정의하는 설정 빈을 생성해야 한다.  
+
+### 1번 데이타소스 및 Mybatis 설정
+소스 : [Datasource1Config.java](src/main/java/com/linor/singer/config/Datasource1Config.java) 
+
+#### 클래스 어노테이션 설정
+```java
+@Configuration
+@MapperScan(basePackages = {"com.linor.singer.dao1"}, sqlSessionFactoryRef = "sqlSessionFactory1")
+public class Datasource1Config {
+```
+@Configuration으로 설정클래스임을 정의한다.  
+@MapperScan은 Mybatis의 매퍼패키지와 사용할 sqlSessionFactory를 등록한다.  
+- basePackages : 매퍼 인터페이스가 위치하는 자바 패키지를 등록한다.
+- sqlSessionFactoryRef : Mybatis가 사용할 sessionFactory빈을 등록한다.
+
+#### Datasource 빈 설정
+```java
+    @Bean
+    @ConfigurationProperties("db.db1.datasource")
+    @Primary
+    public DataSource dataSource1() {
+        return DataSourceBuilder.create().build();
+    }
+```
+@Bean으로 해당 메서드가 빈임을 선언한다. name값을 지정하지 않으면 메서드 명이 name값으로 선언된다.    
+@ConfigurationProperties("db.db1.datasource")로 application.yml에 등록한 db.db1.datasource하위 프로퍼티들을 가져오도록 한다. 
+@Primary는 동일타입의 빈이 여러게 있을 경우 기본으로 사용할 빈을 설정한다.  
+
+#### SqlSessionFactory 빈 설정
+```java
+    @Bean
+    @Primary
+    public SqlSessionFactory sqlSessionFactory1(@Qualifier("dataSource1") DataSource dataSource, ApplicationContext applicationContext) throws Exception{
+        SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
+        sqlSessionFactory.setDataSource(dataSource);
+        sqlSessionFactory.setTypeAliasesPackage("com.linor.singer.domain1");
+        sqlSessionFactory.setMapperLocations(applicationContext.getResources("classpath*:/**/dao1/*.xml"));
+        
+        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+        configuration.setMapUnderscoreToCamelCase(true);
+        configuration.setJdbcTypeForNull(JdbcType.NULL);
+        sqlSessionFactory.setConfiguration(configuration);
+
+        return sqlSessionFactory.getObject();
+    }
+```
+@Bean으로 선언한 메서드의 파라미터는 해당 타입의 빈이 존재할 경우 스피링이 알아서 파라미터 값을 주입한다. 
+SessionFactory 빈 등록으로 빈의 명칭은 sqlSessionFactory1로 @Primary를 선언하여 디폴트 SessionFactor 빈으로 선언한다.  
+데이타 소스는 위에서 정의한 dataSource1을 주입한다. dataSource1이 @Primary로 선언되어 있으므로 @Qualifier("dataSource1")어노테이션을 
+사용하지 않더라고 dataSource1이 주입된다.  
+
+SqlSessionFactory의 setDataSource()로 사용할 데이타소스를 설정한다.  
+setTypeAliasesPackage()를 설정하여 도메인사용시 패키지명을 사용하지 않고도 도메인을 지정할 수 있다.  
 예) com.linor.singer.domain.Album -> Album  
-configuratioins.map-underscore-to-camel-case를 true로 설정하면 테이블 컬럼의 snake case를 camel case로 변환하여 
+setMapperLocations()로 매퍼인터페이스를 처리할 xml 매퍼파일의 위치를 설정한다.  
+applicationContext.getResources("classpath*:/**/dao1/*.xml")는 classpath 내에 dao1을 포함하는 
+폴더에 존재하는 xml파일들을 찾아서 설정한다.  
+Configuration.setMapUnderscoreToCamelCase()값을 true로 설정하여 테이블 컬럼의 snake case를 camel case로 변환하여 
 ORM매핑처리를 한다.  
 예) FIRST_NAME -> firstName
+ 
+#### 트랜잭션관리 빈 설정
+```java
+    @Primary
+    @Bean
+    public DataSourceTransactionManager txManager1(@Qualifier("dataSource1") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+```
+트랜잭션 관리를 위한 빈을 설정한다.  
+
+#### 데이타베이스 초기화 빈 설정
+```java
+    @Bean
+    public DataSourceInitializer dataSourceInitializer1(@Qualifier("dataSource1") DataSource datasource) {
+        ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
+        resourceDatabasePopulator.addScript(new ClassPathResource("schema-post1.sql"));
+        resourceDatabasePopulator.addScript(new ClassPathResource("data-post1.sql"));
+
+        DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
+        dataSourceInitializer.setDataSource(datasource);
+        dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
+        return dataSourceInitializer;
+    }
+```
+application.yml의 datasource.initialization-mode가 always인 경우 클래스 패스의 루트에 있는 schema-post1.sql과 data-post1.sql스크립트를 
+처리하도록 한다.  
 
 ### 데이타베이스 초기화 파일 생성
 todo 프로젝트와 동일하게 설정한다.  

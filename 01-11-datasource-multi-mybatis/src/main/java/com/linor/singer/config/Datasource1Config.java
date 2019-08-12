@@ -35,7 +35,6 @@ public class Datasource1Config {
 		sqlSessionFactory.setDataSource(dataSource);
 		sqlSessionFactory.setTypeAliasesPackage("com.linor.singer.domain1");
 		sqlSessionFactory.setMapperLocations(applicationContext.getResources("classpath*:/**/dao1/*.xml"));
-		//sqlSessionFactory.setTransactionFactory(new SpringManagedTransactionFactory());
 		
 		org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
 		configuration.setMapUnderscoreToCamelCase(true);
