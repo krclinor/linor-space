@@ -92,7 +92,7 @@ applicationContext.getResources("classpath*:/**/dao1/*.xml")는 classpath 내에
 Configuration.setMapUnderscoreToCamelCase()값을 true로 설정하여 테이블 컬럼의 snake case를 camel case로 변환하여 
 ORM매핑처리를 한다.  
 예) FIRST_NAME -> firstName
- 
+
 #### 트랜잭션관리 빈 설정
 ```java
     @Primary
@@ -120,15 +120,97 @@ ORM매핑처리를 한다.
 application.yml의 datasource.initialization-mode가 always인 경우 클래스 패스의 루트에 있는 schema-post1.sql과 data-post1.sql스크립트를 
 처리하도록 한다.  
 
-### 데이타베이스 초기화 파일 생성
-todo 프로젝트와 동일하게 설정한다.  
 
-소스 : [schema.sql](src/main/resources/schema.sql)  
-소스 : [data.sql](src/main/resources/data.sql)  
+### 2번 데이타소스 및 Mybatis 설정
+소스 : [Datasource2Config.java](src/main/java/com/linor/singer/config/Datasource2Config.java) 
+
+#### 클래스 어노테이션 설정
+```java
+@Configuration
+@MapperScan(basePackages = {"com.linor.singer.dao2"}, sqlSessionFactoryRef = "sqlSessionFactory2")
+public class Datasource2Config {
+```
+1번 데이타소스 설정과 같고 다른점은 basePackage는 com.linor.singer.dao2, sqlSessionFactoryRef 빈은 sqlSessionFactory2를 
+사용하도록 한다.  
+
+#### Datasource 빈 설정
+```java
+    @Bean
+    @ConfigurationProperties("db.db2.datasource")
+    public DataSource dataSource2() {
+        return DataSourceBuilder.create().build();
+    }
+```
+@ConfigurationProperties("db.db2.datasource")로 application.yml에 등록한 db.db2.datasource하위 프로퍼티들을 가져오도록 한다. 
+@Primary를 선언하지 않았으므로 이 데이타소스를 사용하려면 @Qualifier("dataSource2")를 사용해야 한다.  
+
+#### SqlSessionFactory 빈 설정
+```java
+    @Bean
+    public SqlSessionFactory sqlSessionFactory2(@Qualifier("dataSource2") DataSource dataSource, ApplicationContext applicationContext) throws Exception{
+        SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
+        sqlSessionFactory.setDataSource(dataSource);
+        sqlSessionFactory.setTypeAliasesPackage("com.linor.singer.domain2");
+        sqlSessionFactory.setMapperLocations(applicationContext.getResources("classpath*:/**/dao2/*.xml"));;
+        //sqlSessionFactory.setTransactionFactory(new SpringManagedTransactionFactory());
+        
+        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+        configuration.setMapUnderscoreToCamelCase(true);
+        configuration.setJdbcTypeForNull(JdbcType.NULL);
+        sqlSessionFactory.setConfiguration(configuration);
+
+        return sqlSessionFactory.getObject();
+    }
+```
+1번 데이타베이스이 SqlSessionFactory와 적용방법은 같고, 사용할 DataSource, TypeAliasesPackage, MapperLocations의 
+값만 다르게 설정한다.  
+ 
+#### 트랜잭션관리 빈 설정
+```java
+    @Bean(name="txManager2")
+    public DataSourceTransactionManager dataSourceTransactionManager2(@Qualifier("dataSource2") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+```
+2번 데이타소스의 트랜잭션 관리를 위한 빈을 설정한다.  
+
+#### 데이타베이스 초기화 빈 설정
+```java
+    @Bean
+    public DataSourceInitializer dataSourceInitializer2(@Qualifier("dataSource2") DataSource datasource) {
+        ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
+        resourceDatabasePopulator.addScript(new ClassPathResource("schema-post2.sql"));
+        resourceDatabasePopulator.addScript(new ClassPathResource("data-post2.sql"));
+
+        DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
+        dataSourceInitializer.setDataSource(datasource);
+        dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
+        return dataSourceInitializer;
+    }
+```
+2번 데이타소스의 초기화 스크립트 파일을 지정한다.    
+
+### 데이타베이스 초기화 파일 생성
+기존 mybatis프로젝트의 schema.sql, data.sql과 같음.  
+#### 1번 데이타소스용 
+소스 : [schema-post1.sql](src/main/resources/schema-post1.sql)  
+소스 : [data-post1.sql](src/main/resources/data-post1.sql)  
+
+#### 2번 데이타소스용 
+소스 : [schema-post2.sql](src/main/resources/schema-post2.sql)  
+소스 : [data-post2.sql](src/main/resources/data-post2.sql)  
 
 ## Domain 클래스 생성
-소스 : [Singer.java](src/main/java/com/linor/singer/domain/Singer.java)  
-소스 : [Album.java](src/main/java/com/linor/singer/domain/Album.java)  
+기존 mybatis프로젝트의  
+Singer.java -> Singer1.java, Singer2.java  
+Album.java -> Album1.java, Album2.java  
+#### 1번 데이타소스용 
+소스 : [Singer1.java](src/main/java/com/linor/singer/domain1/Singer1.java)  
+소스 : [Album1.java](src/main/java/com/linor/singer/domain1/Album1.java)  
+
+#### 2번 데이타소스용 
+소스 : [Singer2.java](src/main/java/com/linor/singer/domain2/Singer2.java)  
+소스 : [Album2.java](src/main/java/com/linor/singer/domain2/Album2.java)  
 
 ## DAO인터페이스 생성
 
