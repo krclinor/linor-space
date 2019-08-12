@@ -3,13 +3,9 @@ package com.linor.singer.dao1;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.singer.domain1.Singer1;
 
-@Repository
-@Transactional
 @Mapper
 public interface SingerDao1 {
 	List<Singer1> findAll();
