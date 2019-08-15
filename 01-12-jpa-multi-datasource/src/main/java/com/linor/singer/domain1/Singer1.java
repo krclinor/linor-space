@@ -7,7 +7,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -79,7 +78,7 @@ public class Singer1 implements Serializable{
 		album.setSinger(this);
 		return getAlbums().add(album);
 	}
-	public void reoveAlbum(Album1 album) {
+	public void removeAlbum(Album1 album) {
 		getAlbums().remove(album);
 	}
 
