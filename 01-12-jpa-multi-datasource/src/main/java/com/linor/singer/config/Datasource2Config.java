@@ -19,7 +19,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableTransactionManagement
+//@EnableTransactionManagement
 //@EnableJpaRepositories(
 //		entityManagerFactoryRef = "entityManagerFactory2",
 //		transactionManagerRef = "transactionManager2",
@@ -31,6 +31,21 @@ public class Datasource2Config {
 		return DataSourceBuilder.create().build();
 	}
 	
+	@Bean(name = "entityManagerFactory2")
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory2(
+			EntityManagerFactoryBuilder builder,
+			@Qualifier("dataSource2") DataSource dataSource) {
+
+		Map<String, ?> jpaProperties = hibernateProperties();
+
+		return builder
+				.dataSource(dataSource)
+				.packages("com.linor.singer.domain2")
+				.persistenceUnit("db2")
+				.properties(jpaProperties)
+				.build();
+	}
+
 	private Map<String, ?> hibernateProperties() {
 		
 		Map<String, Object> hibernateProp = new HashMap<>();
@@ -51,22 +66,7 @@ public class Datasource2Config {
 		hibernateProp.put("hibernate.enable_lazy_load_no_trans", "true");
 		return hibernateProp;
 	}
-	
-	@Bean(name = "entityManagerFactory2")
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory2(
-			EntityManagerFactoryBuilder builder,
-			@Qualifier("dataSource2") DataSource dataSource) {
 
-		Map<String, ?> jpaProperties = hibernateProperties();
-
-		return builder
-				.dataSource(dataSource)
-				.packages("com.linor.singer.domain2")
-				.persistenceUnit("db2")
-				.properties(jpaProperties)
-				.build();
-	}
-	
 	@Bean(name = "transactionManager2")
 	public PlatformTransactionManager transactionManager2(
 			@Qualifier("entityManagerFactory2") EntityManagerFactory entityManagerFactory) {

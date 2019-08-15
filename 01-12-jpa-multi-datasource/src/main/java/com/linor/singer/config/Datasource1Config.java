@@ -23,7 +23,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableTransactionManagement
+//@EnableTransactionManagement
 //@EnableJpaRepositories(
 //		entityManagerFactoryRef = "entityManagerFactory",
 //		transactionManagerRef = "transactionManager",
@@ -36,19 +36,6 @@ public class Datasource1Config {
 		return DataSourceBuilder.create().build();
 	}
 	
-	private Map<String, ?> hibernateProperties() {
-		
-		Map<String, Object> hibernateProp = new HashMap<>();
-		hibernateProp.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-		hibernateProp.put("hibernate.hbm2ddl.auto", "create");
-		hibernateProp.put("hibernate.format_sql", "false");
-		hibernateProp.put("hibernate.use_sql_comments", "false");
-		hibernateProp.put("hibernate.show_sql", "false");
-		hibernateProp.put("hibernate.physical_naming_strategy", "com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy");
-		hibernateProp.put("hibernate.jdbc.lob.non_contextual_creation", "true");
-		return hibernateProp;
-	}
-	 
 	@Bean(name = "entityManagerFactory")
 	@Primary
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(
@@ -61,6 +48,18 @@ public class Datasource1Config {
 				.persistenceUnit("db1")
 				.properties(jpaProperties)
 				.build();
+	}
+	private Map<String, ?> hibernateProperties() {
+		
+		Map<String, Object> hibernateProp = new HashMap<>();
+		hibernateProp.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+		hibernateProp.put("hibernate.hbm2ddl.auto", "create");
+		hibernateProp.put("hibernate.format_sql", "false");
+		hibernateProp.put("hibernate.use_sql_comments", "false");
+		hibernateProp.put("hibernate.show_sql", "false");
+		hibernateProp.put("hibernate.physical_naming_strategy", "com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy");
+		hibernateProp.put("hibernate.jdbc.lob.non_contextual_creation", "true");
+		return hibernateProp;
 	}
 	
 	@Primary
