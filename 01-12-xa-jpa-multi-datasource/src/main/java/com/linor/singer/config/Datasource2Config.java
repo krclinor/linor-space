@@ -62,7 +62,7 @@ public class Datasource2Config {
 		hibernateProp.put("hibernate.hbm2ddl.auto", "create");
 		hibernateProp.put("hibernate.format_sql", "false");
 		hibernateProp.put("hibernate.use_sql_comments", "false");
-		hibernateProp.put("hibernate.show_sql", "false");
+		hibernateProp.put("hibernate.show_sql", "true");
 		hibernateProp.put("hibernate.physical_naming_strategy", "com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy");
 		hibernateProp.put("hibernate.jdbc.lob.non_contextual_creation", "true");
 		hibernateProp.put("hibernate.enable_lazy_load_no_trans", "true");
