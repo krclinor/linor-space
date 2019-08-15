@@ -79,7 +79,7 @@ public class Singer implements Serializable{
 		album.setSinger(this);
 		return getAlbums().add(album);
 	}
-	public void reoveAlbum(Album album) {
+	public void removeAlbum(Album album) {
 		getAlbums().remove(album);
 	}
 
