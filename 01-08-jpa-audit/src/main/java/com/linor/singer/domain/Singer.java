@@ -75,13 +75,13 @@ public class Singer extends Auditable<String>{
 		album.setSinger(this);
 		return getAlbums().add(album);
 	}
-	public void reoveAlbum(Album album) {
+	public void removeAlbum(Album album) {
 		getAlbums().remove(album);
 	}
 	public boolean addInstrument(Instrument instrument) {
 		return getInstruments().add(instrument);
 	}
-	public void reoveInstrument(Instrument instrument) {
+	public void removeInstrument(Instrument instrument) {
 		getInstruments().remove(instrument);
 	}
 }
