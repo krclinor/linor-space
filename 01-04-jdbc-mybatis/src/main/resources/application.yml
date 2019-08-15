@@ -4,7 +4,7 @@ logging:
     console: '%-5level %logger{0} - %msg%n'
   level:
     root: info
-    com.linor.singer.dao: trace
+    com.linor.singer.dao: info
     
 #데이타소스
 spring:
