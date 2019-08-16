@@ -3,9 +3,6 @@ spring.profiles.active: dev
 spring:
   jta:
     enabled: true
-#    service: com.atomikos.icatch.standalone.UserTransactionServiceFactory
-#    max-actives: 200
-#    enable-logging: false
     
 #Multi DataSource 설정
 db:
