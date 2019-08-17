@@ -1,18 +1,21 @@
-package com.linor.app.jpa.dao;
+package com.linor.singer.dao1;
 
 import java.util.List;
 
-import com.linor.app.jpa.domain.Singer1;
+import org.apache.ibatis.annotations.Mapper;
 
-public interface Singer1Dao {
+import com.linor.singer.domain1.Singer1;
+
+@Mapper
+public interface SingerDao1 {
 	List<Singer1> findAll();
 	List<Singer1> findByFirstName(String firstName);
-	List<Singer1> findByFirstNameAndLastName(String firstName, String lastName);
-
 	String findNameById(Integer id);
 	Singer1 findById(Integer id);
 	String findFirstNameById(Integer id);
 	void insert(Singer1 singer);
 	void update(Singer1 singer);
 	void delete(Integer singerId);
+	List<Singer1> findAllWithAlbums();
+	void insertWithAlbum(Singer1 singer);
 }

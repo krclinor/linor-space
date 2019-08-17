@@ -1,27 +1,29 @@
+spring.profiles.active: dev
+
 spring:
-#데이타소스
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
-    username: linor
-    password: linor1234
     initialization-mode: always
+#  jpa:
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: create
 
-#    #hikari Connection Pull 설정
-#    hikari:
-#      maximum-pool-size: 20
-#      idle-timeout: 1
-#      minimum-idle: 0
-
+#Multi DataSource 설정
 db:
-  jpa:
-    properties:
-      hibernate:
-        hbm2ddl.auto: none
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        physical-naming-strategy: com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy
-        show_sql: false
-        format_sql: true
-        use_sql_comments: true
-        jdbc.lob.non_contextual_creation: true
-        temp.use_jdbc_metadata_default: false
+  db1: 
+    datasource:
+      driverClassName: org.postgresql.Driver
+      jdbcUrl: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+      username: linor
+      password: linor1234
+      
+  db2: 
+    datasource:
+      driverClassName: org.postgresql.Driver
+      jdbcUrl: jdbc:postgresql://localhost:5432/spring?currentSchema=public
+      username: linor
+      password: linor1234
+#      driverClassName: org.h2.Driver
+#      jdbcUrl: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS USERS
+#      username: sa
+#      password: sa
