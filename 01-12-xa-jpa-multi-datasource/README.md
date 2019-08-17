@@ -17,7 +17,7 @@ jpa 프로젝트 와 동일.
 
 ## 설정
 ### 어플리케이션 설정
-소스 : [applicatiㅕon.yml](src/main/resources/application.yml)  
+소스 : [application.yml](src/main/resources/application.yml)  
 ```xml
 spring.profiles.active: dev
 
