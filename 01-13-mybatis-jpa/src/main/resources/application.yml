@@ -3,10 +3,6 @@ spring.profiles.active: dev
 spring:
   datasource:
     initialization-mode: always
-#  jpa:
-#    show-sql: true
-#    hibernate:
-#      ddl-auto: create
 
 #Multi DataSource 설정
 db:
@@ -23,7 +19,3 @@ db:
       jdbcUrl: jdbc:postgresql://localhost:5432/spring?currentSchema=public
       username: linor
       password: linor1234
-#      driverClassName: org.h2.Driver
-#      jdbcUrl: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS USERS
-#      username: sa
-#      password: sa
