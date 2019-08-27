@@ -82,7 +82,7 @@ public class Datasource1Config {
     }
 ```
 @Bean으로 선언한 메서드의 파라미터는 해당 타입의 빈이 존재할 경우 스피링이 알아서 파라미터 값을 주입한다. 
-SessionFactory 빈 등록으로 빈의 명칭은 sqlSessionFactory1로 @Primary를 선언하여 디폴트 SessionFactor 빈으로 선언한다.  
+SessionFactory 빈 등록으로 빈의 명칭은 sqlSessionFactory1로 @Primary를 선언하여 디폴트 SessionFactory 빈으로 선언한다.  
 데이타 소스는 위에서 정의한 dataSource1을 주입한다. dataSource1이 @Primary로 선언되어 있으므로 @Qualifier("dataSource1")어노테이션을 
 사용하지 않더라고 dataSource1이 주입된다.  
 
