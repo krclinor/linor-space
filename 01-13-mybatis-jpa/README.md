@@ -97,7 +97,7 @@ public class Datasource1Config {
     }
 ```
 @Bean으로 해당 메서드가 빈임을 선언한다. name값을 지정하지 않으면 메서드 명이 name값으로 선언된다.    
-@ConfigurationProperties("db.db1.datasource")로 application.yml에 등록한 db.db1.datasource하위 프로퍼티들을 가져오도록 한다. 
+@ConfigurationProperties("db.db1.datasource")로 application.yml에 등록한 db.db1.datasource하위 프로퍼티들을 가져오도록 한다.   
 @Primary는 동일타입의 빈이 여러게 있을 경우 기본으로 사용할 빈을 설정한다.  
 
 #### SqlSessionFactory 빈 설정
