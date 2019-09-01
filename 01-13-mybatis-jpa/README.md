@@ -232,7 +232,7 @@ properties()는 하이버네이트 추가 설정사항을 선언한다.
 	}
 ```
 트랜잭션 관리를 위한 빈을 설정한다.  
-
+JPA에서는 JpaTransactionManager를 이용하여 트랜잭션을 처리한다.  
 
 ## Domain 클래스 생성
 ### Mybatis용 
