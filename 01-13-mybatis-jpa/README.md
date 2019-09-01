@@ -261,8 +261,60 @@ JPA에서는 JpaTransactionManager를 이용하여 트랜잭션을 처리한다.
 ## 결과 테스트
 Junit으로 SingerDaoTests를 실행한다.  
 1번 데이타소스용 테스트 [SingerDaoTests1.java](src/test/java/com/linor/singer/SingerDaoTests1.java)  
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@Transactional
+@Slf4j
+public class SingerDaoTests1 {
+```  
+SingerDaoTest1테스트케이스는 Mybatis용을 테스트 한다.  
+트랜잭션을 처리하기 위해 @Transactional어노테이션을 사용한다. 사용할 트랜잭션 명을 지정하지 않으면 Primary로 지정한 트랜잭션을 사용한다.  
+Mybatis용 트랜잭션이 Primary로 지정되어 있기 때문에 Mybatis용 트랜잭션을 사용한다.  
+
 2번 데이타소스용 테스트 [SingerDaoTests2.java](src/test/java/com/linor/singer/SingerDaoTests2.java)  
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@Slf4j
+@Transactional("transactionManager2")
+public class SingerDaoTests2 {
+```
+SingerDaoTests2테스트케이스는 JPA를 테스트한다.  
+@Transactional어노테이션에 transactionManager2 트랜잭션 매니저를 선언하여 JPA용 트랜잭션 매니저를 사용하도록 지정한다.  
+ 
 1,2번 둘 다 테스트 [SingerDaoTests3.java](src/test/java/com/linor/singer/SingerDaoTests3.java)  
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@Slf4j
+@Transactional
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class SingerDaoTests3 {
+	@Autowired
+	private SingerDao1 singerDao1;
+
+	@Autowired
+	private SingerDao2 singerDao2;
+```
+SingerDaoTests3테스트케이스는 Mybatis와 JPA를 둘 다 사용한다.  
+@Transacitonal어노테이션에 트랜잭션매니저를 지정하지 않았으므로 기본은 transactionManager1인 Mybatis용 트랜잭션매니저가 사용된다.  
+```java
+	@Test
+	@Transactional("transactionManager2")
+	public void test207InsertSinger() {
+		log.info("테스트207");
+		Singer2 singer = new Singer2();
+		singer.setFirstName("조한");
+		singer.setLastName("김");
+		singer.setBirthDate(LocalDate.parse("1990-10-16"));
+		singerDao2.insert(singer);
+		List<Singer2> singers = singerDao2.findAll();
+		log.info(">>> 김조한 추가후");
+		listSingers2(singers);
+	}
+```
+JPA용 트랜잭션매니저가 필요한 경우 메서드의 상단에 @Transactional어노테이션으로 트랜잭션매니저를 지정해 준다.  
 
 ## 정리
 데이타 소스 각각을 별개로 사용할 경우 트랜잭션에 문가 발생하지 않으나, 2개의 데이타소스를 동시에 사용하는 경우 Primary로 지정하지 않은 2번 데이타소스의 
