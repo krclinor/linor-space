@@ -195,19 +195,20 @@ public class SingerDaoImpl implements SingerDao {
 
 	@Override
 	public void delete(Integer singerId) {
-		Connection con = null;
-		PreparedStatement stmt = null;
-		try {
-			con = dataSource.getConnection();
-			stmt = con.prepareStatement("delete from singer\n"+
-					"where id = ?");
-			stmt.setInt(1, singerId);
-			stmt.executeUpdate();
-		}catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-			if(stmt != null ) try {stmt.close();}catch (Exception e2) {}
-			if(con != null ) try {con.close();}catch (Exception e2) {}
+		DeleteSinger deleteSinger = new DeleteSinger(dataSource);
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("id", singerId);
+		deleteSinger.updateByNamedParam(paraMap);
+	}
+	
+	private static final class DeleteSinger extends SqlUpdate{
+		private static final String sql = 
+				"delete from singer\n"+
+				"where id = :id";
+		
+		public DeleteSinger(DataSource dataSource) {
+			super(dataSource, sql);
+			declareParameter(new SqlParameter("id", Types.INTEGER));
 		}
 	}
 
