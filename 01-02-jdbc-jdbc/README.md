@@ -81,10 +81,10 @@ public class SingerDaoImpl implements SingerDao {
         }
     }
 ```
-@Override어노테이션은 인터페이스로 상속받은 메서드임을 표시한다.  
+@Override어노테이션은 인터페이스에서 상속받은 메서드임을 표시한다.  
 @Slf4j어노테이션을 설정하였기 때문에 log.info나 log.error메서드를 사용하여 로그를 뿌릴 수 있다.  
 
-Native JDBC를 이용하여 구현할 때 적용되는 전형적이 방식으로 데이타소스에서 Connection을 받고, 
+Native JDBC를 이용하여 구현할 때 적용되는 전형적이 방식으로 데이타소스에서 Connection을 가져와서, 
 Connection.prepareStatement()로 SQL문을 파라미터값으로 전달하여 Statement를 생성한 다음 
 PreparedStatement.executeQuery()를 실행하여 결과를 ResultSet으로 받아와서 
 결과가 배열인 경우 ResultSet.next()가 참인동안 
@@ -121,7 +121,7 @@ PreparedStatement.executeQuery()를 실행하여 결과를 ResultSet으로 받�
         }
     }
 ```
-insert메서드는 매개변수로 받은 가수 객체를 데이타베이스에 인서트 하는 작업을 수행한다.  
+insert메서드는 매개변수로 받은 가수 객체를 데이타베이스에 추가하는 작업을 수행한다.  
 
 ## 결과 테스트
 Junit으로 SingerDaoTests를 실행한다.
