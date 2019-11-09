@@ -110,7 +110,7 @@ RowMapper를 이용한 방법은 가장 일반적인 방법이지만 코딩 길�
         return template.query(sql, new BeanPropertyRowMapper<Singer>(Singer.class));
     }
 ```
-이 방법은 snake case를 camel case로 자동변환까지 가능한 쉽고, 단순하지만 성능면에서 위 2가지 방법보다 떨어질 수 있다.  
+이 방법은 snake case를 camel case로 자동변환해주는 쉽고, 단순한 방법이지만 성능면에서 위 2가지 방법보다 떨어질 수 있다.  
 
 ### findAllWithAlbums 메서드 구현
 #### ResultSetExtractor를 이용한 중첩 도메인 오브젝트 추출
