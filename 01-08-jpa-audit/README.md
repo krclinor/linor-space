@@ -175,6 +175,8 @@ Spring Security를 이용하여 구현할 경우 아래 코멘트를 해제하�
 
 ### Junit 테스팅
 Junit으로 SingerDaoTests를 실행한다.
+실행결과 audit을 적용한 경우 testFindAllByNativeQuery()가 실패로 나타남.
+NativeSQL처리가 안되었다.
 
 ## 정리
 Jpa Audit은 스프링에서 제공하는 기능으로 Jpa를 사용하는 경우 원하는 테이블에 Audit을 쉽게 적용할 수 있다.  

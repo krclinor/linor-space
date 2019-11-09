@@ -25,7 +25,7 @@ spring:
 #      minimum-idle: 0
 
   jpa:
-#    show-sql: true
+    show-sql: true
 #    open-in-view: false  #Entity Join시 fetch타입이 디폴트인 LAZY가 가능하도록 
     hibernate:
       ddl-auto: create
@@ -33,10 +33,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         physical-naming-strategy: com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy
-        #format_sql: true
-        #use_sql_comments: true
-        jdbc.lob.non_contextual_creation: true
-        enable_lazy_load_no_trans: true #일대다 매핑에서 fetch를 Lazy로하는 경우 오류 막음
+        format_sql: true
+        use_sql_comments: true
+        #jdbc.lob.non_contextual_creation: true
+        #enable_lazy_load_no_trans: true #일대다 매핑에서 fetch를 Lazy로하는 경우 오류 막음
         #temp.use_jdbc_metadata_default: false
 
 ---
@@ -44,21 +44,20 @@ spring:
   profiles: h2
   datasource:
     platform: h2 
-#    driver-class-name: org.h2.Driver
+    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:mem:test;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#    username: sa
+#    password: ''
 #    initialization-mode: always
-
-#    #hikari Connection Pull 설정
+#  h2.console.enabled: true
+    #hikari Connection Pull 설정
 #    hikari:
 #      maximum-pool-size: 20
 #      idle-timeout: 1
 #      minimum-idle: 0
-#    url: jdbc:h2:mem:test;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-#    username: sa
-#    password: ''
-#  h2.console.enabled: true
   jpa:
 #    show-sql: true
-    open-in-view: false  #Entity Join시 fetch타입이 디폴트인 LAZY가 가능하도록 
+#    open-in-view: false  #Entity Join시 fetch타입이 디폴트인 LAZY가 가능하도록 
     hibernate:
       ddl-auto: create
     properties:
@@ -67,7 +66,6 @@ spring:
 #        format_sql: true
 #        use_sql_comments: true
         physical-naming-strategy: com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy
-        enable_lazy_load_no_trans: true #일대다 매핑에서 fetch를 Lazy로하는 경우 오류 막음
 #        max_fetch_depth: 3
 #        jdbc.batch_size: 10
 #        jdbc.patch_size: 50
