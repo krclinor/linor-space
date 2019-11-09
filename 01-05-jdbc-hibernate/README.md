@@ -43,7 +43,7 @@ todo 프로젝트 의존성 라이브러리에 jpa와 hibernate-types-52를 추�
         <dependency>
             <groupId>com.vladmihalcea</groupId>
             <artifactId>hibernate-types-52</artifactId>
-            <version>2.5.0</version>
+            <version>2.7.1</version>
         </dependency>
     </dependencies>
 ```
@@ -97,7 +97,7 @@ initialization-mode를 never로 설정하면 schema-postgre.sql과 data-postgres
 테이블 생성은 ddl-auto를 create로 설정하여 Hibernate가 만들도록 설정한다.  
 ddl-auto는 시스템 시작시 스키마 생성 규칙을 정의하는 것으로 create, create-update, update, none중 하나를 등록한다.
 - create : 기존에 존재하면 drop하고 테이블을 새로 생성한다.
-- update : 기존에 존재하면 modify하고 없으면 새로 생헝한다.
+- update : 기존에 존재하면 modify하고 없으면 새로 생성한다.
 - create-drop : 기존에 존재하면 drop하고 테이블을 새로 생성하며, 시스템 종료시 drop한다.  
 - none : 스키마 작업을 하지 않는다.  
 
@@ -523,7 +523,7 @@ Hibernate는 OR매핑툴 중에서 가장 많이 사용되고 있다.
 따라서 데이터베이스 밴더의 영향을 받지 않으면서 시스템 개발이 가능하다.
 단점은 hibernate가 생성한 sql문이 우리가 원하는 sql문이 아닐 수도 있기 때문에 세심한 체크가 필요하다.  
 Hibernate는 엔터티클래스를 이용하여 테이블을 생성할 수 있지만 가능하면 sql스크립트를 만들어서 사용하는 것이 좋다.  
-테이블 스페이스 등 각종 물리적 스키마 내역을 다루기어렵기 때문이다.
+테이블 스페이스 등 각종 물리적 스키마 내역을 다루기 어렵기 때문이다.
 
 
 
