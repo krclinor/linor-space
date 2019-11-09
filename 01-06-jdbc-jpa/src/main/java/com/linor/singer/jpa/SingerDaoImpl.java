@@ -26,7 +26,7 @@ public class SingerDaoImpl implements SingerDao {
 	@Override
 	@Transactional(readOnly=true)
 	public List<Singer> findAll() {
-		return entityManager.createQuery("from Singer s", Singer.class).getResultList();
+		return entityManager.createQuery("from Singer s").getResultList();
 	}
 
 	private static final String ALL_SINGER_NATIVE_SQL =

@@ -1,5 +1,5 @@
 # JPA EntityManager
-JPA는 EJB 3.0에서 ORM 기술에 대한 API 표준스펙이며, 이 스팩을 구현한 구현체가 Hibernate, OpenJPA, EclipseLink, 
+JPA는 EJB 3.0에서 ORM 기술에 대한 API 표준스펙이며, 이 스펙을 구현한 구현체가 Hibernate, OpenJPA, EclipseLink, 
 TopLink등이 있다.  
 JPA EntityManager를 이용하여 처리하는 방법을 배워본다.  
 
@@ -62,7 +62,7 @@ public class SingerDaoImpl implements SingerDao {
 EntityManager.createQuery()를 호출하여 쿼리를 생성하고 Query.getResultList()를 호출하여 결과 목록을 받아온다.  
 단일 레코드만 조회하려면 Query.uniqueResult()를 호출한다.  
 여기에서 사용되는 쿼리는 JPQL(Java Persistence Query Language)이며, 
-JPA스팩의 일부로 정의된 플랫폼 독립적인 객체지향 쿼리 언어이다.  
+JPA스펙의 일부로 정의된 플랫폼 독립적인 객체지향 쿼리 언어이다.  
 
 #### findByFirstName 메서드 구현(NamedQuery)
 NamedQuery를 사용하기 위해 먼저 엔터티 클래스에서 NamedQuery를 작성한다.
