@@ -81,8 +81,8 @@
 	from	singer s
 	left outer join album a on a.singer_id = s.id
 	<where>
-		<if test="value != null">
-		s.first_name = #{first_name}
+		<if test="firstName != null">
+		s.first_name = #{firstName}
 		</if>
 	</where>
 </select>

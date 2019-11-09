@@ -33,7 +33,7 @@ todo 프로젝트 의존성 라이브러리에 mybatis-spring-boot-starter를 �
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.1.0</version>
+            <version>2.1.1</version>
         </dependency>
     </dependencies>
 ```
@@ -41,7 +41,7 @@ todo 프로젝트 의존성 라이브러리에 mybatis-spring-boot-starter를 �
 소스 : [application.yml](src/main/resources/application.yml)  
 
 ### 데이타 소스 설정
-todo 프로젝트와 동일하게 설정한다.  
+Mybatis 설정을 제외하고는 todo 프로젝트와 동일하게 설정한다.  
 
 ### Mybatis 설정
 ```yml
@@ -87,7 +87,7 @@ public interface SingerDao {
 }
 ```
 todo프로젝트에서 만든 dao인터페이스에 @Mapper어노테이션을 추가하여 매퍼용 인터페이스임을 알린다.  
-해당 인터페이스는 Mybatis Mapper에서 XML로 구현할 수도 있고, 현 인터페이스에 어노테이션으로 추가할 수 있다.  
+해당 인터페이스는 Mybatis Mapper에서 XML로 구현할 수도 있고, 현 인터페이스에 어노테이션으로 SQL문을 구현할 수 있다.  
 
 ## SingerDao인터페이스 구현
 Mybatis Mapper인터페이스를 XML파일로 구현한다.  
@@ -232,7 +232,7 @@ insert문 실행 후 mybatis가 singer객체의 id에 값을 대입한다.
 </insert>
 ```
 주요 sql문을 처리하기 전에 sql문을 처리할 수 있는 selectKey를 제공한다.  
-selectKey에서 처리 후 결가 값을 keyProperty에 선언한 id에 저장하는에 이 id는 Singer클래스의 프로퍼티로 선언되어 있어야 한다.  
+selectKey에서 처리 후 결가 값을 keyProperty에 선언한 id에 저장하는데, 이 id는 Singer클래스의 프로퍼티로 선언되어 있어야 한다.  
 order를 BEFORE로 선언함으로써 주 쿼리 실행전에 처리하도록 한다.   
 
 ## 결과 테스트
