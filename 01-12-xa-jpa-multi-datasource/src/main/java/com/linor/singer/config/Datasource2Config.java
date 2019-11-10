@@ -3,21 +3,21 @@ package com.linor.singer.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.hibernate.dialect.PostgreSQL10Dialect;
+import org.hibernate.engine.transaction.jta.platform.internal.AtomikosJtaPlatform;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy;
+
 
 @Configuration
 @EnableTransactionManagement
@@ -51,25 +51,14 @@ public class Datasource2Config {
 	private Map<String, ?> hibernateProperties() {
 		
 		Map<String, Object> hibernateProp = new HashMap<>();
-//		hibernateProp.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-//		hibernateProp.put("hibernate.hbm2ddl.auto", "create");
-//		hibernateProp.put("hibernate.format_sql", "false");
-//		hibernateProp.put("hibernate.use_sql_comments", "false");
-//		hibernateProp.put("hibernate.show_sql", "false");
-//		hibernateProp.put("hibernate.physical_naming_strategy", "com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy");
-
-		hibernateProp.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+		hibernateProp.put("hibernate.dialect", PostgreSQL10Dialect.class.getName());
 		hibernateProp.put("hibernate.hbm2ddl.auto", "create");
 		hibernateProp.put("hibernate.format_sql", "false");
 		hibernateProp.put("hibernate.use_sql_comments", "false");
 		hibernateProp.put("hibernate.show_sql", "true");
-		hibernateProp.put("hibernate.physical_naming_strategy", "com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy");
-		hibernateProp.put("hibernate.jdbc.lob.non_contextual_creation", "true");
-		hibernateProp.put("hibernate.enable_lazy_load_no_trans", "true");
-
-		hibernateProp.put("hibernate.transaction.factory_class", "org.hibernate.transaction.JTATransactionFactory");
-		hibernateProp.put("hibernate.transaction.jta.platform", "com.linor.singer.config.AtomikosPlatform");
-		hibernateProp.put("hibernate.transaction.coordinator_class", "jta");
+		hibernateProp.put("hibernate.physical_naming_strategy", CamelCaseToSnakeCaseNamingStrategy.class.getName());
+		hibernateProp.put("hibernate.transaction.jta.platform", AtomikosJtaPlatform.class.getName());
+		hibernateProp.put("javax.persistence.transactionType", "JTA");
 		
 		return hibernateProp;
 	}
