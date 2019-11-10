@@ -58,7 +58,7 @@ public class Datasource1Config {
 		hibernateProp.put("hibernate.use_sql_comments", "false");
 		hibernateProp.put("hibernate.show_sql", "true");
 		hibernateProp.put("hibernate.physical_naming_strategy", "com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy");
-		hibernateProp.put("hibernate.jdbc.lob.non_contextual_creation", "true");
+//		hibernateProp.put("hibernate.jdbc.lob.non_contextual_creation", "true");
 		return hibernateProp;
 	}
 	
