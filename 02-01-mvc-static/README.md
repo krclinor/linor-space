@@ -41,7 +41,7 @@ server:
 
 ## 정적 페이지 구현
 ### html페이지
-보통 html페이지는 /src/main/resources/public에 구현한다.
+보통 html페이지는 /src/main/resources/public에 구현한다.  
 소스 : [index.hmtl](src/main/resources/public/index.html)  
 ```html
 <!DOCTYPE html>
@@ -86,7 +86,7 @@ server:
 위 파일의 URL은 http://localhost:8080/ 또는 http://localhost:8080/index.html이다.
  
 ### Cascading StyleSheet 구현
-보통 css는 /src/main/resources/static/css에 구현한다.
+보통 css는 /src/main/resources/static/css에 구현한다.  
 소스 : [style.css](src/main/resources/static/css/style.css)  
 ```css
 @charset "UTF-8";
