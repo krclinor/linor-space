@@ -34,7 +34,7 @@
 		</tr>
 		<tr>
 			<td>성별</td>
-			<td>${u.gender}</td>
+			<td>${u.gender}(${u.gender.value})</td>
 		</tr>
 		<tr>
 			<td>국가</td>
