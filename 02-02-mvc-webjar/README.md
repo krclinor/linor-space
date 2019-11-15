@@ -42,7 +42,7 @@ Maven Dependency의 bootstrap-4.3.1.jar파일을 열면 위와 같은 구조로 
 
 ## html에서 webjar 사용
 소스 : index.html(src/main/resources/public/index.html)
-```
+```html
 <!DOCTYPE html>
 <html>
 <head>
