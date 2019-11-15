@@ -37,12 +37,12 @@ Webjar는 프론트엔드에서 사용하는 Jquery 자바스크립트 라이브
 ```
 많이 사용하는 bootstrap CSS프레임워크와, jquery 자바스크립트 라이브러리, popper.js자바스크립트 라이브러리를 webjar로 추가한다.
 
-![부트스트랩 이미지](images/bootstrap.png)
+![부트스트랩 이미지](images/bootstrap.png)  
 Maven Dependency의 bootstrap-4.3.1.jar파일을 열면 위와 같은 구조로 되어 있다.
 
 ## html에서 webjar 사용
 소스 : index.html(src/main/resources/public/index.html)
-```
+```html
 <!DOCTYPE html>
 <html>
 <head>
