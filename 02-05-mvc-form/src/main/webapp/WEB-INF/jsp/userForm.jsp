@@ -33,7 +33,9 @@
 		</tr>
 		<tr>
 			<td><form:label path="gender">성별</form:label></td>
-			<td><form:select path="gender" items="${genders}"/></td>
+			<td>
+				<form:select path="gender" items="${genders}" itemValue="key" itemLabel="value"/>
+			 </td>
 		</tr>
 		<tr>
 			<td><form:label path="country">국가</form:label></td>
