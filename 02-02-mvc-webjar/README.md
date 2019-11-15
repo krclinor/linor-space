@@ -90,8 +90,7 @@ Maven Dependency의 bootstrap-4.3.1.jar파일을 열면 위와 같은 구조로 
 </body>
 </html>
 ```
-
 ## 결과 테스트
 브라우저에서 다음 주소를 호출한다.  
-https://localhost:84438
+http://localhost:8080
  
