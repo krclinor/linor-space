@@ -23,26 +23,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
-		<!-- Tomcat embedded container -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- JSTL for JSP -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-		</dependency>
-		
-		<!-- Need this to compile JSP -->
-		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-jasper</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -58,8 +38,12 @@
 			<artifactId>jquery</artifactId>
 			<version>3.4.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.webjars.bower</groupId>
+			<artifactId>popper.js</artifactId>
+			<version>1.16.0</version>
+		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
