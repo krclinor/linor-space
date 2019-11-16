@@ -3,6 +3,7 @@ package com.linor.singer.controller;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,27 +17,23 @@ public class UserController {
 		{"대한민국", "터어키", "미국", "일본"};
 	
 	@RequestMapping(value="/form")
-	public ModelAndView user() {
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.addObject("user", new User());
-		modelAndView.addObject("genders", Gender.values());
-		modelAndView.addObject("countries", countries);
-		modelAndView.setViewName("userForm");
-		return modelAndView;
+	public String user(Model model) {
+		model.addAttribute("user", new User());
+		model.addAttribute("genders", Gender.values());
+		model.addAttribute("countries", countries);
+		return "userForm";
 	}
 	
 	@RequestMapping(value = "/result")
-	public ModelAndView processUser(@Valid User user, BindingResult result) {
-		ModelAndView modelAndView = new ModelAndView();
+	public String processUser(@Valid User user, BindingResult result, Model model) {
 		if(result.hasErrors()) {
-			modelAndView.addObject("user", user);
-			modelAndView.addObject("genders", Gender.values());
-			modelAndView.addObject("countries", countries);
-			modelAndView.setViewName("userForm");
+			model.addAttribute("user", user);
+			model.addAttribute("genders", Gender.values());
+			model.addAttribute("countries", countries);
+			return "userForm";
 		}else {
-			modelAndView.setViewName("userResult");
-			modelAndView.addObject("u", user);
+			model.addAttribute("u", user);
+			return "userResult";
 		}
-		return modelAndView;
 	}
 }

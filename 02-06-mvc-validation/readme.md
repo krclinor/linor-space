@@ -1,14 +1,12 @@
-# Spring Boot에서 JSTL Form 처리
-웹개발시 사용자로부터 자료를 입력받아 시스템에서 처리하도록 한다.
-이때 필요한 것이 폼이다.  
-사용자의 성, 이름, 이메일, 비밀번호, 생일, 성별, 국가, 흡연여부 등을 입력하여 처리하는 웹화면을 구현해 보자.  
+# Spring Boot에서 JSTL Form 유효성 체크
+02-05-mvc-form프로젝트에서 처리했던 폼처리에 유효성(Validation) 체크를 추가해 본다.  
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
-프로젝트 생성은 02-04-mvc-jstl프로젝트와 동일한 방식으로 생성한다.  
+프로젝트 생성은 02-05-mvc-form을 복사하여 진행한다.  
 
 ### 의존성 라이브러리
-Spring initializer로 생성시 기본 dependency는 Web, DevTools, Lombok를 선택한다.
-프로젝트 생성 후 pom.xml에 tomcat-jasper, jstl, bootstrap을 추가한다.
+의존성라이브러리에 validation-api를 추가한다.
+
 소스 : [pom.xml](pom.xml)
 ```xml
 	<dependencies>
@@ -31,7 +29,7 @@ Spring initializer로 생성시 기본 dependency는 Web, DevTools, Lombok를 �
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- JSTL for JSP -->
+ 		<!-- JSTL for JSP -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
@@ -48,8 +46,14 @@ Spring initializer로 생성시 기본 dependency는 Web, DevTools, Lombok를 �
 			<artifactId>bootstrap</artifactId>
 			<version>4.3.1</version>
 		</dependency>
+		<!-- Validation -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+		</dependency>
 	</dependencies>
 ```
+
 ## 설정
 ### 어플리케이션 설정
 소스 : [application.yml](src/main/resources/application.yml)  
@@ -59,41 +63,68 @@ spring:
     view:
       prefix: /WEB-INF/jsp/
       suffix: .jsp
+  messages:
+    basename: messages
+    cache-duration: -1
+    encoding: UTF-8
+    fallback-to-system-locale: true
 ```
 사용포트는 설정하지 않으면 디폴트가 8080포트를 사용한다.  
 jsp파일의 위치를 설정하기 위해 sprint.mvc.view.prefix와 suffix를 설정한다.
+spring.messages는 메시지를 설정하기 위해 사용한다.  
+-  basename : 프로퍼티파일명을 설정한다. messages.properties파일로 설정하기 위해 messages로 입력함.
+-  cache-duraton : -1로 입력하면 시작시 메모리에 올려서 서버가 죽을 때까지 사용한다.
 
-### 메인 프로그램 수정
-소스 :[Application.java](src/main/java/com/linor/singer/Application.java)
+### 메시지 프로퍼티파일 설정
+설정파일에서 설정한 메시지 파일
+소스 : [messages.properties](src/main/resources/messages.properties)
+
+```properties
+Pattern.user.password=비밀번호는 대소문자를 포함한 4 이상 15자 이하이어야 합니다.
+error.name=이름은 {min}에서 {max}개의 문자열로 작성합니다.
+error.lastName=성은 필수입력입니다.
+error.email=정확한 이메일 양식으로 등록하세요.
+```
+시스템에서 사용할 메시지를 등록한다.
+
+#### Validation 메시지 소스 설정
+소스 : [WebConfig.java](src/main/java/com/linor/singer/config/WebConfig.java)  
 ```java
-@SpringBootApplication
-public class Application extends SpringBootServletInitializer{
-
+@Configuration
+@RequiredArgsConstructor
+public class WebConfig implements WebMvcConfigurer{
+	private final MessageSource messageSource;
 	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-		return builder.sources(Application.class);
+	public Validator getValidator() {
+		LocalValidatorFactoryBean factory = new LocalValidatorFactoryBean();
+		factory.setValidationMessageSource(messageSource);
+		return factory;
 	}
-
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
-
 }
 ```
-Tomcat과 같은 WAS에 war파일로 디플로이 할 수 있도록 하기 위해 메인 Application클래스를 SpringBootServletInitializer로 상속받아 위와 같이 구현한다.  
+Validation에서 사용할 메시지 소스를 지정하기 위해 WebMvcConfigurer를 상속받아 WebConfig설정 클래스를 생성한다.    
 
-### 폼데이터 관리를 위한 모델 클래스 생성
+### 폼데이터 유효성 체크를 위한 모델 클래스 수정
 소스: [User.java](src/main/java/com/linor/singer/model/User.java)   
 
 ```java
 @Data
 public class User {
+	@Size(min = 2, max = 10, message = "{error.name}")
 	private String name;
+	
+	@NotEmpty(message = "{error.lastName}")
 	private String lastName;
+	
+	@Email(message = "{error.email}")
 	private String email;
+	
+	@Pattern(regexp = "^[a-zA-Z]\\w{3,14}$")
 	private String password;
+	
 	private String detail;
 	
+	@Past
 	@DateTimeFormat(pattern="yyyy.MM.dd")
 	private LocalDate birthDate;
 	
@@ -102,37 +133,17 @@ public class User {
 	private boolean nonSmoking;
 	
 	@NumberFormat(pattern="#,##0")
+	@Min(value = 100)
 	private long salary;
 }
 ```
-@Data는 클래스 인스턴스 변수인 name, lastName등의 get/set메서드를 자동으로 생성해주는 lombok어노테이션이다.  
-User클래스에 name, lastName, email, password, detail, birthDate, gender, country,noSmoking, salary 프로퍼티를 등록한다.
-birthDate에 선언한 @DateTimeFormat(pattern="yyyy.MM.dd")은 웹화면에서 날짜등록 포멧을 yyyy.MM.dd형식으로 입력받도록 하고 이러한 형식의 문자열을 LocalDate타입으로 자동변환해 준다.  
-salary에 선언한 @NumberFormat(pattern="#,##0")은 웹화면에서 금액 입력시 천단위 콤마를 표시하는 숫자를 입력받을 수 있도록 한다.
-
-### Enum 사용
-다양한 경험을 위해 성별을 Enum으로 정의해 보자.  
-소스: [Gender.java](src/main/java/com/linor/singer/model/Gender.java)  
-```java
-public enum Gender{
-	MALE("남"),
-	FEMALE("여");
-	
-	private String value;
-	
-	Gender(String value){
-		this.value = value;
-	}
-	
-	public String getKey() {
-		return name();
-	}
-	
-	public String getValue() {
-		return value;
-	}
-}
-```
+유효성 체크를 위해 Validation어노테이션들을 추가한다.  
+-  @Size(min = 2, max = 10, message = "{error.name}") : 최소 2문자, 최해 10문자로 제한하고 체크에서 벝어 나는 경우 messsages.properties파일의 error.name메시지를 메시지로 제공한다.  
+-  @NotEmpty(message = "{error.lastName}") : 필수 입력 설정으로 값이 없을 경우 error.lastName메시지를 제공한다.
+-  @Email(message = "{error.email}") : 데이타가 이메일 패턴에 맞는지 체크한다.
+-  @Pattern(regexp = "^[a-zA-Z]\\w{3,14}$") : 정규 표현식에 맞는지 체크
+-  @Past : 날짜관련 타입이 과거인지 체크
+-  @Min(value = 100) : 최소값이 설정된 값 이상인지 체크
 
 ### 컨트롤러 생성
 소스 :[UserController.java](src/main/java/com/linor/singer/controller/UserController.java)  
@@ -152,32 +163,24 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/result")
-	public String processUser(User user, Model model) {
-		model.addAttribute("u", user);
-		return "userResult";
+	public String processUser(@Valid User user, BindingResult result, Model model) {
+		if(result.hasErrors()) {
+			model.addAttribute("user", user);
+			model.addAttribute("genders", Gender.values());
+			model.addAttribute("countries", countries);
+			return "userForm";
+		}else {
+			model.addAttribute("u", user);
+			return "userResult";
+		}
 	}
 }
 ```
-/form을 브라우저에서 호출하면 user()메서드가 처리된다.
-
-```java
-		model.addAttribute("user", new User());
-```
-모델에 user객체를 생성하여 user속성을 설정한다.
-
-```java
-		model.addAttribute("genders", Gender.values());
-		model.addAttribute("countries", countries);
-```
-콤보박스에서 표시하기 위한 성별목록을 전달하기 위해 Enum.values()로 Enum타입을 배열로 변경하여 genders속성을 설정한다.  
-
-```java
-		return "userForm";
-```   
+폼 입력값을 처리하는 processUser메서드에서 유효성 체크를 위해 @Valid어노테이션을 추가한다.  
+유효성 체크 결과는 BindingResult result파라미터에서 result.hasErrors()가 True이면 유효성 체크에서 오류가 발생한 경우이므로 모델에 입력받은 값을 다시 등록하여 오류 메시지와 다시 폼에서 입력받을 수 있도록 userForm.jsp뷰를 호출한다.  
+오류가 없으면 결과를 보기 위하여 userResult.jsp뷰를 호출한다.   
  
-JSP뷰 파일인 /WEB-INF/js/userForm.jsp를 호출한다.
-
-### 뷰 JSP 
+### 입력뷰 JSP 
 소스 [userForm.jsp](src/main/webapp/WEB-INF/jsp/userForm.jsp)
 ```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -227,7 +230,7 @@ JSP뷰 파일인 /WEB-INF/js/userForm.jsp를 호출한다.
 		</tr>
 		<tr>
 			<td><form:label path="gender">성별</form:label></td>
-			<td colspan="2"><form:select path="gender" items="${genders}"/></td>
+			<td colspan="2"><form:select path="gender" items="${genders}" itemName="key" itemLabel="value"/></td>
 		</tr>
 		<tr>
 			<td><form:label path="country">국가</form:label></td>
@@ -256,7 +259,21 @@ JSP뷰 파일인 /WEB-INF/js/userForm.jsp를 호출한다.
 ```
 스프링에서 제공하는 form태그라이브러리를 사용하기 위해 선언한다.
 
+```jsp
+<form:form modelAttribute="user" action="result">
+```
+form:form태그는 스프링의 form태그라이브러리로 modelAttribute에 user를 선언하여 컨트롤러에서 모델에 설정한 user를 사용하도록 한다.  
+
+```jsp
+			<td><form:label path="lastName">성</form:label></td>
+			<td><form:input path="lastName" cssErrorClass="formFieldError"/></td>
+			<td><form:errors path="lastName"/></td>
+```
+form:input의 path는 user의 속성을(lastName)을 지정한다.  
+cssErrorClass는 요효성 체크 후 오류인 경우 css클래스를 지정한다.  
+<form:errors path="lastName"/>는 lastName유효성에 오류가 발생한 경우 메시지를 출력한다.  
+
 ## 결과 테스트
 브라우저에서 다음 주소를 호출한다.  
-http://localhost:8080
+http://localhost:8080/form
  

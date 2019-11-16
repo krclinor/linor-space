@@ -18,5 +18,4 @@ public class WebConfig implements WebMvcConfigurer{
 		factory.setValidationMessageSource(messageSource);
 		return factory;
 	}
-	
 }
