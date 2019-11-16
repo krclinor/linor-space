@@ -61,8 +61,7 @@ spring:
       suffix: .jsp
 ```
 사용포트는 설정하지 않으면 디폴트가 8080포트를 사용한다.  
-jsp파일의 위치를 설정하기 위해 sprint.mvc.view.prefix와 suffix를 설정한다.  
-만일 컨트롤러에서 /WEB-INF/jsp/userForm.jsp 파일로 전송하려면 return "userForm"이라고 표시한다.
+jsp파일의 위치를 설정하기 위해 sprint.mvc.view.prefix와 suffix를 설정한다.
 
 ### 메인 프로그램 수정
 소스 :[Application.java](src/main/java/com/linor/singer/Application.java)
@@ -81,7 +80,7 @@ public class Application extends SpringBootServletInitializer{
 
 }
 ```
-Tomcat과 같은 WAS에 war파일로 배포할 수 있도록 하기 위해 메인 Application클래스를 SpringBootServletInitializer로 상속받아 위와 같이 구현한다.  
+Tomcat과 같은 WAS에 war파일로 디플로이 할 수 있도록 하기 위해 메인 Application클래스를 SpringBootServletInitializer로 상속받아 위와 같이 구현한다.  
 
 ### 폼데이터 관리를 위한 모델 클래스 생성
 소스: [User.java](src/main/java/com/linor/singer/model/User.java)   
