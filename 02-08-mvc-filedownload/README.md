@@ -1,31 +1,76 @@
-package com.linor.singer.controller;
+# 파일 다운로드
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+## Spring Boot Starter를 이용한 프로젝트 생성
+Spring boot Starter로 프로젝트 생성시 패키징은 war로 설정한다.
+```xml
+	<packaging>war</packaging>
+```
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
+### 의존성 라이브러리
+Spring initializer로 생성시 기본 dependency는 Web, DevTools, Lombok를 선택한다.
+프로젝트 생성 후 pom.xml에 JSP사용을 위해 tomcat-jasper를 추가한다.
+소스 : [pom.xml](pom.xml)
+```xml
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+ 		<!-- JSTL for JSP -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+		</dependency>
+		<!-- Need this to compile JSP -->
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+```
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+## 설정
+### 어플리케이션 설정
+소스 : [application.yml](src/main/resources/application.yml)  
+```yml
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
 
-import lombok.RequiredArgsConstructor;
+myapp.download-folder: /temp
+```
 
-@Controller
+myapp.download-folder는 프로그램에서 사용하기 위해 만든 것으로 다운로드할 파일의 위치를 지정한다.  
+
+테스트 파일은 간단하게 다음가 같이 생성해 놓는다.  
+파일명 :/temp/test.txt  
+```txt
+안녕하세요..
+연습용 파일 입니다.
+```
+### 컨트롤러 생성
+소스 :[FileController.java](src/main/java/com/linor/singer/controller/FileController.java)  
+
+```java
+Controller
 @RequiredArgsConstructor
 public class FileController {
 	private final ServletContext servletContext;
@@ -125,3 +170,15 @@ public class FileController {
 		inputStream.close();
 	}
 }
+```
+위에서는 3가지 방식으로 파일 다운로드를 구현하였다.  
+첫 번째 방법은 ResponseEntity<InputStreamResource>를 이용한 방법이다.  
+두 번째 방법은 ResponseEntity<ByteArrayResource>를 이용한 방법이다.  
+세 번째 방법은 HttpServletResponse를 이용한 방법이다.  
+
+## 결과 테스트
+브라우저에서 다음 주소를 호출한다.  
+http://localhost:8080/download1?fileName=test.txt  
+http://localhost:8080/download2?fileName=test.txt  
+http://localhost:8080/download3?fileName=test.txt
+ 

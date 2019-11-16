@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -50,8 +49,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					.permitAll()
 				.antMatchers("/admin/")
 					.hasAuthority("ADMIN")
-				.antMatchers("/user/**")
-					.access("@webSecurity.check(authentication, request)")
+				.antMatchers("/user/{userId}/home")
+					.access("@myWebSecurity.checkUserId(authentication, #userId, request)")
 				.anyRequest()
 					.authenticated()
 			.and()

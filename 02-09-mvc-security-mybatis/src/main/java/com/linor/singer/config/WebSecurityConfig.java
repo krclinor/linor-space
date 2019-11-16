@@ -38,12 +38,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/", "/logoutSuccess")
 					.permitAll()
 				.antMatchers("/admin/**")
-//					.hasAuthority("ADMIN")
-//					.hasRole("ADMIN")
-//					.hasAnyAuthority("ADMIN")
-					.hasAnyRole("ROLE_ADMIN")
-				.antMatchers("/user/**")
-					.access("@webSecurity.check(authentication, request)")
+//					.hasAuthority("ROLE_ADMIN")
+//					.hasRole("ADMIN")//데이타베이스에는 ROLE_ADMIN으로 저장되어 있어야 함
+//					.hasAnyAuthority("ROLE_ADMIN")
+					.hasAnyRole("ADMIN")//데이타베이스에는 ROLE_ADMIN으로 저장되어 있어야 함
+				.antMatchers("/user/{userId}/home")
+					.access("@myWebSecurity.checkUserId(authentication, #userId, request)")
 				.anyRequest()
 					.authenticated()
 			.and()

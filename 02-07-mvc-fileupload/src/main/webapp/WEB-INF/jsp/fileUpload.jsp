@@ -15,6 +15,14 @@
 			<input type="file" name="myFile"/>
 			<button type="submit">전송</button>
 		</form>
+
+		<h2>여러 파일 업로드</h2>
+		<form action="/uploadMyFiles" 
+			method="post" enctype="multipart/form-data">
+			<input type="file" name="myFiles" multiple="multiple"/>
+			<button type="submit">전송</button>
+		</form>
+
 		<c:if test="${msg != null }">
 			${msg}
 		</c:if>

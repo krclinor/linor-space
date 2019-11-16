@@ -16,10 +16,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FileController {
 	
-	@Value("${myapp.upload_folder:/temp}")
+	@Value("${myapp.upload-folder:/temp}")
 	private String UPLOAD_FOLDER;
 	
-	@GetMapping("/uploadForm")
+	@GetMapping("/")
 	public String uploadForm() {
 		return "fileUpload";
 	}
@@ -35,6 +35,24 @@ public class FileController {
 				e.printStackTrace();
 			}
 		}
-		return "redirect:/uploadForm";
+		return "redirect:/";
+	}
+
+	@PostMapping("/uploadMyFiles")
+	public String uploadFiles(@RequestParam("myFiles") MultipartFile[] files, ModelMap modelMap) {
+		if(files != null && files.length > 0) {
+			for(MultipartFile file: files) {
+				if(!file.isEmpty()) {
+					try {
+						file.transferTo(new File( UPLOAD_FOLDER + File.separator + file.getOriginalFilename()));
+					}catch(Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			modelMap.addAttribute("files", files);
+			return "viewUploadFiles";
+		}
+		return "redirect:/";
 	}
 }

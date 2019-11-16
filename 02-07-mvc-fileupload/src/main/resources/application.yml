@@ -11,4 +11,4 @@ spring:
       file-size-threshold: 5MB
 
 #업로드파일 저장 위치
-myapp.upload_folder: /temp/
+myapp.upload-folder: /temp/
