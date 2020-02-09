@@ -1,10 +1,9 @@
 package com.linor.singer.dao;
 
 import static com.linor.jooq.model.tables.Album.ALBUM;
-import static com.linor.jooq.model.tables.Singer.SINGER_;
 import static com.linor.jooq.model.tables.Instrument.INSTRUMENT;
-
-import static org.jooq.impl.DSL.concat;
+import static com.linor.jooq.model.tables.Singer.SINGER_;
+import static org.jooq.impl.DSL.*;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -14,9 +13,7 @@ import java.util.List;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
-import org.jooq.Select;
 import org.jooq.impl.DSL;
-import org.jooq.impl.DSL.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -179,7 +176,7 @@ public class SingerDaoImpl implements SingerDao {
 					.leftOuterJoin(A1)
 					.on(A1.SINGER_ID.eq(S.ID))
 					.where(A1.RELEASE_DATE.eq(
-							DSL.select(DSL.max(A2.RELEASE_DATE))
+							select(max(A2.RELEASE_DATE))
 							.from(A2)
 							.where(A2.SINGER_ID.eq(S.ID))
 							)

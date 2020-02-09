@@ -113,26 +113,16 @@ plugins에 jooq-codegen-maven, build-helper-maven-plugin플러그인을 추가�
 jooq소스생성기가 생성할 소스를 저장할공간으로 src/main/jooqsrc폴더를 생성한다.  
 ![image01](images/image01.png)
 
+프로젝트에서 maven update(Alt + F5)를 수행한 다음 Maven generate-sources를 수행한다.  
+결과 src/main/jooqsrc에 소스가 생성된다.  
+![image02](images/image02.png)
+
+
 ## 설정
 소스 : [application.yml](src/main/resources/application.yml)  
 
 ### 데이타 소스 설정
-Mybatis 설정을 제외하고는 todo 프로젝트와 동일하게 설정한다.  
-
-### Mybatis 설정
-```yml
-#마이바티스
-mybatis:
-  mapper-locations: classpath*:/**/dao/*.xml
-  type-aliases-package: com.linor.singer.domain
-  configuration.map-underscore-to-camel-case: true
-```
-mapper-locations는 sql문을 처리하는 mybatis mapper xml파일의 위치를 지정한다.  
-type-aliases-package를 등록하면 도메인사용시 패키지명을 사용하지 않고도 도메인을 지정할 수 있다.  
-예) com.linor.singer.domain.Album -> Album  
-configuratioins.map-underscore-to-camel-case를 true로 설정하면 테이블 컬럼의 snake case를 camel case로 변환하여 
-ORM매핑처리를 한다.  
-예) FIRST_NAME -> firstName
+todo 프로젝트와 동일하다.    
 
 ### 데이타베이스 초기화 파일 생성
 todo 프로젝트와 동일하게 설정한다.  
@@ -147,39 +137,29 @@ todo 프로젝트와 동일하게 설정한다.
 ## DAO인터페이스 생성
 
 소스 : [SingerDao.java](src/main/java/com/linor/singer/dao/SingerDao.java)  
-```java
-@Mapper
-public interface SingerDao {
-    List<Singer> findAll();
-    List<Singer> findByFirstName(String firstName);
-    String findNameById(Integer id);
-    Singer findById(Integer id);
-    String findFirstNameById(Integer id);
-    void insert(Singer singer);
-    void update(Singer singer);
-    void delete(Integer singerId);
-    List<Singer> findAllWithAlbums();
-    void insertWithAlbum(Singer singer);
-}
-```
-todo프로젝트에서 만든 dao인터페이스에 @Mapper어노테이션을 추가하여 매퍼용 인터페이스임을 알린다.  
-해당 인터페이스는 Mybatis Mapper에서 XML로 구현할 수도 있고, 현 인터페이스에 어노테이션으로 SQL문을 구현할 수 있다.  
 
 ## SingerDao인터페이스 구현
-Mybatis Mapper인터페이스를 XML파일로 구현한다.  
-eclipse Marketplace에서 Mybatipse플러그인을 설치하면 Mybatis Mapper xml파일을 쉽게 생성할 수 있다.  
-소스 : [SingerDao.xml](src/main/resources/com/linor/singer/dao/SingerDao.xml)  
+JOOQ DSL API를 이용하여 SingerDao인터페이스를 구현한다.
+소스 : [SingerDaoImpl.java](src/main/java/com/linor/singer/dao/SingerDaoImpl.java)  
 
-### Mapper 선언부
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
-<mapper namespace="com.linor.singer.dao.SingerDao">
+### import static
+```java
+import static com.linor.jooq.model.tables.Album.ALBUM;
+import static com.linor.jooq.model.tables.Instrument.INSTRUMENT;
+import static com.linor.jooq.model.tables.Singer.SINGER_;
+import static org.jooq.impl.DSL.*;
 ```
-처음 2줄은 무조건 추가한다.  
-namespace에 구현할 인터페이스명을 등록한다.
+JDK 1.5부터는 정적(static) 메소드와, 정적 변수를 쉽게 사용하기 위해서 static import 를 지원한다.  
 
+이클립스에서 Ctrl + Space 를 누르면 Code Assist가 동작하여 처음 몇자만 입력하면 필요한 클래스의 import 나 사용 가능한 메소드를 추천 또는 자동완성을 해준다. 하지만 static import 는 기본적으로 자동으로 인식하지 못한다.  
+이클립스에서 static 멤버에 대한 Code Assist 를 지원하기 위해서는 사용할 클래스를 Favorites 에 등록하여 사용할 수 있다.  
+- Window -> Preferences > Java/Editor/Content Assist/Favorites에서 New Type 으로 클래스를 등록한다.  
+- 여기서는 org.jooq.impl.DSL 클래스를 등록하면 org.jooq.impl.DSL.* 로 표시된다.
+![image03](images/image03.png)
+
+DSL멤버 메서드인 select가 제안되어 팝업으로 나타나는 것을 확인할 수 있다.
+![image04](images/image04.png)
+ 
 ### findAll 메서드 구현
 ```xml
 <select id="findAll" resultType="Singer">

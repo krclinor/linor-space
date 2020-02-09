@@ -14,9 +14,3 @@ spring:
     username: linor
     password: linor1234
     initialization-mode: always
-
-#마이바티스
-mybatis:
-  mapper-locations: classpath*:/**/dao/*.xml
-  type-aliases-package: com.linor.singer.domain
-  configuration.map-underscore-to-camel-case: true
