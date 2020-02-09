@@ -160,142 +160,134 @@ JDK 1.5부터는 정적(static) 메소드와, 정적 변수를 쉽게 사용하�
 DSL멤버 메서드인 select가 제안되어 팝업으로 나타나는 것을 확인할 수 있다.
 ![image04](images/image04.png)
  
-### findAll 메서드 구현
-```xml
-<select id="findAll" resultType="Singer">
-    select * from singer
-</select>
+### Service 등록
+```java
+@Service
+@Transactional
+public class SingerDaoImpl implements SingerDao {
+	@Autowired
+	private DSLContext dsl;
 ```
-select는 쿼리 작업을 수행하는 데 사용하며, id는 인터페이스의 메서드에 해당하며 메서드 명과 동일해야 한다.  
-sql문을 실행 후 칼럼명을 snake case에서 camel case로 변환하여 Singer객체의 각 프로퍼티에 매핑하여 
-배열객체(List<Singer>)로 리턴한다.
+@Service와 @Transactional을 선언하여 서비스 빈으로 사용할 수 있도록 한다.  
+JOOQ DLS API를 사용하기 위해 DSLContext를 @Autowired로 선언하여 스프링이 자동으로 객체를 생성하도록 한다.   
+
+### Record 매핑 Utility메서드 구현
+JOOQ Record를 도메인 객체에 담을 Utility 메서드를 구현한다. 
+```java
+	private Singer getSingerDomain(Record record) {
+		return Singer.builder()
+				.id(record.getValue(SINGER_.ID))
+				.firstName(record.getValue(SINGER_.FIRST_NAME))
+				.lastName(record.getValue(SINGER_.LAST_NAME))
+				.birthDate(record.getValue(SINGER_.BIRTH_DATE, LocalDate.class))
+				.build();
+	}
+	private Album getAlbumDomain(Record record) {
+		return Album.builder()
+				.id(record.getValue(ALBUM.ID))
+				.singerId(record.getValue(ALBUM.SINGER_ID))
+				.title(record.getValue(ALBUM.TITLE))
+				.releaseDate(record.getValue(ALBUM.RELEASE_DATE, LocalDate.class))
+				.build();
+	}
+```
+
+### findAll 메서드 구현
+```java
+	@Override
+	public List<Singer> findAll() {
+		List<Singer> singers = new ArrayList<Singer>();
+		Result<Record> result = dsl.select().from(SINGER_).fetch();
+		for(Record record: result) {
+			singers.add(getSingerDomain(record));
+		}
+		return singers;
+	}
+```
+dsl을 이용하여 select쿼리를 작성한다.  
+여러개의 레코드를 받기 위해 fetch()를 사용하고, 단일 레코드를 받으려면 fetchOne()을 사용한다.  
+for문을 이용하여 여러 Record를 도메인 배열로 변환한다.  
 
 ### findAllWithAllbums 메서드 구현
-#### 방법1. 중첩 select를 이용한 조회
-```xml
-<resultMap type="Singer" id="singerWithAlbumMap">
-    <collection property="albums" ofType="Album"
-        column="id" select="selectAlbumsForSinger"/>
-</resultMap>
-<select id="findAllWithAlbums" resultMap="singerWithAlbumMap">
-    select * from singer
-</select>
-<select id="selectAlbumsForSinger" parameterType="int" resultType="Album">
-    select *
-    from    album
-    where   singer_id = #{id}
-</select>
+```java
+	@Override
+	public List<Singer> findAllWithAlbums() {
+		List<Singer> singers = new ArrayList<Singer>();
+		Result<Record> result = dsl.select().from(SINGER_).fetch();
+		for(Record record: result) {
+			Singer singer = getSingerDomain(record);
+			Result<Record> resultAlbums = dsl.select()
+					.from(ALBUM)
+					.where(ALBUM.SINGER_ID.equal(singer.getId()))
+					.fetch();
+			for(Record recordAlbum : resultAlbums) {
+				singer.addAlbum(getAlbumDomain(recordAlbum));
+			}
+			singers.add(singer);
+		}
+		return singers;
+	}
 ```
-앨범을 포함한 가수 목록을 조회하고, resultMap에서 가수에 대한 앨범목록 가져오기 위하여 
-collection에서 select속성에 앨범을 조회하는 selectAlbumsForSinger를 등록한다.
+가수 목록을 조회하고, 각 가수에 대한 앨범목록을 다시 조회한다.  
 
-#### 방법2. 중첩 Result를 이용한 조회
-```xml
-<resultMap type="Singer" id="singerWithAlbumMap2">
-    <id property="id" column="id"/>
-    <result property="firstName" column="first_name"/>
-    <result property="lastName" column="last_name"/>
-    <result property="birthDate" column="birth_date"/>
-    <collection property="albums" ofType="Album">
-        <id property="id" column="album_id"/>
-        <result property="singerId" column="singer_id"/>
-        <result property="title" column="title"/>
-        <result property="releaseDate" column="release_date"/>
-    </collection>
-</resultMap>
-<select id="findAllWithAlbums" resultMap="singerWithAlbumMap2">
-    select s.id, s.first_name, s.last_name, s.birth_date,
-            a.id album_id, a.singer_id, a.title, a.release_date
-    from    singer s
-    left outer join album a on a.singer_id = s.id
-</select>
+### findNameById 메서드 구현
+```java
+	@Override
+	public String findNameById(Integer id) {
+		return dsl.select(concat(SINGER_.FIRST_NAME, DSL.val(" "), SINGER_.LAST_NAME).as("name"))
+				.from(SINGER_)
+				.where(SINGER_.ID.equal(id))
+				.fetchOne()
+				.into(String.class);
+	}
 ```
-
-### findNameById 메서드 구현(명명된 파라미터)
-```xml
-<select id="findNameById" parameterType="int" resultType="string">
-    select s.first_name ||' '|| s.last_name as name
-    from    singer s
-    where   s.id = #{id}
-</select>
-```
-sql문에서 사용하는 파라미터는 #{ }로 감싸서 표현한다. 파라미터의 타입은 parameterType에 선언하며 클래스도 가능하다.
-
-### findByFirstName 메서드 구현(다이나믹 sql문)
-```xml
-<select id="findByFirstName" parameterType="string" resultMap="singerWithAlbumMap2">
-    select s.id, s.first_name, s.last_name, s.birth_date,
-            a.id album_id, a.singer_id, a.title, a.release_date
-    from    singer s
-    left outer join album a on a.singer_id = s.id
-    <where>
-        <if test="value != null">
-        s.first_name = #{value}
-        </if>
-    </where>
-</select>
-```
-파라미터 값이 null인 경우 where절이 사라져서 findAllWithAlbums메서드와 동일하게 처리되고, 파라미터에 값이 존재하면 where절이 
-만들어진다.  
-파라미터가 단일인 변수명은 value가 디폴트이다.(다르게 명명해도 상관 없음) value값에 따라 sql 문이 달라진다.  
-value에 값이 없을 경우 findAll과 동일한 효과가 나타난다.
+컬럼들을 하나의 컬럼으로 합치기 위해 concat메서드를 사용하였으며, 단일 레코드를 받기 위해 fetchOne()을 호출한다.  
+into()메서드로 결과 객체 타입이 String클래스임을 알려서 바로 리턴할 수 있도록 한다.  
 
 ### insert 메서드 구현
-```xml
-<insert id="insert" parameterType="Singer"
-    useGeneratedKeys="true"
-    keyProperty="id">
-    insert into singer (first_name, last_name, birth_date)
-    values(#{firstName}, #{lastName}, #{birthDate})
-</insert>
+```java
+	@Override
+	public void insert(Singer singer) {
+		SingerRecord record = dsl.insertInto(SINGER_)
+				//.set(SINGER_.ID, singer.getId())
+				.set(SINGER_.FIRST_NAME, singer.getFirstName())
+				.set(SINGER_.LAST_NAME, singer.getLastName())
+				.set(SINGER_.BIRTH_DATE, Date.valueOf(singer.getBirthDate()))
+				.returning(SINGER_.ID)
+				.fetchOne();
+		
+		singer.setId(record.getId());
+	}
 ```
-sql insert문 실행시 자동으로 생성되는 id값을 받아오기 위해 useGeneratedKeys를 true로 설정하고, keyProperty를 id로 설정한다.  
-insert문 실행 후 mybatis가 singer객체의 id에 값을 대입한다. 
+insert문은 insertInto()로 처리하며, 각 컬럼값을 설정하기 위해 set()을 이용한다.  
+insert후 자동으로 생성된 주키값을 받기 위해 returning()와 fetchOne()을 호출하여 생성된 주키 값을 singer객체에 입력한다.   
 
 ### update 메서드 구현
-```xml
-<update id="update" parameterType="Singer">
-    update singer
-    set     first_name = #{firstName},
-            last_name = #{lastName},
-            birth_date = #{birthDate}
-    where   id = #{id}
-</update>
+```java
+	@Override
+	public void update(Singer singer) {
+		dsl.update(SINGER_)
+			.set(SINGER_.FIRST_NAME, singer.getFirstName())
+			.set(SINGER_.LAST_NAME, singer.getLastName())
+			.set(SINGER_.BIRTH_DATE, Date.valueOf(singer.getBirthDate()))
+			.where(SINGER_.ID.eq(singer.getId()))
+			.execute();
+	}
 ```
 
 ### delete 메서드 구현
-```xml
-<update id="delete" parameterType="int">
-    delete from singer
-    where   id = #{id}
-</update>
+```java
+	@Override
+	public void delete(Integer singerId) {
+		dsl.delete(SINGER_)
+			.where(SINGER_.ID.eq(singerId))
+			.execute();
+	}
 ```
-
-### insertWithAlbum 메서드 구현(plsql처리)
-```xml
-<insert id="insertWithAlbum" parameterType="Singer">
-    <selectKey keyProperty="id" resultType="int" order="BEFORE">
-        Select nextval(pg_get_serial_sequence('singer', 'id'))
-    </selectKey>
-    insert into singer(id, first_name, last_name, birth_date)
-    values(#{id}, #{firstName}, #{lastName}, #{birthDate});
-    <if test="albums != null">
-        <foreach collection="albums" item="album">
-            insert into album (singer_id, title, release_date)
-            values (#{id}, #{album.title}, #{album.releaseDate});
-        </foreach>
-    </if>
-</insert>
-```
-주요 sql문을 처리하기 전에 sql문을 처리할 수 있는 selectKey를 제공한다.  
-selectKey에서 처리 후 결가 값을 keyProperty에 선언한 id에 저장하는데, 이 id는 Singer클래스의 프로퍼티로 선언되어 있어야 한다.  
-order를 BEFORE로 선언함으로써 주 쿼리 실행전에 처리하도록 한다.   
 
 ## 결과 테스트
 Junit으로 SingerDaoTests를 실행한다.
 
 ## 정리
-Mybatis는 전자정부프레임워크에서 Persistence레이어로 사용하고 있다.  
-SQL문을 잘 다루는 개발자에게 적합하고, 모든 SQL문을 별도의 공간에서 관리할 수 있어 편리하다.  
-단점은 SQL문을 개발자가 직접 구현해야 하며, 데이터베이스가 바뀔 경우 해당 데이타베이스에 맞게 SQL문을 수정해 주어야 한다.
-
+Jooq는 쿼리를 자바로 구현할수 있어서 컴파일 단계에서 Type매칭에 대한 에러를 확인할 수 있도록 TypeSafe를 선혼한다.  
+이외에도 DSL을 통해 자바 코드로 쿼리를 작성하여 기본적인 쿼리 구문 오류를 컴파일 단계에서 확인할 수 있다.
