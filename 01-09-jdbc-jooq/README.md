@@ -110,6 +110,15 @@ plugins에 jooq-codegen-maven, build-helper-maven-plugin플러그인을 추가�
 			</plugin>
 		</plugins>
 ```
+jooq-codegen-maven플러그인은 DSL에서 사용할 Table, Record 등의 클래스 소스를 생성한다.  
+- dependency에 사용할 데이타베이스 드라이버를 선언한다. version까지 등록해야 한다.  
+- jdbc에 데이타베이스 접속정보를 설정한다.  
+- database의 inputSchema에 해당 스키마를 선언한다.  
+- target의 packageName에 생성할 패키지를 선언한다. 패키지 하위에 DSL에서 사용할 각종 클래스들이 생성된다.
+- directory에 JOOQ소스생성기가 생성할 소스의 루트 저장소이다.  
+
+build-helper-maven-plugin플러그인은 JOOQ가 생성할 소스 저장소를 이클립스가 자바소스 디렉토리로 인식할 수 있도록 한다.
+
 jooq소스생성기가 생성할 소스를 저장할공간으로 src/main/jooqsrc폴더를 생성한다.  
 ![image01](images/image01.png)
 
