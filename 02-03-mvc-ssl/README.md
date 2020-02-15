@@ -102,5 +102,5 @@ public class TomcatConfiguration {
 ### 결과 테스트
 브라우저에서 다음 주소를 호출한다.  
 http://localhost:8080
-그러면 https://localhost:8443으로 이동된다.
+그러면 https://localhost:8443 으로 이동된다.
 
