@@ -98,6 +98,7 @@ public class WebConfig implements WebMvcConfigurer{
 }
 ```
 Validation에서 사용할 메시지 소스를 지정하기 위해 WebMvcConfigurer를 상속받아 WebConfig설정 클래스를 생성한다.    
+위 설정 클래스를 생성하지 않으면 디폴트로 /ValidationMessages.properties를 사용한다.  
 
 ### 폼데이터 유효성 체크를 위한 모델 클래스 수정
 소스: [User.java](src/main/java/com/linor/singer/model/User.java)   
