@@ -5,7 +5,7 @@
 프로젝트 생성은 02-05-mvc-form을 복사하여 진행한다.  
 
 ### 의존성 라이브러리
-의존성라이브러리에 validation-api를 추가한다.
+validation-api를 이용하여 유효성 체크를 하는데, 이 라이브러리는 spring-boot-starter-web에 포함되어 있다.
 
 소스 : [pom.xml](pom.xml)
 ```xml
@@ -45,11 +45,6 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
 			<version>4.3.1</version>
-		</dependency>
-		<!-- Validation -->
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
 		</dependency>
 	</dependencies>
 ```
