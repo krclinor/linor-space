@@ -57,5 +57,50 @@ server:
 
 ## 결과 테스트
 브라우저에서 다음 주소를 호출한다.  
-https://localhost:84438
- 
+https://localhost:8443
+
+## 8080포트 접속시 8443리다이렉트 처리
+내장 톰켓서버를 설정하는 클래스를 추가한다.
+
+소스 : [TomcatConfiguration.java](src/main/java/com/linor/singer/config/TomcatConfiguration.java)  
+```java
+@Configuration
+public class TomcatConfiguration {
+	@Value("${server.port}")
+	int serverPort;
+	
+	@Bean
+	public ServletWebServerFactory servletConainer() {
+		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
+
+			@Override
+			protected void postProcessContext(Context context) {
+				SecurityConstraint securityConstraint = new SecurityConstraint();
+				securityConstraint.setUserConstraint("CONFIDENTIAL");
+				SecurityCollection collection = new SecurityCollection();
+				collection.addPattern("/*");
+				securityConstraint.addCollection(collection);
+				context.addConstraint(securityConstraint);
+			}
+			
+		};
+		
+		tomcat.addAdditionalTomcatConnectors(initiateHttpConnector());
+		return tomcat;
+	}
+	
+	private Connector initiateHttpConnector() {
+		Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+		connector.setScheme("http");
+		connector.setPort(8080);
+		connector.setSecure(false);
+		connector.setRedirectPort(serverPort);
+		return connector;
+	}
+}
+```
+### 결과 테스트
+브라우저에서 다음 주소를 호출한다.  
+http://localhost:8080
+그러면 https://localhost:8443으로 이동된다.
+
