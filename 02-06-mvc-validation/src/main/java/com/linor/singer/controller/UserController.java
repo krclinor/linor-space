@@ -2,6 +2,7 @@ package com.linor.singer.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,9 +11,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.linor.singer.model.Gender;
 import com.linor.singer.model.User;
+import com.linor.singer.validators.UserValidator;
 
 @Controller
 public class UserController {
+	@Autowired
+	private UserValidator userValidator;
+	
 	private static final String[] countries =
 		{"대한민국", "터어키", "미국", "일본"};
 	
@@ -26,6 +31,8 @@ public class UserController {
 	
 	@RequestMapping(value = "/result")
 	public String processUser(@Valid User user, BindingResult result, Model model) {
+		userValidator.validate(user, result);
+		
 		if(result.hasErrors()) {
 			model.addAttribute("user", user);
 			model.addAttribute("genders", Gender.values());

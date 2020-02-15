@@ -271,4 +271,59 @@ cssErrorClass는 요효성 체크 후 오류인 경우 css클래스를 지정한
 ## 결과 테스트
 브라우저에서 다음 주소를 호출한다.  
 http://localhost:8080/form
- 
+
+## CustomValidation 구현
+org.springframework.validation.Validator를 이용하여 복잡한 유효성 체크를 구현할 수 있다.  
+입력한 email이 linor@gmailcom이면 이미 등록한 이메일 임을 알리는 오류표시를 해보자.  
+소스 [UserValidator.java](src/main/java/com/linor/singer/validators/UserValidator.java)
+```java
+@Component
+public class UserValidator implements Validator {
+
+	@Override
+	public boolean supports(Class<?> clazz) {
+		return User.class.isAssignableFrom(clazz);
+	}
+
+	@Override
+	public void validate(Object target, Errors errors) {
+		User user = (User)target;
+		String email = user.getEmail();
+		if ("linor@gmail.com".equals(email)) {
+			errors.rejectValue("email",
+					"email.exists",
+					new Object[] {email},
+					email + "은(는) 이미 사용중입니다.");
+		}
+	}
+}
+```
+
+이제 컨트롤러에서 User Validator를 사용한다.
+소스 [UserController.java](src/main/java/com/linor/singer/controller/UserController.java)
+
+```java
+	@Autowired
+	private UserValidator userValidator;
+```
+UserValidator를 맴버번수로 등록한다.
+
+```java
+	@RequestMapping(value = "/result")
+	public String processUser(@Valid User user, BindingResult result, Model model) {
+		userValidator.validate(user, result);
+		
+		if(result.hasErrors()) {
+			model.addAttribute("user", user);
+			model.addAttribute("genders", Gender.values());
+			model.addAttribute("countries", countries);
+			return "userForm";
+		}else {
+			model.addAttribute("u", user);
+			return "userResult";
+		}
+	}
+```
+userValidator.validate(user, result);로 유효성체크한다.  
+
+![image01](images/image01.png)
