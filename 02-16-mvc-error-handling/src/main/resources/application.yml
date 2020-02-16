@@ -1,0 +1,7 @@
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+
+welcome.message: 안녕하세요 스프링부트 JSP예제 입니다. 
