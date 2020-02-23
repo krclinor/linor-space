@@ -7,7 +7,7 @@ management:
   info:
     git:
       mode: full
-      
+
 spring:
   security:
     user:

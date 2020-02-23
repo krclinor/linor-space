@@ -1,4 +1,4 @@
-package com.linor.ioc;
+package com.linor.singer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
