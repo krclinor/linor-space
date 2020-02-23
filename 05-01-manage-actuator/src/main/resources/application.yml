@@ -1,0 +1,23 @@
+management:
+  endpoints:
+    web:
+#      base-path: /app #디폴트 /actuator
+      exposure:
+        include: '*'
+  info:
+    git:
+      mode: full
+      
+spring:
+  security:
+    user:
+      name: admin
+      password: secret
+      roles:
+      - ADMIN
+
+info:
+  app:
+    name: Beginning Spring Boot 2
+    description: This is a SpringBoot Demo app
+    version: 1.0.0
