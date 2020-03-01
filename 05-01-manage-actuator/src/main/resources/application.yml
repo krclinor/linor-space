@@ -1,15 +1,15 @@
 management:
+  endpoint:
+    health:
+      show-details: always # when-authorized
+    shutdown:
+      enabled: true
   endpoints:
     web:
 #      base-path: /app #디폴트 /actuator
       exposure:
         include: '*'
-  endpoint:
-    shutdown:
-      enabled: true
-    health:
-      show-details: when-authorized
-
+    
 spring:
   security:
     user:
