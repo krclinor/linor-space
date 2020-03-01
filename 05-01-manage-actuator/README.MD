@@ -183,27 +183,27 @@ RestTemplate를 이용하여 http://feedserver.com/ping를 접속하여 OK메시
 URL : http://localhost:8080/actuator/health
 ```json
 {
-"status": "DOWN",
-"components": {
-"diskSpace": {
-"status": "UP",
-"details": {
-"total": 185486336000,
-"free": 148835770368,
-"threshold": 10485760
-}
-},
-"feedServer": {
-"status": "DOWN",
-"details": {
-"error": "org.springframework.web.client.HttpClientErrorException$BadRequest: 400 Bad Request: [no body]",
-"ping_url": "http://feedserver.com/ping",
-"ping_time": "2020-03-01T01:30:12.881+0000"
-}
-},
-"ping": {
-"status": "UP"
-}
-}
+	"status": "DOWN",
+	"components": {
+		"diskSpace": {
+			"status": "UP",
+			"details": {
+			"total": 185486336000,
+			"free": 148835770368,
+			"threshold": 10485760
+			}
+		},
+		"feedServer": {
+			"status": "DOWN",
+			"details": {
+			"error": "org.springframework.web.client.HttpClientErrorException$BadRequest: 400 Bad Request: [no body]",
+			"ping_url": "http://feedserver.com/ping",
+			"ping_time": "2020-03-01T01:30:12.881+0000"
+			}
+		},
+		"ping": {
+			"status": "UP"
+		}
+	}
 }
 ```
