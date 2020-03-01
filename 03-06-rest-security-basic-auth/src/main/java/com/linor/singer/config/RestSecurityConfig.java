@@ -38,24 +38,24 @@ public class RestSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		//CRSF Disable
-		http.csrf()
-			.disable();
-		
-		//Basic Authentication
-		http.httpBasic()
-			.authenticationEntryPoint(authEntryPoint);
-		
-		//Stateless Session Management
-		http.sessionManagement()
-			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		
-		//Authorization
-		http.authorizeRequests()
-			.antMatchers("/api/**")
-				.hasAuthority("ADMIN")
-			.anyRequest()
-				.authenticated();
+		http
+			//CRSF Disable
+			.csrf()
+				.disable()
+			//Basic Authentication
+			.httpBasic()
+				.authenticationEntryPoint(authEntryPoint)
+				.and()
+			//Stateless Session Management
+			.sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and()
+			//Authorization
+			.authorizeRequests()
+				.antMatchers("/api/**")
+					.hasAuthority("ADMIN")
+				.anyRequest()
+					.authenticated();
 	}
 	
 	@Override
