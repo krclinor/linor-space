@@ -15,11 +15,15 @@ BeanFactory 인터페이스를 상속받는 ApplicationContext는 BeanFactory가
 
 모든 ApplicationContext 구현체는 BeanFactory의 기능을 모두 제공하므로, 특별한 경우를 제외하고는 ApplicationContext를 사용하는 것이 바람직하다. 
 
-Spring프레임워크에서는 다수의 ApplicationContext를 제공하는데 ClassPathXmlApplicationContext를 생성하는 예시를 보자.
+Spring프레임워크에서는 다수의 ApplicationContext를 제공하는데 ClassPathXmlApplicationContext를 생성하는 예시를 보자.  
+소스 : [DlExample.java](src/main/java/com/linor/ioc/dl/DlExample.java)  
 
 ```java
-ApplicationContext context = new ClassPathXmlApplicationContext("config/bean.xml");
-MyBean bean = context.getBean("myBean");
+	public static void main(String... args) {
+		ApplicationContext context = new ClassPathXmlApplicationContext("xmlContext.xml");
+		Hello hello = (Hello)context.getBean("hello");
+		System.out.println(hello.sayHello());
+	}
 ```
 
 ## DI(Dependency Injection)
@@ -30,6 +34,10 @@ IOC를 구현하기 위한 방법으로 DL(Dependency Lookup)과 DI(Dependency I
 
 ### DL(Dependency Lookup) : 의존성 검색
 컨테이너에서 제공하는 API를 이용해 사용하고자 하는 빈(Bean)을 저장소에서 Lookup하는 것을 말한다.
+
+```java
+		Hello hello = (Hello)context.getBean("hello");
+```
 
 ### DI(Dependency Injection) : 의존성 주입
 각 객체간의 의존성을 컨테이너가 자동으로 연결해주는 것으로 개발자가 빈(Bean) 설정파일에 의존관계가 필요한 정보를 추가해주면 컨테이너가 자동적으로 연결해준다.
