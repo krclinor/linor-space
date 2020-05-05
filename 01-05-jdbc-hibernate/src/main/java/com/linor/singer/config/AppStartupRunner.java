@@ -13,8 +13,8 @@ import com.linor.singer.domain.Album;
 import com.linor.singer.domain.Instrument;
 import com.linor.singer.domain.Singer;
 
-@Profile("dev")
-@Component
+//@Profile("dev")
+//@Component
 public class AppStartupRunner implements ApplicationRunner {
 	@Autowired
 	private SingerDao singerDao;

@@ -15,7 +15,7 @@ import com.linor.singer.domain.SingerSummary;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Repository
 @Slf4j
 public class SingerDaoImpl implements SingerDao {
@@ -26,7 +26,7 @@ public class SingerDaoImpl implements SingerDao {
 	@Override
 	@Transactional(readOnly=true)
 	public List<Singer> findAll() {
-		return entityManager.createQuery("from Singer s").getResultList();
+		return entityManager.createQuery("from Singer s", Singer.class).getResultList();
 	}
 
 	private static final String ALL_SINGER_NATIVE_SQL =

@@ -15,10 +15,10 @@ spring:
   datasource:
     platform: postgresql
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+    url: jdbc:postgresql://postgres:5432/spring?currentSchema=singer
     username: linor
     password: linor1234
-#    initialization-mode: always
+    initialization-mode: always
 
     #hikari Connection Pull 설정
 #    hikari:
@@ -34,7 +34,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         physical-naming-strategy: com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy
-        #format_sql: true
+        format_sql: true
         #use_sql_comments: true
         #jdbc.lob.non_contextual_creation: true
         #temp.use_jdbc_metadata_default: false
@@ -45,7 +45,7 @@ spring:
   datasource:
     platform: h2 
 #    driver-class-name: org.h2.Driver
-#    initialization-mode: always
+    initialization-mode: always
 
     #hikari Connection Pull 설정
 #    hikari:

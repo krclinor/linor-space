@@ -10,7 +10,22 @@ Hibernate 프로젝트와 동일하게 설정.
 
 ### 어플리케이션 설정
 hibernate프로젝트와 동일하게 설정.    
-소스 : [application.yml](src/main/resources/application.yml)
+소스 : [application.yml](src/main/resources/application.yml)  
+```yml
+#데이타소스
+spring: 
+  profiles: postgres
+  datasource:
+    platform: postgresql
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgres:5432/spring?currentSchema=singer
+    username: linor
+    password: linor1234
+    initialization-mode: always
+```
+data-postgresql.sql파일을 실행하려면
+datasource의 initialization-mode를 always로하면 된다. 또한 AppStartupRunner클래스에서 데이타를 입력하지 않도록 삭제한다.
+주의할 점은 jpa.hibernate.ddl-auto를 create로 하였을 경우 테이블을 생성하는 schema.sql파일을 지워야 한다.
 
 ### 엔터티 클래스 생성
 생성한 Singer, Album, Instrument 엔터티 클래스는 hibernate프로젝트에서 생성한 엔터티 클래스와 동일하다.  

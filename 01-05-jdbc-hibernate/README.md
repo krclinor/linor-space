@@ -43,7 +43,7 @@ todo 프로젝트 의존성 라이브러리에 jpa와 hibernate-types-52를 추�
         <dependency>
             <groupId>com.vladmihalcea</groupId>
             <artifactId>hibernate-types-52</artifactId>
-            <version>2.7.1</version>
+            <version>2.9.9</version>
         </dependency>
     </dependencies>
 ```
@@ -386,7 +386,7 @@ public class Singer implements Serializable{
 ```
 session의 getNamedQuery메서드를 이용하여 호출한다.  
 Name 파라미터 설정은 Query.setParameter(), 또는 Query.setParameterList()를 사용하여 설정한다.    
-단일 레코드를 리턴하기 위해 Query.uniqueResult()를 사용하고, 여러 레코드를 리터하려면 Query.list()를 사용한다.  
+단일 레코드를 리턴하기 위해 Query.uniqueResult()를 사용하고, 여러 레코드를 리턴하려면 Query.list()를 사용한다.  
 
 #### insert 메서드 구현
 ```java
