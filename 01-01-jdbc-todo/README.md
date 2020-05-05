@@ -66,6 +66,25 @@ Spring Boot -> Spring Starter Project로 생성한다.
     </dependencies>
 ```
 ## 설정
+### lombok설정
+lombok를 사용하면 자바 빈의 get,set메서드를 선언하지 않더라로 알아서 만들어 주므로 소스가 깔끔해 진다.
+또한 slf4j log를 쉽게 선언하여 사용할 수 있도록 지원한다.  
+![](./images/image01.png)  
+Maven Dependencies에서 lombox-1.18.12.jar파일을 선택하고 Shit+Alt+X를 누른 다음 j를 눌러 실행한다.  
+
+![](./images/image02.png)  
+Specify Location...버튼을 클릭하여 위 그림 처럼 이클립스가 설치된 폴더를 선택하여 추가한다.
+Intall/Update버튼을 클릭한다.
+
+![](./images/image03.png)  
+설치완료되면 위 그림과 같이 나나타며, Quit Installer버튼을 클릭하여 종료한 후 이클립스를 재시작한다.   
+
+### 데이타베이스 호스트 설정
+/etc/hosts파일에 다음 내용을 추가하여 localhost가 postgres서버로 인식하도록 한다.   
+```hosts
+127.0.0.1	localhost postgres
+```
+
 ### 데이타 소스 설정
 스프링부트에서 사용할 데이타소스를 설정한다.  
 소스 : [application.yml](src/main/resources/application.yml)
@@ -73,7 +92,7 @@ Spring Boot -> Spring Starter Project로 생성한다.
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+    url: jdbc:postgresql://postgres:5432/spring?currentSchema=singer
     username: linor
     password: linor1234
     initialization-mode: always

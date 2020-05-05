@@ -124,7 +124,9 @@ PreparedStatement.executeQuery()를 실행하여 결과를 ResultSet으로 받�
 insert메서드는 매개변수로 받은 가수 객체를 데이타베이스에 추가하는 작업을 수행한다.  
 
 ## 결과 테스트
-Junit으로 SingerDaoTests를 실행한다.
+Junit으로 SingerDaoTests를 실행한다.  
+![](./images/image01.png)  
+Junit으로 테스트케이스를 실행하면 위와같은 화면으로 각 메서드별 실행결과를 확인할 수 있다.  
 
 ## 정리
 가장 다루기 힘든 처리방법이며, 스프링에서 제공하는 선언적 트랜잭션을 사용할 수 없다.  
