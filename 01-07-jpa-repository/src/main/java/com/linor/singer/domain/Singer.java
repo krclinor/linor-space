@@ -57,7 +57,7 @@ public class Singer implements Serializable{
 	//@Column(name="birth_date")
 	private LocalDate birthDate;
 	
-	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true)
+	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.LAZY)
 	//@ToString.Exclude
 	//@EqualsAndHashCode.Exclude
 	@Singular
