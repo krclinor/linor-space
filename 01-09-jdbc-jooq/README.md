@@ -67,13 +67,13 @@ plugins에 jooq-codegen-maven, build-helper-maven-plugin플러그인을 추가�
 					<dependency>
 						<groupId>org.postgresql</groupId>
 						<artifactId>postgresql</artifactId>
-						<version>42.2.8</version>
+						<version>${postgresql.version}</version>
 					</dependency>
 				</dependencies>
 				<configuration>
 					<jdbc>
 						<driver>org.postgresql.Driver</driver>
-						<url>jdbc:postgresql://localhost:5432/spring</url>
+						<url>jdbc:postgresql://postgres:5432/spring</url>
 						<user>linor</user>
 						<password>linor1234</password>
 					</jdbc>
@@ -149,7 +149,7 @@ todo 프로젝트와 동일하게 설정한다.
 
 ## SingerDao인터페이스 구현
 JOOQ DSL API를 이용하여 SingerDao인터페이스를 구현한다.
-소스 : [SingerDaoImpl.java](src/main/java/com/linor/singer/dao/SingerDaoImpl.java)  
+소스 : [SingerDaoImpl.java](src/main/java/com/linor/singer/jooq/SingerDaoImpl.java)  
 
 ### import static
 ```java
@@ -298,5 +298,5 @@ insert후 자동으로 생성된 주키값을 받기 위해 returning()와 fetch
 Junit으로 SingerDaoTests를 실행한다.
 
 ## 정리
-Jooq는 쿼리를 자바로 구현할수 있어서 컴파일 단계에서 Type매칭에 대한 에러를 확인할 수 있도록 TypeSafe를 선혼한다.  
+Jooq는 쿼리를 자바로 구현할수 있어서 컴파일 단계에서 Type매칭에 대한 에러를 확인할 수 있도록 TypeSafe를 선호한다.  
 이외에도 DSL을 통해 자바 코드로 쿼리를 작성하여 기본적인 쿼리 구문 오류를 컴파일 단계에서 확인할 수 있다.

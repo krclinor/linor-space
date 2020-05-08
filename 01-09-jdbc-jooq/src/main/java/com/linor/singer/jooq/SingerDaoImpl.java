@@ -1,4 +1,4 @@
-package com.linor.singer.dao;
+package com.linor.singer.jooq;
 
 import static com.linor.jooq.model.tables.Album.ALBUM;
 import static com.linor.jooq.model.tables.Instrument.INSTRUMENT;
@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.jooq.model.tables.records.AlbumRecord;
 import com.linor.jooq.model.tables.records.SingerRecord;
+import com.linor.singer.dao.SingerDao;
 import com.linor.singer.domain.Album;
 import com.linor.singer.domain.Instrument;
 import com.linor.singer.domain.Singer;
