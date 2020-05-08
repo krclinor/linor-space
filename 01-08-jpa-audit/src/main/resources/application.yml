@@ -1,4 +1,4 @@
-spring.profiles.active: [postgres, dev]
+spring.profiles.active: [h2, dev]
 #로거
 logging:
   pattern:
@@ -13,7 +13,7 @@ spring:
   datasource:
     platform: postgresql
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+    url: jdbc:postgresql://postgres:5432/spring?currentSchema=singer
     username: linor
     password: linor1234
 #    initialization-mode: always
@@ -48,7 +48,7 @@ spring:
 #    url: jdbc:h2:mem:test;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
 #    username: sa
 #    password: ''
-#    initialization-mode: always
+    initialization-mode: never
 #  h2.console.enabled: true
     #hikari Connection Pull 설정
 #    hikari:
