@@ -97,10 +97,13 @@ spring:
     password: linor1234
     initialization-mode: always
 ```
-yml파일이 properties파일보다 시스템 설정사항을 효율적으로 관리할 수 있다.
-datasource 설정에 필요한 속성은 driver-class-name, url, username, password이다.
-initialization-mode를 always로 하면 spring boot시작시 schema.sql과 data.sql파일을 
-실행하여 데이타베이스의 테이블을 생성하고 데이타를 로드하여 데이타베이스를 초기화 한다.
+yml파일이 properties파일보다 시스템 설정사항을 효율적으로 관리할 수 있다.  
+properties의 경우 Profile을 설정하려면 Profile별로 properties파일을 생성해야 하지만 yml은 하나의 파일에서 관리할 수 있다.  
+datasource 설정에 필요한 속성은 driver-class-name, url, username, password이다.  
+initialization-mode:
+- always : spring boot시작시 schema.sql과 data.sql파일을 실행하여 데이타베이스의 테이블을 생성하고 데이타를 로드하여 데이타베이스를 초기화 한다.
+- never : 데이타베이스를 초기화 하지 않는다.
+- embedded : HSQL, H2와 같이 내장 데이타베이스를 사용하는 경우에 설정한다. 
 
 ### 데이타베이스 초기화 파일 생성
 프로젝트 실행시 사용할 테이블을 생성하기 한 sql script파일로 application.yml에서     
@@ -153,32 +156,71 @@ values
 소스 : [Singer.java](src/main/java/com/linor/singer/domain/Singer.java)
 ```java
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Singer {
-    private Integer id;
-    private String firstName;
-    private String lastName;
-    private LocalDate birthDate;
-    private List<Album> albums;
-
-    public void addAlbum(Album album) {
-        if(albums == null) {
-            albums = new ArrayList<>();
-        }
-        albums.add(album);
-    }
+	private Integer id;
+	private String firstName;
+	private String lastName;
+	private LocalDate birthDate;
+	
+	@Singular
+	private List<Album> albums = new ArrayList<Album>();
 }
 ```
-Data어노테이션은 Lombok에서 제공하는 것으로 자동으로 get/set메서드를 생성하여 코딩을 깔끔하게 작성할 수 있다.
+@Data, @Builder, @AllArgsConstructor, @NoArgsConstructor, @Singular는 모두 Lombok어노테이션이다.  
+@Data는 자동으로 get/set메서드를 생성하여 코딩을 깔끔하게 작성할 수 있다.  
+@Builder는 객체를 생성할 때 유용하게 사용한다. 사용법은 다음과 같다.
+```java
+		Singer singer = Singer.builder()
+				.firstName("조한")
+				.lastName("김")
+				.birthDate(LocalDate.parse("1990-10-16"))
+				.build();
+```
 
+@AllArgsConstructor는 모든 맴버변수를 가진 생성자를 만들도록 한다.  
+@NoArgsConstructor는 맴버변수가 없는 생성자를 만들도록 한다.  
+![](./images/image04.png)  
+Singer()생성자는 @NoArgsConstructor가 만들었고,
+Singer(Integer, String, String, LocalDate, List<Album>)는 @AllArgsConstructor가 만들었다.  
+@Singular는 배열변수인 경우 여러건을 등록할 수 있도록 한다. 사용법은 다음과 같다.  
+```java
+		Singer singer = Singer.builder()
+				.firstName("태원")
+				.lastName("김")
+				.birthDate(LocalDate.parse("1965-04-12"))
+				.album(Album.builder()
+						.title("Never Ending Story")
+						.releaseDate(LocalDate.parse("2001-08-31"))
+						.build()
+						)
+				.album(Album.builder()
+						.title("생각이나")
+						.releaseDate(LocalDate.parse("2009-08-14"))
+						.build()
+						)
+				.album(Album.builder()
+						.title("사랑할수록")
+						.releaseDate(LocalDate.parse("1993-11-01"))
+						.build()
+						)
+				.build();
+```  
+@Singular를 선언한 albums맴버변수에 album메서드를 이용하여 계속 객체를 추가할 수 있다.  
 
 소스 : [Album.java](src/main/java/com/linor/singer/domain/Album.java)
 ```java
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Album {
-    private Integer id;
-    private Integer singerId;
-    private String title;
-    private LocalDate releaseDate;
+	private Integer id;
+	private Integer singerId;
+	private String title;
+	private LocalDate releaseDate;
 }
 ```
 
@@ -188,16 +230,16 @@ public class Album {
 소스 : [SingerDao.java](src/main/java/com/linor/singer/dao/SingerDao.java)  
 ```java
 public interface SingerDao {
-    List<Singer> findAll();
-    List<Singer> findByFirstName(String firstName);
-    String findNameById(Integer id);
-    Singer findById(Integer id);
-    String findFirstNameById(Integer id);
-    void insert(Singer singer);
-    void update(Singer singer);
-    void delete(Integer singerId);
-    List<Singer> findAllWithAlbums();
-    void insertWithAlbum(Singer singer);
+	List<Singer> findAll();
+	List<Singer> findByFirstName(String firstName);
+	String findNameById(Integer id);
+	Singer findById(Integer id);
+	String findFirstNameById(Integer id);
+	void insert(Singer singer);
+	void update(Singer singer);
+	void delete(Integer singerId);
+	List<Singer> findAllWithAlbums();
+	void insertWithAlbum(Singer singer);
 }
 ```
 
@@ -207,92 +249,149 @@ Dao인터페이스를 테스트 할 테스트케이스를 생성한다.
 ```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class SingerDaoTests {
-    @Autowired
-    private SingerDao singerDao;
-    
-    @Test
-    public void testFindNameById() {
-        String name = singerDao.findNameById(1);
-        assertTrue("종서 김".equals(name));
-    }
+	@Autowired
+	private SingerDao singerDao;
+	
+	@Test
+	public void contextLoads() {
+	}
+	
+	@Test
+	public void testFindNameById() {
+		String name = singerDao.findNameById(1);
+		assertTrue("종서 김".equals(name));
+	}
 
-    @Test
-    public void testFindAll(){
-        List<Singer> singers = singerDao.findAll();
-        assertNotNull(singers);
-        assertTrue(singers.size() == 4);
-        log.info("가수목록");
-        listSingers(singers);
-        
-        Singer singer = new Singer();
-        singer.setFirstName("길동");
-        singer.setLastName("홍");
-        singer.setBirthDate(LocalDate.parse("1977-10-16"));
-        singerDao.insert(singer);
-        
-        singers = singerDao.findAll();
-        assertTrue(singers.size() == 5);
-        log.info("가수 추가 후 가수 목록");
-        listSingers(singers);
-        
-        singerDao.delete(singer.getId());
-        singers = singerDao.findAll();
-        assertTrue(singers.size() == 4);
-        log.info("가수 삭제 후 가수 목록");
-        listSingers(singers);
-        
-    }
-    
-    
-    private void listSingers(List<Singer> singers){
-        for(Singer singer: singers){
-            log.info(singer.toString());
-        }
-    }
+	@Test
+	public void testFindAll(){
+		List<Singer> singers = singerDao.findAll();
+		assertNotNull(singers);
+		assertTrue(singers.size() == 4);
+		log.info("가수목록");
+		listSingers(singers);
+		
+		Singer singer = 
+				Singer.builder()
+				.firstName("길동")
+				.lastName("홍")
+				.birthDate(LocalDate.parse("1991-01-11"))
+				.build();
 
-    @Test
-    public void testFindAllWidthAlbums() {
-        List<Singer> singers = singerDao.findAllWithAlbums();
-        assertTrue(singers.size() == 4);
-        singers.forEach(singer -> {
-            log.info(singer.toString());
-        });
-    }
-    
-    @Test
-    public void testFindByFirstName() {
-        List<Singer> singers = singerDao.findByFirstName("종서");
-        assertTrue(singers.size() == 1);
-        listSingers(singers);
-    }
+		singerDao.insert(singer);
+		
+		singers = singerDao.findAll();
+		assertTrue(singers.size() == 5);
+		log.info("가수 추가 후 가수 목록");
+		listSingers(singers);
+		
+		singerDao.delete(singer.getId());
+		singers = singerDao.findAll();
+		assertTrue(singers.size() == 4);
+		log.info("가수 삭제 후 가수 목록");
+		listSingers(singers);
+		
+	}
+	
+	
+	private void listSingers(List<Singer> singers){
+		for(Singer singer: singers){
+			log.info(singer.toString());
+		}
+	}
 
-    @Test
-    public void testFindbyId() {
-        Singer singer = singerDao.findById(1);
-        log.info("주키로 1개 레코드 검색 결과>>>");
-        log.info(singer.toString());
-    }
-    
-    @Test
-    public void testSingerUpdate() {
-        Singer singerOldSinger = singerDao.findById(1);
-        log.info(">>> 김종서 수정 전 >>>");
-        log.info(singerOldSinger.toString());
-        Singer singer = new Singer();
-        singer.setId(1);
-        singer.setFirstName("종서");
-        singer.setLastName("김");
-        singer.setBirthDate(LocalDate.parse("1977-10-16"));
-        singerDao.update(singer);
-        Singer singerNewSinger = singerDao.findById(1);
-        log.info(">>> 김종서 수정 후 >>>");
-        log.info(singerNewSinger.toString());
-    }
+	@Test
+	public void testFindAllWidthAlbums() {
+		List<Singer> singers = singerDao.findAllWithAlbums();
+		assertTrue(singers.size() == 4);
+		singers.forEach(singer -> {
+			log.info(singer.toString());
+		});
+	}
+	
+	@Test
+	public void testFindByFirstName() {
+		List<Singer> singers = singerDao.findByFirstName("종서");
+		assertTrue(singers.size() == 1);
+		listSingers(singers);
+	}
+
+	@Test
+	public void testFindbyId() {
+		Singer singer = singerDao.findById(1);
+		log.info("주키로 1개 레코드 검색 결과>>>");
+		log.info(singer.toString());
+	}
+	
+	@Test
+	public void testSingerUpdate() {
+		Singer singerOldSinger = singerDao.findById(1);
+		log.info(">>> 김종서 수정 전 >>>");
+		log.info(singerOldSinger.toString());
+		Singer singer = Singer.builder()
+				.id(1)
+				.firstName("종서")
+				.lastName("김")
+				.birthDate(LocalDate.parse("1977-10-16"))
+				.build();
+		singerDao.update(singer);
+		Singer singerNewSinger = singerDao.findById(1);
+		log.info(">>> 김종서 수정 후 >>>");
+		log.info(singerNewSinger.toString());
+	}
+	
+	@Test
+	public void testInsertSinger() {
+		Singer singer = Singer.builder()
+				.firstName("조한")
+				.lastName("김")
+				.birthDate(LocalDate.parse("1990-10-16"))
+				.build();
+		singerDao.insert(singer);
+		List<Singer> singers = singerDao.findAll();
+		log.info(">>> 김조한 추가후");
+		listSingers(singers);
+	}
+	
+	@Test
+	public void testInsertSingerWithAlbum() {
+		Singer singer = Singer.builder()
+				.firstName("태원")
+				.lastName("김")
+				.birthDate(LocalDate.parse("1965-04-12"))
+				.album(Album.builder()
+						.title("Never Ending Story")
+						.releaseDate(LocalDate.parse("2001-08-31"))
+						.build()
+						)
+				.album(Album.builder()
+						.title("생각이나")
+						.releaseDate(LocalDate.parse("2009-08-14"))
+						.build()
+						)
+				.album(Album.builder()
+						.title("사랑할수록")
+						.releaseDate(LocalDate.parse("1993-11-01"))
+						.build()
+						)
+				.build();
+		singerDao.insertWithAlbum(singer);
+		List<Singer> singers = singerDao.findAllWithAlbums();
+		listSingers(singers);
+	}
 }
-
 ```
 테스트 케이스는 Junit 테스트 케이스로 현재 프로젝트에서는 인터페이스 구현체가 없어서 실행되지 않지만 
-나머지 프로젝트에서 구현체를 생성 후 Junit을 실행하면 모두 실행되도록 하였다.
+나머지 프로젝트에서 구현체를 생성 후 Junit을 실행하면 모두 실행되도록 하였다.  
+- @RunWith는 JUnit 프레임워크가 내장된 Runner를 실행할 때 @RunWith내에 선언된 SpringRunner.class라는 클래스를 실행하도록 한다.
+- @SpringBootTest는 테스트에 사용할 ApplicationContext를 쉽게 생성하고 조작할 수 있도록 한다.  
+- @Transactional은 테스트케이스 실행 후 트랜잭션을 롤백한다.  
+- @Slf4j는 Lombok어노테이션으로 Slf4j로거를 사용할 수 있도록 log맴버객체를 생성한다.
+![](./images/image05.png)  
+log가 Slf4j어노테이션이 생성한 맴버객에이다.  
+사용법은 아래와 같다.  
+```java
+		log.info("가수목록");
+```

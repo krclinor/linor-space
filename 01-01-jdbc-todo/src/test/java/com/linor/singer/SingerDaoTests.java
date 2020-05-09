@@ -11,16 +11,17 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.singer.dao.SingerDao;
+import com.linor.singer.domain.Album;
 import com.linor.singer.domain.Singer;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class SingerDaoTests {
 	@Autowired
@@ -44,10 +45,13 @@ public class SingerDaoTests {
 		log.info("가수목록");
 		listSingers(singers);
 		
-		Singer singer = new Singer();
-		singer.setFirstName("길동");
-		singer.setLastName("홍");
-		singer.setBirthDate(LocalDate.parse("1977-10-16"));
+		Singer singer = 
+				Singer.builder()
+				.firstName("길동")
+				.lastName("홍")
+				.birthDate(LocalDate.parse("1991-01-11"))
+				.build();
+
 		singerDao.insert(singer);
 		
 		singers = singerDao.findAll();
@@ -98,14 +102,55 @@ public class SingerDaoTests {
 		Singer singerOldSinger = singerDao.findById(1);
 		log.info(">>> 김종서 수정 전 >>>");
 		log.info(singerOldSinger.toString());
-		Singer singer = new Singer();
-		singer.setId(1);
-		singer.setFirstName("종서");
-		singer.setLastName("김");
-		singer.setBirthDate(LocalDate.parse("1977-10-16"));
+		Singer singer = Singer.builder()
+				.id(1)
+				.firstName("종서")
+				.lastName("김")
+				.birthDate(LocalDate.parse("1977-10-16"))
+				.build();
 		singerDao.update(singer);
 		Singer singerNewSinger = singerDao.findById(1);
 		log.info(">>> 김종서 수정 후 >>>");
 		log.info(singerNewSinger.toString());
+	}
+	
+	@Test
+	public void testInsertSinger() {
+		Singer singer = Singer.builder()
+				.firstName("조한")
+				.lastName("김")
+				.birthDate(LocalDate.parse("1990-10-16"))
+				.build();
+		singerDao.insert(singer);
+		List<Singer> singers = singerDao.findAll();
+		log.info(">>> 김조한 추가후");
+		listSingers(singers);
+	}
+	
+	@Test
+	public void testInsertSingerWithAlbum() {
+		Singer singer = Singer.builder()
+				.firstName("태원")
+				.lastName("김")
+				.birthDate(LocalDate.parse("1965-04-12"))
+				.album(Album.builder()
+						.title("Never Ending Story")
+						.releaseDate(LocalDate.parse("2001-08-31"))
+						.build()
+						)
+				.album(Album.builder()
+						.title("생각이나")
+						.releaseDate(LocalDate.parse("2009-08-14"))
+						.build()
+						)
+				.album(Album.builder()
+						.title("사랑할수록")
+						.releaseDate(LocalDate.parse("1993-11-01"))
+						.build()
+						)
+				.build();
+		singerDao.insertWithAlbum(singer);
+		List<Singer> singers = singerDao.findAllWithAlbums();
+		listSingers(singers);
 	}
 }
