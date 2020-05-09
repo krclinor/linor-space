@@ -50,12 +50,16 @@ public class SingerDaoImpl implements SingerDao {
 	}
 	@Override
 	public List<Singer> findAll() {
-		List<Singer> singers = new ArrayList<Singer>();
-		Result<Record> result = dsl.select().from(SINGER_).fetch();
-		for(Record record: result) {
-			singers.add(getSingerDomain(record));
-		}
-		return singers;
+		//// 첫 번째 방법
+//		List<Singer> singers = new ArrayList<Singer>();
+//		Result<Record> result = dsl.select().from(SINGER_).fetch();
+//		for(Record record: result) {
+//			singers.add(getSingerDomain(record));
+//		}
+//		return singers;
+		
+		//// 두 번째 방법
+		return dsl.select().from(SINGER_).fetch().into(Singer.class);
 	}
 
 	@Override
