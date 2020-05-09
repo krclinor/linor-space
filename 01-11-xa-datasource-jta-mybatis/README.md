@@ -37,7 +37,7 @@ db:
       xa-properties:
         user: linor
         password: linor1234
-        URL: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+        URL: jdbc:postgresql://postgres:5432/spring?currentSchema=singer
   db2: 
     datasource:
       unique-resource-name: dataSource2
@@ -49,11 +49,11 @@ db:
       xa-properties:
         user: linor
         password: linor1234
-        URL: jdbc:postgresql://localhost:5432/spring?currentSchema=public
+        URL: jdbc:postgresql://postgres:5432/spring?currentSchema=public
 ```
 spring.jta.enabled를 true로 설정하여 JTA를 사용하도록 한다.  
 db1과 db2의 데이타소스를 atomiko에 맞게 설정한다.  
-xa-data-source-class-name에 JTA용 데이타베이스 드라이버로 설정한다.  
+xa-data-source-class-name에 JTA용 데이타베이스 드라이버로 설정한다. postgresql의 경우 org.postgresql.xa.PGXADataSource이다.  
 
 ### 1번 데이타소스 및 Mybatis 설정
 소스 : [Datasource1Config.java](src/main/java/com/linor/singer/config/Datasource1Config.java) 

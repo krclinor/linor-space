@@ -3,6 +3,7 @@ package com.linor.singer.config;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 import org.apache.ibatis.type.JdbcType;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -39,6 +40,7 @@ public class Datasource1Config {
 		configuration.setMapUnderscoreToCamelCase(true);
 		configuration.setJdbcTypeForNull(JdbcType.NULL);
 		sqlSessionFactory.setConfiguration(configuration);
+		//sqlSessionFactory.setTransactionFactory(new ManagedTransactionFactory());
 
 		return sqlSessionFactory.getObject();
 	}

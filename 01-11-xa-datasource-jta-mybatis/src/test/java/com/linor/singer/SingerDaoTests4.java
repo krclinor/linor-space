@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest
 @Transactional
 @Slf4j
-public class SingerDaoTests {
+public class SingerDaoTests4 {
 	@Autowired
 	private SingerDao1 singerDao1;
 
