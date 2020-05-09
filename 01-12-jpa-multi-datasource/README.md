@@ -19,14 +19,14 @@ db:
   db1: 
     datasource:
       driverClassName: org.postgresql.Driver
-      jdbcUrl: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+      jdbcUrl: jdbc:postgresql://postgres:5432/spring?currentSchema=singer
       username: linor
       password: linor1234
       
   db2: 
     datasource:
       driverClassName: org.postgresql.Driver
-      jdbcUrl: jdbc:postgresql://localhost:5432/spring?currentSchema=public
+      jdbcUrl: jdbc:postgresql://postgres:5432/spring?currentSchema=public
       username: linor
       password: linor1234
 ```
@@ -75,13 +75,14 @@ public class Datasource1Config {
     private Map<String, ?> hibernateProperties() {
         
         Map<String, Object> hibernateProp = new HashMap<>();
-        hibernateProp.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-        hibernateProp.put("hibernate.hbm2ddl.auto", "create");
-        hibernateProp.put("hibernate.format_sql", "false");
-        hibernateProp.put("hibernate.use_sql_comments", "false");
-        hibernateProp.put("hibernate.show_sql", "false");
-        hibernateProp.put("hibernate.physical_naming_strategy", "com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy");
-        hibernateProp.put("hibernate.jdbc.lob.non_contextual_creation", "true");
+		hibernateProp.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+		hibernateProp.put("hibernate.hbm2ddl.auto", "create");
+		hibernateProp.put("hibernate.format_sql", "false");
+		hibernateProp.put("hibernate.use_sql_comments", "false");
+		hibernateProp.put("hibernate.show_sql", "true");
+		hibernateProp.put("hibernate.physical_naming_strategy", "com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy");
+		hibernateProp.put("hibernate.jdbc.lob.non_contextual_creation", "true");
+		hibernateProp.put("hibernate.enable_lazy_load_no_trans", "true");
         return hibernateProp;
     }
 ```
@@ -95,6 +96,7 @@ dataSource()는 사용할 데이타소스를 선언한다.
 packages()는 엔터티가 존재하는 패키지를 선언한다.  
 persistenceUnit()는 PersistentUnit명을 선언한다.  
 properties()는 하이버네이트 추가 설정사항을 선언한다. 
+추가설정 사항 중 hibernate.enable_lazy_load_no_trans를 true로 해야 PostgreSQL에서 org.hibernate.LazyInitializationException이 발생하지 않는다.  
 
 #### 트랜잭션관리 빈 설정
 ```java
@@ -152,7 +154,7 @@ public class Datasource2Config {
 		hibernateProp.put("hibernate.hbm2ddl.auto", "create");
 		hibernateProp.put("hibernate.format_sql", "false");
 		hibernateProp.put("hibernate.use_sql_comments", "false");
-		hibernateProp.put("hibernate.show_sql", "false");
+		hibernateProp.put("hibernate.show_sql", "true");
 		hibernateProp.put("hibernate.physical_naming_strategy", "com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy");
 		hibernateProp.put("hibernate.jdbc.lob.non_contextual_creation", "true");
 		hibernateProp.put("hibernate.enable_lazy_load_no_trans", "true");

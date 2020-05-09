@@ -203,6 +203,7 @@ public class SingerDaoTests3 {
 		log.info(">>> 김조한 추가후");
 		listSingers2(singers);
 	}
+	
 	@Test
 	public void test108UpdateSinger() {
 		log.info("테스트108");
@@ -233,6 +234,7 @@ public class SingerDaoTests3 {
 		log.info(">>> 김종서 수정 후 >>>");
 		log.info(singerNewSinger.toString());
 	}
+	
 	@Test
 	public void test109DeleteSinger() {
 		log.info("테스트109");
@@ -251,6 +253,7 @@ public class SingerDaoTests3 {
 		log.info("가수 삭제 후 가수 목록>>>");
 		listSingers2(singers);
 	}
+	
 	@Test
 	public void test110InsertSingerWithAlbum() {
 		log.info("테스트110");

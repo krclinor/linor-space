@@ -12,14 +12,13 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-//@EnableTransactionManagement
+@EnableTransactionManagement
 //@EnableJpaRepositories(
 //		entityManagerFactoryRef = "entityManagerFactory2",
 //		transactionManagerRef = "transactionManager2",
@@ -62,8 +61,8 @@ public class Datasource2Config {
 		hibernateProp.put("hibernate.use_sql_comments", "false");
 		hibernateProp.put("hibernate.show_sql", "true");
 		hibernateProp.put("hibernate.physical_naming_strategy", "com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy");
-//		hibernateProp.put("hibernate.jdbc.lob.non_contextual_creation", "true");
-//		hibernateProp.put("hibernate.enable_lazy_load_no_trans", "true");
+		hibernateProp.put("hibernate.jdbc.lob.non_contextual_creation", "true");
+		hibernateProp.put("hibernate.enable_lazy_load_no_trans", "true");
 		return hibernateProp;
 	}
 
