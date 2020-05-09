@@ -15,19 +15,20 @@ mybatis 프로젝트 와 동일.
 ### 어플리케이션 설정
 소스 : [application.yml](src/main/resources/application.yml)  
 ```xml
-  datasource:
-    initialization-mode: always
+spring.datasource.initialization-mode: always
+    
+#Multi DataSource 설정
 db:
   db1: 
     datasource:
       driverClassName: org.postgresql.Driver
-      jdbcUrl: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+      jdbcUrl: jdbc:postgresql://postgres:5432/spring?currentSchema=singer
       username: linor
       password: linor1234
   db2: 
     datasource:
       driverClassName: org.postgresql.Driver
-      jdbcUrl: jdbc:postgresql://localhost:5432/spring?currentSchema=public
+      jdbcUrl: jdbc:postgresql://postgres:5432/spring?currentSchema=public
       username: linor
       password: linor1234
 ```
@@ -253,5 +254,5 @@ Junit으로 SingerDaoTests를 실행한다.
 
 ## 정리
 데이타 소스 각각을 별개로 사용할 경우 트랜잭션에 문가 발생하지 않으나, 2개의 데이타소스를 동시에 사용하는 경우 Primary로 지정하지 않은 2번 데이타소스의 
-트랜잭션은 롤백되지 않는 단점이 있다.  
+트랜잭션은 롤백되지 않는 단점이 있다.(SingerDaoTests3를 테스트하면 오류가 발생함)    
 이를 해결하려면 JTA트랜잭션을 사용해야 한다.  
