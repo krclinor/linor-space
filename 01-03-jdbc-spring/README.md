@@ -57,17 +57,17 @@ public class SingerDaoImpl implements SingerDao {
         JdbcTemplate template = new JdbcTemplate(dataSource);
         String sql = "select * from singer";
     
-        return template.query(sql,new RowMapper<Singer>() {
-            @Override
-            public Singer mapRow(ResultSet rs, int rowNum) throws SQLException {
-                Singer singer = new Singer();
-                singer.setId(rs.getInt("id"));
-                singer.setFirstName(rs.getString("first_name"));
-                singer.setLastName(rs.getString("last_name"));
-                singer.setBirthDate(rs.getDate("birth_date").toLocalDate());
-                return singer;
-            }
-        });
+		return template.query(sql,new RowMapper<Singer>() {
+			@Override
+			public Singer mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return Singer.builder()
+						.id(rs.getInt("id"))
+						.firstName(rs.getString("first_name"))
+						.lastName(rs.getString("last_name"))
+						.birthDate(rs.getDate("birth_date").toLocalDate())
+						.build();
+			}
+		});
     }
 ```
 ReadOnly트랜잭션을 타도록 하기 위해 @Transactional(readOnly=true)를 설정한다. 이렇게 하면 해당 메서드에서는   
@@ -89,12 +89,12 @@ RowMapper를 이용한 방법은 가장 일반적인 방법이지만 코딩 길�
         String sql = "select * from singer";
     
         return template.query(sql, (rs, rowNum) -> {
-            Singer singer = new Singer();
-            singer.setId(rs.getInt("id"));
-            singer.setFirstName(rs.getString("first_name"));
-            singer.setLastName(rs.getString("last_name"));
-            singer.setBirthDate(rs.getDate("birth_date").toLocalDate());
-            return singer;
+			return Singer.builder()
+					.id(rs.getInt("id"))
+					.firstName(rs.getString("first_name"))
+					.lastName(rs.getString("last_name"))
+					.birthDate(rs.getDate("birth_date").toLocalDate())
+					.build();
         });
     }
 ```
@@ -281,7 +281,7 @@ SQL문 처리후 자동으로 생성된 ID값은 KeyHolder를 이용하여 받�
     }
 ```
 BatchSqlUpdate.setBatchSize()를 이용하여 배치처리 횟수를 지정한다.  
-SqlUpdate는 바로바로 실행되지만 BatchSqlUpdate는 배치 사이즈 회수만큼 발생할 때 마다 한꺼번에 처리한다.  
+SqlUpdate는 즉시 실행되지만 BatchSqlUpdate는 배치 사이즈 회수만큼 기다렸다가 한꺼번에 처리한다.  
 BatchSqlUpdate.flush()는 배치사이즈에 도달하지 않아 기다리는 sql문을 처리한다.
 
 ## 결과 테스트
@@ -290,6 +290,7 @@ Junit으로 SingerDaoTests를 실행한다.
 ## 정리
 선언적 트랜잭션, 명명된 파라미터등을 지원한다.  
 Spring에서 제공하는 JdbcTemplate을 사용하면 Connection, Statement를 close할 필요가 없다.  
-스프링에서 알아서 처리해 준다. 또한 선언적 트랜잭션 관리도 가능하다.  
+스프링이 알아서 처리해 준다.  
+또한 선언적 트랜잭션 관리도 가능하다.  
 
  

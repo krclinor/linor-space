@@ -52,23 +52,23 @@ public class SingerDaoImpl implements SingerDao {
 //		return template.query(sql,new RowMapper<Singer>() {
 //			@Override
 //			public Singer mapRow(ResultSet rs, int rowNum) throws SQLException {
-//				Singer singer = new Singer();
-//				singer.setId(rs.getInt("id"));
-//				singer.setFirstName(rs.getString("first_name"));
-//				singer.setLastName(rs.getString("last_name"));
-//				singer.setBirthDate(rs.getDate("birth_date").toLocalDate());
-//				return singer;
+//				return Singer.builder()
+//						.id(rs.getInt("id"))
+//						.firstName(rs.getString("first_name"))
+//						.lastName(rs.getString("last_name"))
+//						.birthDate(rs.getDate("birth_date").toLocalDate())
+//						.build();
 //			}
 //		});
 		
 ////2. 람다함수를 이용한 방법		
 //		return template.query(sql, (rs, rowNum) -> {
-//			Singer singer = new Singer();
-//			singer.setId(rs.getInt("id"));
-//			singer.setFirstName(rs.getString("first_name"));
-//			singer.setLastName(rs.getString("last_name"));
-//			singer.setBirthDate(rs.getDate("birth_date").toLocalDate());
-//			return singer;
+//			return Singer.builder()
+//					.id(rs.getInt("id"))
+//					.firstName(rs.getString("first_name"))
+//					.lastName(rs.getString("last_name"))
+//					.birthDate(rs.getDate("birth_date").toLocalDate())
+//					.build();
 //		});
 
 		
@@ -95,12 +95,12 @@ public class SingerDaoImpl implements SingerDao {
 		}
 		@Override
 		protected Singer mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Singer singer = new Singer();
-			singer.setId(rs.getInt("id"));
-			singer.setFirstName(rs.getString("first_name"));
-			singer.setLastName(rs.getString("last_name"));
-			singer.setBirthDate(rs.getDate("birth_date").toLocalDate());
-			return singer;
+			return Singer.builder()
+					.id(rs.getInt("id"))
+					.firstName(rs.getString("first_name"))
+					.lastName(rs.getString("last_name"))
+					.birthDate(rs.getDate("birth_date").toLocalDate())
+					.build();
 		}
 		
 	}
@@ -230,21 +230,23 @@ public class SingerDaoImpl implements SingerDao {
 				Integer id = rs.getInt("id");
 				singer = map.get(id);
 				if(singer == null) {
-					singer = new Singer();
-					singer.setId(id);
-					singer.setFirstName(rs.getString("first_name"));
-					singer.setLastName(rs.getString("last_name"));
-					singer.setBirthDate(rs.getDate("birth_date").toLocalDate());
-					singer.setAlbums(new ArrayList<>());
+					singer = Singer.builder()
+							.id(rs.getInt("id"))
+							.firstName(rs.getString("first_name"))
+							.lastName(rs.getString("last_name"))
+							.birthDate(rs.getDate("birth_date").toLocalDate())
+							.albums(new ArrayList<Album>())
+							.build();
 					map.put(id, singer);
 				}
 				Integer albumId = rs.getInt("album_id");
 				if(albumId > 0) {
-					Album album = new Album();
-					album.setId(albumId);
-					album.setSingerId(id);
-					album.setTitle(rs.getString("title"));
-					album.setReleaseDate(rs.getDate("release_date").toLocalDate());
+					Album album = Album.builder()
+							.id(albumId)
+							.singerId(id)
+							.title(rs.getString("title"))
+							.releaseDate(rs.getDate("release_date").toLocalDate())
+							.build();
 					singer.getAlbums().add(album);
 				}
 			}
