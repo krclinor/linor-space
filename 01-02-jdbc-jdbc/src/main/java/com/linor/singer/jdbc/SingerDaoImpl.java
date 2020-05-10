@@ -13,7 +13,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,15 +20,15 @@ import com.linor.singer.dao.SingerDao;
 import com.linor.singer.domain.Album;
 import com.linor.singer.domain.Singer;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Repository
+@RequiredArgsConstructor
 public class SingerDaoImpl implements SingerDao {
 	
-	@Autowired
-	private DataSource dataSource;
-	
+	private final DataSource dataSource;
 
 	@Override
 	public List<Singer> findAll() {
@@ -43,11 +42,12 @@ public class SingerDaoImpl implements SingerDao {
 			List<Singer> singers = new ArrayList<>();
 			
 			while(rs.next()) {
-				Singer singer = new Singer();
-				singer.setId(rs.getInt("id"));
-				singer.setFirstName(rs.getString("first_name"));
-				singer.setLastName(rs.getString("last_name"));
-				singer.setBirthDate(rs.getDate("birth_date").toLocalDate());
+				Singer singer = Singer.builder()
+						.id(rs.getInt("id"))
+						.firstName(rs.getString("first_name"))
+						.lastName(rs.getString("last_name"))
+						.birthDate(rs.getDate("birth_date").toLocalDate())
+						.build();
 				singers.add(singer);
 				log.info("가수명 : {}{}, 생년월일: {}", singer.getLastName(), singer.getFirstName(),singer.getBirthDate().toString());
 			}
@@ -76,11 +76,12 @@ public class SingerDaoImpl implements SingerDao {
 			List<Singer> singers = new ArrayList<>();
 			
 			while(rs.next()) {
-				Singer singer = new Singer();
-				singer.setId(rs.getInt("id"));
-				singer.setFirstName(rs.getString("first_name"));
-				singer.setLastName(rs.getString("last_name"));
-				singer.setBirthDate(rs.getDate("birth_date").toLocalDate());
+				Singer singer = Singer.builder()
+						.id(rs.getInt("id"))
+						.firstName(rs.getString("first_name"))
+						.lastName(rs.getString("last_name"))
+						.birthDate(rs.getDate("birth_date").toLocalDate())
+						.build();
 				singers.add(singer);
 			}
 			return singers;
@@ -129,12 +130,12 @@ public class SingerDaoImpl implements SingerDao {
 			stmt.setInt(1, id);
 			rs = stmt.executeQuery();
 			if(rs.next()) {
-				Singer singer = new Singer();
-				singer.setId(rs.getInt("id"));
-				singer.setFirstName(rs.getString("first_name"));
-				singer.setLastName(rs.getString("last_name"));
-				singer.setBirthDate(rs.getDate("birth_date").toLocalDate());
-				return singer;
+				return Singer.builder()
+						.id(rs.getInt("id"))
+						.firstName(rs.getString("first_name"))
+						.lastName(rs.getString("last_name"))
+						.birthDate(rs.getDate("birth_date").toLocalDate())
+						.build();
 			}
 			return null;
 		} catch (SQLException e) {
@@ -154,7 +155,8 @@ public class SingerDaoImpl implements SingerDao {
 		ResultSet rs = null;
 		try {
 			con = dataSource.getConnection();
-			stmt = con.prepareStatement("select first_name  from singer\n"+
+			stmt = con.prepareStatement(
+					"select first_name  from singer\n"+
 					"where id = ?");
 			stmt.setInt(1, id);
 			rs = stmt.executeQuery();
@@ -261,21 +263,26 @@ public class SingerDaoImpl implements SingerDao {
 				Integer id = rs.getInt("id");
 				singer = map.get(id);
 				if(singer == null) {
-					singer = new Singer();
-					singer.setId(id);
-					singer.setFirstName(rs.getString("first_name"));
-					singer.setLastName(rs.getString("last_name"));
-					singer.setBirthDate(rs.getDate("birth_date").toLocalDate());
-					singer.setAlbums(new ArrayList<>());
+					singer = Singer.builder()
+							.id(rs.getInt("id"))
+							.firstName(rs.getString("first_name"))
+							.lastName(rs.getString("last_name"))
+							.birthDate(rs.getDate("birth_date").toLocalDate())
+							.build();
+					Integer albumId = rs.getInt("album_id");
+					if(albumId > 0) {
+						singer.setAlbums(new ArrayList<Album>());
+					}
 					map.put(id, singer);
 				}
 				Integer albumId = rs.getInt("album_id");
 				if(albumId > 0) {
-					Album album = new Album();
-					album.setId(albumId);
-					album.setSingerId(id);
-					album.setTitle(rs.getString("title"));
-					album.setReleaseDate(rs.getDate("release_date").toLocalDate());
+					Album album = Album.builder()
+							.id(albumId)
+							.singerId(id)
+							.title(rs.getString("title"))
+							.releaseDate(rs.getDate("release_date").toLocalDate())
+							.build();
 					singer.getAlbums().add(album);
 				}
 			}

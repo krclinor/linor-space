@@ -164,12 +164,10 @@ public class Singer {
 	private String firstName;
 	private String lastName;
 	private LocalDate birthDate;
-	
-	@Singular
 	private List<Album> albums = new ArrayList<Album>();
 }
 ```
-@Data, @Builder, @AllArgsConstructor, @NoArgsConstructor, @Singular는 모두 Lombok어노테이션이다.  
+@Data, @Builder, @AllArgsConstructor, @NoArgsConstructor는 모두 Lombok어노테이션이다.  
 @Data는 자동으로 get/set메서드를 생성하여 코딩을 깔끔하게 작성할 수 있다.  
 @Builder는 객체를 생성할 때 유용하게 사용한다. 사용법은 다음과 같다.
 ```java
@@ -209,6 +207,33 @@ Singer(Integer, String, String, LocalDate, List<Album>)는 @AllArgsConstructor�
 				.build();
 ```  
 @Singular를 선언한 albums맴버변수에 album메서드를 이용하여 계속 객체를 추가할 수 있다.  
+하지만 실제 적용한 결과 객체 생성 후 리스트변수에 객체를 추가하면 java.lang.UnsupportedOperationException이 발생한다.  
+이유는 @Singular를 사용하면 내부적으로 final변수로 변경되어 배열객체에 객체를 추가삭제할 수 없는 상태가 되어 사용하지 않는다.  
+따라서 다음가 같이 수정함.  
+```java
+		Singer singer = Singer.builder()
+				.firstName("태원")
+				.lastName("김")
+				.birthDate(LocalDate.parse("1965-04-12"))
+				.albums(new ArrayList<Album>())
+				.build();
+		List<Album> ablums = singer.getAlbums();
+				ablums.add(Album.builder()
+						.title("Never Ending Story")
+						.releaseDate(LocalDate.parse("2001-08-31"))
+						.build()
+						);
+				ablums.add(Album.builder()
+						.title("생각이나")
+						.releaseDate(LocalDate.parse("2009-08-14"))
+						.build()
+						);
+				ablums.add(Album.builder()
+						.title("사랑할수록")
+						.releaseDate(LocalDate.parse("1993-11-01"))
+						.build()
+						);
+```
 
 소스 : [Album.java](src/main/java/com/linor/singer/domain/Album.java)
 ```java
@@ -361,22 +386,24 @@ public class SingerDaoTests {
 				.firstName("태원")
 				.lastName("김")
 				.birthDate(LocalDate.parse("1965-04-12"))
-				.album(Album.builder()
+				.albums(new ArrayList<Album>())
+				.build();
+		List<Album> ablums = singer.getAlbums();
+				ablums.add(Album.builder()
 						.title("Never Ending Story")
 						.releaseDate(LocalDate.parse("2001-08-31"))
 						.build()
-						)
-				.album(Album.builder()
+						);
+				ablums.add(Album.builder()
 						.title("생각이나")
 						.releaseDate(LocalDate.parse("2009-08-14"))
 						.build()
-						)
-				.album(Album.builder()
+						);
+				ablums.add(Album.builder()
 						.title("사랑할수록")
 						.releaseDate(LocalDate.parse("1993-11-01"))
 						.build()
-						)
-				.build();
+						);
 		singerDao.insertWithAlbum(singer);
 		List<Singer> singers = singerDao.findAllWithAlbums();
 		listSingers(singers);

@@ -1,14 +1,12 @@
 package com.linor.singer.domain;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Singular;
 
 @Data
 @Builder
@@ -20,6 +18,5 @@ public class Singer {
 	private String lastName;
 	private LocalDate birthDate;
 	
-	@Singular
-	private List<Album> albums = new ArrayList<Album>();
+	private List<Album> albums;
 }

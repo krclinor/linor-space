@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -133,22 +134,24 @@ public class SingerDaoTests {
 				.firstName("태원")
 				.lastName("김")
 				.birthDate(LocalDate.parse("1965-04-12"))
-				.album(Album.builder()
+				.albums(new ArrayList<Album>())
+				.build();
+		List<Album> ablums = singer.getAlbums();
+				ablums.add(Album.builder()
 						.title("Never Ending Story")
 						.releaseDate(LocalDate.parse("2001-08-31"))
 						.build()
-						)
-				.album(Album.builder()
+						);
+				ablums.add(Album.builder()
 						.title("생각이나")
 						.releaseDate(LocalDate.parse("2009-08-14"))
 						.build()
-						)
-				.album(Album.builder()
+						);
+				ablums.add(Album.builder()
 						.title("사랑할수록")
 						.releaseDate(LocalDate.parse("1993-11-01"))
 						.build()
-						)
-				.build();
+						);
 		singerDao.insertWithAlbum(singer);
 		List<Singer> singers = singerDao.findAllWithAlbums();
 		listSingers(singers);

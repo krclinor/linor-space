@@ -35,51 +35,60 @@ SinerDao인터페이스에서 선언한 모든 메서드를 구현한다.
 ```java
 @Slf4j
 @Repository
+@RequiredArgsConstructor
 public class SingerDaoImpl implements SingerDao {
 ```
-@Slf4j는 로그를 위한 어노테이션으로 lombok가 제공한다.  
-@Repository는 스프링이 제공하는 어노테이션으로 데이타베이스 저장소를 구현하기 위해 설정한다.  
+@Slf4j는 로그를 사용하기 위해 선언한다.  
+@Repository는 스프링어노테이션으로 데이타베이스 저장소를 구현하기 위해 설정한다.  
+@RequiredArgsConstructor를 선언하여 final맴버변수를 생성자 파라미터로 사용하도록 한다.
+
 
 ### 데이타소스 선언 
 ```java
-    @Autowired
-    private DataSource dataSource;
+    private final DataSource dataSource;
 ``` 
-데이타소스를 선언하고 @Autowired어노테이션으로 스프링이 데이타소스를 주입하도록 한다.  
+@RequiredArgsConstructor를 선언하였기 때문에 lombok가 다음 생성자를 만들어 낸다.  
+```java
+	public SingerDaoImpl(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+```
+생성자의 파라미터로 등록된 데이타소스는 스프링이 데이타소스를 주입 한다.  
 주입하는 데이타소스는 application.yml에서 설정한 datasource이다.  
   
 ### findAll 메서드 구현
 ```java
-    @Override
-    public List<Singer> findAll() {
-        Connection con = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            con = dataSource.getConnection();
-            stmt = con.prepareStatement("select * from singer");
-            rs = stmt.executeQuery();
-            List<Singer> singers = new ArrayList<>();
-            
-            while(rs.next()) {
-                Singer singer = new Singer();
-                singer.setId(rs.getInt("id"));
-                singer.setFirstName(rs.getString("first_name"));
-                singer.setLastName(rs.getString("last_name"));
-                singer.setBirthDate(rs.getDate("birth_date").toLocalDate());
-                singers.add(singer);
-                log.info("가수명 : {}{}, 생년월일: {}", singer.getLastName(), singer.getFirstName(),singer.getBirthDate().toString());
-            }
-            return singers;
-        } catch (SQLException e) {
-            log.error("에러코드: {}, 에러내역: {}", e.getErrorCode(), e.getMessage());
-            return null;
-        }finally {
-            if(rs != null ) try {rs.close();}catch (Exception e2) {}
-            if(stmt != null ) try {stmt.close();}catch (Exception e2) {}
-            if(con != null ) try {con.close();}catch (Exception e2) {}
-        }
-    }
+	@Override
+	public List<Singer> findAll() {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = dataSource.getConnection();
+			stmt = con.prepareStatement("select * from singer");
+			rs = stmt.executeQuery();
+			List<Singer> singers = new ArrayList<>();
+			
+			while(rs.next()) {
+				Singer singer = Singer.builder()
+						.id(rs.getInt("id"))
+						.firstName(rs.getString("first_name"))
+						.lastName(rs.getString("last_name"))
+						.birthDate(rs.getDate("birth_date").toLocalDate())
+						.build();
+				singers.add(singer);
+				log.info("가수명 : {}{}, 생년월일: {}", singer.getLastName(), singer.getFirstName(),singer.getBirthDate().toString());
+			}
+			return singers;
+		} catch (SQLException e) {
+			log.error("에러코드: {}, 에러내역: {}", e.getErrorCode(), e.getMessage());
+			return null;
+		}finally {
+			if(rs != null ) try {rs.close();}catch (Exception e2) {}
+			if(stmt != null ) try {stmt.close();}catch (Exception e2) {}
+			if(con != null ) try {con.close();}catch (Exception e2) {}
+		}
+	}
 ```
 @Override어노테이션은 인터페이스에서 상속받은 메서드임을 표시한다.  
 @Slf4j어노테이션을 설정하였기 때문에 log.info나 log.error메서드를 사용하여 로그를 뿌릴 수 있다.  
@@ -121,7 +130,7 @@ PreparedStatement.executeQuery()를 실행하여 결과를 ResultSet으로 받�
         }
     }
 ```
-insert메서드는 매개변수로 받은 가수 객체를 데이타베이스에 추가하는 작업을 수행한다.  
+insert메서드는 가수 객체를 데이타베이스에 추가하는 작업을 수행한다.  
 
 ## 결과 테스트
 Junit으로 SingerDaoTests를 실행한다.  
