@@ -8,8 +8,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -18,13 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.singer.dao.SingerDao;
 import com.linor.singer.domain.Album;
+import com.linor.singer.domain.Instrument;
 import com.linor.singer.domain.Singer;
+import com.linor.singer.domain.SingerSummary;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Repository
+@Transactional
 @RequiredArgsConstructor
 public class SingerDaoImpl implements SingerDao {
 	
@@ -49,7 +54,6 @@ public class SingerDaoImpl implements SingerDao {
 						.birthDate(rs.getDate("birth_date").toLocalDate())
 						.build();
 				singers.add(singer);
-				log.info("가수명 : {}{}, 생년월일: {}", singer.getLastName(), singer.getFirstName(),singer.getBirthDate().toString());
 			}
 			return singers;
 		} catch (SQLException e) {
@@ -271,7 +275,7 @@ public class SingerDaoImpl implements SingerDao {
 							.build();
 					Integer albumId = rs.getInt("album_id");
 					if(albumId > 0) {
-						singer.setAlbums(new ArrayList<Album>());
+						singer.setAlbums(new HashSet<Album>());
 					}
 					map.put(id, singer);
 				}
@@ -309,7 +313,7 @@ public class SingerDaoImpl implements SingerDao {
 			con = dataSource.getConnection();
 			stmt = con.prepareStatement(sql);
 
-			List<Album> albums = singer.getAlbums();
+			Set<Album> albums = singer.getAlbums();
 			if(albums != null) {
 				for(Album album:albums) {
 					stmt.setInt(1, singer.getId());
@@ -319,6 +323,164 @@ public class SingerDaoImpl implements SingerDao {
 				}
 				stmt.executeBatch();
 			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(stmt != null ) try {stmt.close();}catch (Exception e2) {}
+			if(con != null ) try {con.close();}catch (Exception e2) {}
+		}
+	}
+
+	@Override
+	public List<Singer> findAllByNativeQuery() {
+		return this.findAll();
+	}
+
+	@Override
+	public List<Singer> findByFirstNameAndLastName(Singer singer) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = dataSource.getConnection();
+			stmt = con.prepareStatement(
+					"select *  from singer\n"+
+					"where first_name = ?\n"+
+					 "and last_name = ?");
+			stmt.setString(1, singer.getFirstName());
+			stmt.setString(2, singer.getLastName());
+			rs = stmt.executeQuery();
+			List<Singer> singers = new ArrayList<Singer>();
+			while(rs.next()) {
+				Singer s = Singer.builder()
+						.id(rs.getInt("id"))
+						.firstName(rs.getString("first_name"))
+						.lastName(rs.getString("last_name"))
+						.birthDate(rs.getDate("birth_date").toLocalDate())
+						.build();
+				singers.add(s);
+			}
+			return singers;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}finally {
+			if(rs != null ) try {rs.close();}catch (Exception e2) {}
+			if(stmt != null ) try {stmt.close();}catch (Exception e2) {}
+			if(con != null ) try {con.close();}catch (Exception e2) {}
+		}
+	}
+
+	@Override
+	public List<Album> findAlbumsBySinger(Singer singer) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = dataSource.getConnection();
+			stmt = con.prepareStatement(
+					"select *  from album\n"+
+					"where singer_id = ?");
+			stmt.setInt(1, singer.getId());
+			rs = stmt.executeQuery();
+			List<Album> albums = new ArrayList<Album>();
+			while(rs.next()) {
+				Album a = Album.builder()
+						.id(rs.getInt("id"))
+						.singerId(rs.getInt("singer_id"))
+						.title(rs.getString("title"))
+						.releaseDate(rs.getDate("release_date").toLocalDate())
+						.build();
+				albums.add(a);
+			}
+			return albums;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}finally {
+			if(rs != null ) try {rs.close();}catch (Exception e2) {}
+			if(stmt != null ) try {stmt.close();}catch (Exception e2) {}
+			if(con != null ) try {con.close();}catch (Exception e2) {}
+		}
+	}
+
+	@Override
+	public List<Album> findAlbumsByTitle(String title) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = dataSource.getConnection();
+			stmt = con.prepareStatement(
+					"select *  from album\n"+
+					"where title like ?||'%'");
+			stmt.setString(1, title);
+			rs = stmt.executeQuery();
+			List<Album> albums = new ArrayList<Album>();
+			while(rs.next()) {
+				Singer singer = findById(rs.getInt("singer_id"));
+				Album a = Album.builder()
+						.id(rs.getInt("id"))
+						.singerId(rs.getInt("singer_id"))
+						.title(rs.getString("title"))
+						.releaseDate(rs.getDate("release_date").toLocalDate())
+						.singer(singer)
+						.build();
+				albums.add(a);
+			}
+			return albums;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}finally {
+			if(rs != null ) try {rs.close();}catch (Exception e2) {}
+			if(stmt != null ) try {stmt.close();}catch (Exception e2) {}
+			if(con != null ) try {con.close();}catch (Exception e2) {}
+		}	}
+
+	@Override
+	public List<SingerSummary> listAllSingersSummary() {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = dataSource.getConnection();
+			stmt = con.prepareStatement(
+					"	select s.id, s.first_name, s.last_name, a.title last_album\n" + 
+					"	from	singer s\n" + 
+					"	left outer join album a on a.singer_id = s.id\n" + 
+					"	where a.release_date = (select max(a2.release_date) from album a2 where a2.singer_id = s.id)");
+			rs = stmt.executeQuery();
+			List<SingerSummary> summaries = new ArrayList<SingerSummary>();
+			while(rs.next()) {
+				SingerSummary sm = SingerSummary.builder()
+						.firstName(rs.getString("first_name"))
+						.lastName(rs.getString("last_name"))
+						.lastAlbum(rs.getString("last_album"))
+						.build();
+				summaries.add(sm);
+			}
+			return summaries;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}finally {
+			if(rs != null ) try {rs.close();}catch (Exception e2) {}
+			if(stmt != null ) try {stmt.close();}catch (Exception e2) {}
+			if(con != null ) try {con.close();}catch (Exception e2) {}
+		}
+	}
+
+	@Override
+	public void insertInstrument(Instrument instrument) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		try {
+			con = dataSource.getConnection();
+			stmt = con.prepareStatement("insert into instrument (instrument_id)\n" + 
+					"values (?)");
+			stmt.setString(1, instrument.getId());
+			stmt.execute();
 		}catch (Exception e) {
 			e.printStackTrace();
 		}finally {
