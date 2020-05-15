@@ -21,11 +21,7 @@ spring:
     url: jdbc:postgresql://postgres:5432/spring?currentSchema=singer
     username: linor
     password: linor1234
-    initialization-mode: always
 ```
-data-postgresql.sql파일을 실행하려면
-datasource의 initialization-mode를 always로하면 된다. 또한 AppStartupRunner클래스에서 데이타를 입력하지 않도록 삭제한다.
-주의할 점은 jpa.hibernate.ddl-auto를 create로 하였을 경우 테이블을 생성하는 schema.sql파일을 지워야 한다.
 
 ### 엔터티 클래스 생성
 생성한 Singer, Album, Instrument 엔터티 클래스는 hibernate프로젝트에서 생성한 엔터티 클래스와 동일하다.  
@@ -41,10 +37,10 @@ JPQL을 통해 생성한 쿼리에 사용할 사용자 정의 엔터티를 생�
 ```java
 @Data
 @AllArgsConstructor
-public class SingerSummary implements Serializable {
-    private String firstName;
-    private String lastName;
-    private String lastAlbum;
+public class SingerSummary{
+	private String firstName;
+	private String lastName;
+	private String lastAlbum;
 }
 ```
 @AllArgsConstructor어노테이션은 클래스 내의 모든 프로퍼티를 매개변수로 하는 생성자를 만든다.  
