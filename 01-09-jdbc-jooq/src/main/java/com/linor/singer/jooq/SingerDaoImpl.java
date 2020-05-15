@@ -8,6 +8,7 @@ import static org.jooq.impl.DSL.*;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.jooq.DSLContext;
@@ -38,6 +39,8 @@ public class SingerDaoImpl implements SingerDao {
 				.firstName(record.getValue(SINGER_.FIRST_NAME))
 				.lastName(record.getValue(SINGER_.LAST_NAME))
 				.birthDate(record.getValue(SINGER_.BIRTH_DATE, LocalDate.class))
+				.albums(new HashSet<Album>())
+				.instruments(new HashSet<Instrument>())
 				.build();
 	}
 	private Album getAlbumDomain(Record record) {
@@ -69,15 +72,11 @@ public class SingerDaoImpl implements SingerDao {
 
 	@Override
 	public List<Singer> findByFirstName(String firstName) {
-		List<Singer> singers = new ArrayList<Singer>();
-		Result<Record> result = dsl.select()
+		return dsl.select()
 				.from(SINGER_)
 				.where(SINGER_.FIRST_NAME.like("%"+firstName+"%"))
-				.fetch();
-		for(Record record: result) {
-			singers.add(getSingerDomain(record));
-		}
-		return singers;
+				.fetch()
+				.into(Singer.class);
 	}
 
 	@Override
@@ -91,7 +90,7 @@ public class SingerDaoImpl implements SingerDao {
 					.where(ALBUM.SINGER_ID.equal(singer.getId()))
 					.fetch();
 			for(Record recordAlbum : resultAlbums) {
-				singer.addAlbum(getAlbumDomain(recordAlbum));
+				singer.getAlbums().add(getAlbumDomain(recordAlbum));
 			}
 			singers.add(singer);
 		}
@@ -176,7 +175,7 @@ public class SingerDaoImpl implements SingerDao {
 		com.linor.jooq.model.tables.Album A1 = ALBUM.as("A1");
 		com.linor.jooq.model.tables.Album A2 = ALBUM.as("A2");
 		
-		return dsl.select(S.ID, S.FIRST_NAME, S.LAST_NAME, A1.TITLE.as("LAST_ALBUM"))
+		return dsl.select(S.FIRST_NAME, S.LAST_NAME, A1.TITLE.as("LAST_ALBUM"))
 					.from(S)
 					.leftOuterJoin(A1)
 					.on(A1.SINGER_ID.eq(S.ID))
@@ -195,6 +194,43 @@ public class SingerDaoImpl implements SingerDao {
 		dsl.insertInto(INSTRUMENT)
 			.set(INSTRUMENT.INSTRUMENT_ID, instrument.getId())
 			.execute();
+	}
+	
+	@Override
+	public List<Singer> findByFirstNameAndLastName(Singer singer) {
+		return dsl.select()
+			.from(SINGER_)
+			.where(SINGER_.FIRST_NAME.equal(singer.getFirstName()))
+			.and(SINGER_.LAST_NAME.equal(singer.getLastName()))
+			.fetch()
+			.into(Singer.class);
+	}
+	
+	@Override
+	public List<Album> findBySinger(Singer singer) {
+		return dsl.select()
+				.from(ALBUM)
+				.where(ALBUM.SINGER_ID.equal(singer.getId()))
+				.fetch()
+				.into(Album.class);
+	}
+	
+	@Override
+	public List<Album> findAlbumsByTitle(String title) {
+		List<Album> albums = dsl.select()
+				.from(ALBUM)
+				.where(ALBUM.TITLE.like(title+"%"))
+				.fetch()
+				.into(Album.class);
+		for(Album album:albums) {
+			Singer singer = dsl.select()
+					.from(SINGER_)
+					.where(SINGER_.ID.equal(album.getSingerId()))
+					.fetchOne()
+					.into(Singer.class);
+			album.setSinger(singer);
+		}
+		return albums;
 	}
 
 }

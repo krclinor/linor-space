@@ -16,4 +16,6 @@ public class Album {
 	private Integer singerId;
 	private String title;
 	private LocalDate releaseDate;
+	
+	private Singer singer;
 }
