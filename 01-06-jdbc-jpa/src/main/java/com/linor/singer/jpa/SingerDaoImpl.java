@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.singer.dao.SingerDao;
+import com.linor.singer.domain.Album;
 import com.linor.singer.domain.Instrument;
 import com.linor.singer.domain.Singer;
 import com.linor.singer.domain.SingerSummary;
@@ -105,8 +106,30 @@ public class SingerDaoImpl implements SingerDao {
 	}
 
 	@Override
-	public void insert(Instrument instrument) {
+	public void insertInstrument(Instrument instrument) {
 		entityManager.persist(instrument);
+	}
+
+	@Override
+	public List<Singer> findByFirstNameAndLastName(Singer singer) {
+		return entityManager.createNamedQuery("Singer.findByFirstNameAndLastName",Singer.class)
+				.setParameter("firstName", singer.getFirstName())
+				.setParameter("lastName", singer.getLastName())
+				.getResultList();
+	}
+
+	@Override
+	public List<Album> findAlbumsBySinger(Singer singer) {
+		return entityManager.createNamedQuery("Album.findAlbumsBySinger", Album.class)
+				.setParameter("singer_id", singer.getId())
+				.getResultList();
+	}
+
+	@Override
+	public List<Album> findAlbumsByTitle(String title) {
+		return entityManager.createNamedQuery("Album.findByTitle", Album.class)
+				.setParameter("title", title)
+				.getResultList();
 	}
 
 	
