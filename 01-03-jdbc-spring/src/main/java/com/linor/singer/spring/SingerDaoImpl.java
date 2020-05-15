@@ -5,8 +5,10 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -15,6 +17,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.object.BatchSqlUpdate;
@@ -27,7 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.singer.dao.SingerDao;
 import com.linor.singer.domain.Album;
+import com.linor.singer.domain.Instrument;
 import com.linor.singer.domain.Singer;
+import com.linor.singer.domain.SingerSummary;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -93,6 +98,7 @@ public class SingerDaoImpl implements SingerDao {
 			super(dataSource, sql);
 			super.declareParameter(new SqlParameter("first_name", Types.VARCHAR));
 		}
+		
 		@Override
 		protected Singer mapRow(ResultSet rs, int rowNum) throws SQLException {
 			return Singer.builder()
@@ -150,6 +156,7 @@ public class SingerDaoImpl implements SingerDao {
 		singer.setId(keyHolder.getKey().intValue());
 		log.info("추가된 가수ID: {}",singer.getId() );
 	}
+	
 	private static final class InsertSinger extends SqlUpdate{
 		private static final String sql = "insert into singer (first_name, last_name, birth_date)\n"+
 				"values(:first_name, :last_name, :birth_date)";
@@ -235,7 +242,7 @@ public class SingerDaoImpl implements SingerDao {
 							.firstName(rs.getString("first_name"))
 							.lastName(rs.getString("last_name"))
 							.birthDate(rs.getDate("birth_date").toLocalDate())
-							.albums(new ArrayList<Album>())
+							.albums(new HashSet<Album>())
 							.build();
 					map.put(id, singer);
 				}
@@ -258,7 +265,7 @@ public class SingerDaoImpl implements SingerDao {
 	public void insertWithAlbum(Singer singer) {
 		InsertAlbum insertAlbum = new InsertAlbum(dataSource);
 		insert(singer);
-		List<Album> albums = singer.getAlbums();
+		Set<Album> albums = singer.getAlbums();
 		if(albums != null) {
 			for(Album album:albums) {
 				Map<String, Object> paramMap = new HashMap<>();
@@ -284,4 +291,81 @@ public class SingerDaoImpl implements SingerDao {
 			setBatchSize(BATCH_SIZE);
 		}
 	}
+
+	@Override
+	public List<Singer> findAllByNativeQuery() {
+		return findAll();
+	}
+
+	@Override
+	public List<Singer> findByFirstNameAndLastName(Singer singer) {
+		SelectSingerByFirstNameAndLastName selectSingerByFirstNameAndLastName = new SelectSingerByFirstNameAndLastName(dataSource);
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("first_name", singer.getFirstName());
+		paramMap.put("last_name", singer.getLastName());
+		return selectSingerByFirstNameAndLastName.executeByNamedParam(paramMap);
+	}
+
+	private static final class SelectSingerByFirstNameAndLastName extends MappingSqlQuery<Singer>{
+		private static final String sql =
+				"select * from singer where first_name = :first_name and last_name = :last_name";
+		
+		public SelectSingerByFirstNameAndLastName(DataSource dataSource) {
+			super(dataSource, sql);
+			super.declareParameter(new SqlParameter("first_name", Types.VARCHAR));
+			super.declareParameter(new SqlParameter("last_name", Types.VARCHAR));
+		}
+		@Override
+		protected Singer mapRow(ResultSet rs, int rowNum) throws SQLException {
+			return Singer.builder()
+					.id(rs.getInt("id"))
+					.firstName(rs.getString("first_name"))
+					.lastName(rs.getString("last_name"))
+					.birthDate(rs.getDate("birth_date").toLocalDate())
+					.build();
+		}
+	}
+
+	@Override
+	public List<Album> findAlbumsBySinger(Singer singer) {
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		return jdbcTemplate.query("select id, singer_id, title, release_date from album where singer_id = ?", 
+				new Object[] {singer.getId()}, 
+				new BeanPropertyRowMapper<Album>(Album.class));
+	}
+	
+	@Override
+	public List<Album> findAlbumsByTitle(String title) {
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		RowMapper<Album> mapper = BeanPropertyRowMapper.newInstance(Album.class);
+		List<Album> albums = jdbcTemplate.query(
+				"select id, singer_id, title, release_date from album where title like ? || '%'", 
+				new Object[] {title}, mapper);
+		
+		for(Album album:albums) {
+			album.setSinger(findById(album.getSingerId()));
+		}
+		
+		return albums;
+	}
+
+	@Override
+	public List<SingerSummary> listAllSingersSummary() {
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		RowMapper<SingerSummary> mapper = BeanPropertyRowMapper.newInstance(SingerSummary.class);
+		String sql = 
+				"	select s.first_name, s.last_name, a.title last_album\n" + 
+				"	from	singer s\n" + 
+				"	left outer join album a on a.singer_id = s.id\n" + 
+				"	where a.release_date = (select max(a2.release_date) from album a2 where a2.singer_id = s.id)";
+		return jdbcTemplate.query(sql, mapper);
+	}
+
+	@Override
+	public void insertInstrument(Instrument instrument) {
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		jdbcTemplate.update("insert into instrument (instrument_id) values (?)", new Object[] {instrument.getId()});
+	}
+	
+	
 }
