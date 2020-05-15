@@ -33,7 +33,7 @@ todo 프로젝트 의존성 라이브러리에 mybatis-spring-boot-starter를 �
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.1.1</version>
+            <version>2.1.2</version>
         </dependency>
     </dependencies>
 ```
