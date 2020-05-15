@@ -18,8 +18,11 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
@@ -39,6 +42,9 @@ import lombok.ToString;
 			+ "where s.firstName = :firstName")
 })
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper=false)
 @ToString(callSuper = true)
 public class Singer extends Auditable<String>{
@@ -58,7 +64,7 @@ public class Singer extends Auditable<String>{
 	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true)
 	//@ToString.Exclude
 	//@EqualsAndHashCode.Exclude
-	private Set<Album> albums = new HashSet<>();
+	private Set<Album> albums;
 
 	@ManyToMany
 	@JoinTable(name="singer_instrument", 
@@ -66,22 +72,9 @@ public class Singer extends Auditable<String>{
 		inverseJoinColumns=@JoinColumn(name="instrument_id"))
 	//@ToString.Exclude
 	//@EqualsAndHashCode.Exclude
-	private Set<Instrument> instruments = new HashSet<>();
+	private Set<Instrument> instruments;
 	
 	@Version
 	private int version;
-	
-	public boolean addAlbum(Album album) {
-		album.setSinger(this);
-		return getAlbums().add(album);
-	}
-	public void removeAlbum(Album album) {
-		getAlbums().remove(album);
-	}
-	public boolean addInstrument(Instrument instrument) {
-		return getInstruments().add(instrument);
-	}
-	public void removeInstrument(Instrument instrument) {
-		getInstruments().remove(instrument);
-	}
+
 }

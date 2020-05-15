@@ -43,8 +43,8 @@ public class SingerDaoImpl implements SingerDao {
 	}
 
 	@Override
-	public List<Singer> findByFirstNameAndLastName(String firstName, String lastName) {
-		return singerRepository.findByFirstNameAndLastName(firstName, lastName);
+	public List<Singer> findByFirstNameAndLastName(Singer singer) {
+		return singerRepository.findByFirstNameAndLastName(singer.getFirstName(), singer.getLastName());
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class SingerDaoImpl implements SingerDao {
 	}
 
 	@Override
-	public List<Album> findByTitle(String title) {
+	public List<Album> findAlbumsByTitle(String title) {
 		return albumRepository.findByTitle(title);
 	}
 
@@ -105,7 +105,7 @@ public class SingerDaoImpl implements SingerDao {
 	}
 
 	@Override
-	public void insert(Instrument instrument) {
+	public void insertInstrument(Instrument instrument) {
 		instrumentRepository.save(instrument);
 	}
 }
