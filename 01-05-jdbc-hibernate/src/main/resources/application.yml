@@ -1,5 +1,5 @@
 #사용 프로파일
-spring.profiles.active: [h2, dev]
+spring.profiles.active: [postgres, dev]
 
 #로거
 logging:
@@ -18,7 +18,7 @@ spring:
     url: jdbc:postgresql://postgres:5432/spring?currentSchema=singer
     username: linor
     password: linor1234
-    initialization-mode: always
+#    initialization-mode: always
 
     #hikari Connection Pull 설정
 #    hikari:
@@ -27,7 +27,7 @@ spring:
 #      minimum-idle: 0
 
   jpa:
-    show-sql: true
+    #show-sql: true
     hibernate:
       ddl-auto: create #create, create-drop, none
     properties:

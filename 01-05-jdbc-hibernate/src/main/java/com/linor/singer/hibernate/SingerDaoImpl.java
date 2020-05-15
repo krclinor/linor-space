@@ -10,17 +10,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.singer.dao.SingerDao;
+import com.linor.singer.domain.Album;
 import com.linor.singer.domain.Instrument;
 import com.linor.singer.domain.Singer;
+import com.linor.singer.domain.SingerSummary;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Transactional
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class SingerDaoImpl implements SingerDao {
 	@PersistenceContext
-	EntityManager entityManager;
+	private final EntityManager entityManager;
 
 	protected Session getCurrentSession()  {
 		return entityManager.unwrap(Session.class);
@@ -37,7 +41,7 @@ public class SingerDaoImpl implements SingerDao {
 	public List<Singer> findAll() {
 		Session session = getCurrentSession();
 		return session
-				.createQuery("from Singer")
+				.createQuery("from Singer", Singer.class)
 				.list();
 	}
 
@@ -45,7 +49,7 @@ public class SingerDaoImpl implements SingerDao {
 	public List<Singer> findByFirstName(String firstName) {
 		Session session = getCurrentSession();
 		return session
-				.getNamedQuery("Singer.findByFirstName")
+				.createNamedQuery("Singer.findByFirstName", Singer.class)
 				.setParameter("firstName", firstName)
 				.list();
 	}
@@ -101,7 +105,7 @@ public class SingerDaoImpl implements SingerDao {
 	public List<Singer> findAllWithAlbums() {
 		Session session = getCurrentSession();
 		
-		return session.getNamedQuery("Singer.findAllWithAlbum").list();
+		return session.createNamedQuery("Singer.findAllWithAlbum", Singer.class).list();
 	}
 
 	@Override
@@ -110,9 +114,59 @@ public class SingerDaoImpl implements SingerDao {
 	}
 
 	@Override
-	public void insert(Instrument instrument) {
+	public void insertInstrument(Instrument instrument) {
 		Session session = getCurrentSession();
 		session.saveOrUpdate(instrument);
+	}
+
+	private static final String ALL_SINGER_NATIVE_SQL =
+			"select id, first_name, last_name, birth_date, version from singer";
+	@Override
+	public List<Singer> findAllByNativeQuery() {
+		Session session = getCurrentSession();
+		return session
+				.createNativeQuery(ALL_SINGER_NATIVE_SQL, Singer.class)
+				.list();
+	}
+
+	@Override
+	public List<Singer> findByFirstNameAndLastName(Singer singer) {
+		Session session = getCurrentSession();
+		return session
+				.createNamedQuery("Singer.findByFirstNameAndLastName", Singer.class)
+				.setParameter("firstName", singer.getFirstName())
+				.setParameter("lastName", singer.getLastName())
+				.list();
+	}
+	
+	@Override
+	public List<Album> findAlbumsBySinger(Singer singer) {
+		Session session = getCurrentSession();
+		return session
+				.createNamedQuery("Album.findAlbumsBySinger", Album.class)
+				.setParameter("singer_id", singer.getId())
+				.list();
+	}
+
+	@Override
+	public List<Album> findAlbumsByTitle(String title) {
+		Session session = getCurrentSession();
+		return session
+				.createNamedQuery("Album.findByTitle", Album.class)
+				.setParameter("title", title)
+				.list();
+	}
+
+	@Override
+	public List<SingerSummary> listAllSingersSummary() {
+		Session session = getCurrentSession();
+		return session.createQuery("select \n"
+				+ "new com.linor.singer.domain.SingerSummary(\n"
+				+ "s.firstName, s.lastName, a.title) from Singer s\n"
+				+ "left join s.albums a\n"
+				+ "where a.releaseDate=(select max(a2.releaseDate)\n"
+				+ "from Album a2 where a2.singer.id = s.id)", SingerSummary.class)
+				.list();
 	}
 	
 	
