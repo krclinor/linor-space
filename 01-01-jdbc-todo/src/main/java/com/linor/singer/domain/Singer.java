@@ -1,7 +1,7 @@
 package com.linor.singer.domain;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,5 +18,6 @@ public class Singer {
 	private String lastName;
 	private LocalDate birthDate;
 	
-	private List<Album> albums;
+	private Set<Album> albums;
+	private Set<Instrument> instruments;
 }
