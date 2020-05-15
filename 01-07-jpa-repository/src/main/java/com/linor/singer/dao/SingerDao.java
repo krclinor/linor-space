@@ -14,11 +14,11 @@ public interface SingerDao {
 	List<Singer> findAllByNativeQuery();
 
 	List<Singer> findByFirstName(String firstName);
-	List<Singer> findByFirstNameAndLastName(String firstName, String lastName);
+	List<Singer> findByFirstNameAndLastName(Singer singer);
 	List<Singer> findAllWithAlbums();
-	List<Album> findBySinger(Singer singer);
+	List<Album> findAlbumsBySinger(Singer singer);
 	
-	List<Album> findByTitle(@Param("title") String t);
+	List<Album> findAlbumsByTitle(@Param("title") String t);
 
 	String findNameById(Integer id);
 	Singer findById(Integer id);
@@ -29,5 +29,5 @@ public interface SingerDao {
 	void insertWithAlbum(Singer singer);
 	public List<SingerSummary> listAllSingersSummary();
 
-	void insert(Instrument instrument);
+	void insertInstrument(Instrument instrument);
 }

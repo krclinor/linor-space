@@ -1,7 +1,6 @@
 package com.linor.singer.domain;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -22,8 +21,10 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.Singular;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name="singer", uniqueConstraints = {@UniqueConstraint(name = "singer_uq_01", columnNames = {"firstName", "lastName"})})
@@ -42,6 +43,9 @@ import lombok.Singular;
 			+ "where s.firstName = :firstName")
 })
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Singer implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,8 +64,7 @@ public class Singer implements Serializable{
 	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.LAZY)
 	//@ToString.Exclude
 	//@EqualsAndHashCode.Exclude
-	@Singular
-	private Set<Album> albums = new HashSet<>();
+	private Set<Album> albums;
 
 	@ManyToMany
 	@JoinTable(name="singer_instrument", 
@@ -69,8 +72,7 @@ public class Singer implements Serializable{
 		inverseJoinColumns=@JoinColumn(name="instrument_id",foreignKey = @ForeignKey(name="fk_singer_instrument_fk_02")))
 	//@ToString.Exclude
 	//@EqualsAndHashCode.Exclude
-	@Singular
-	private Set<Instrument> instruments = new HashSet<>();
+	private Set<Instrument> instruments;
 	
 	@Version
 	private int version;
