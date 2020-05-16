@@ -16,7 +16,7 @@ public interface SingerDao {
 	List<Singer> findByFirstName(String firstName);
 	List<Singer> findByFirstNameAndLastName(Singer singer);
 	List<Singer> findAllWithAlbums();
-	List<Album> findBySinger(Singer singer);
+	List<Album> findAlbumsBySinger(Singer singer);
 	
 	List<Album> findAlbumsByTitle(@Param("title") String t);
 

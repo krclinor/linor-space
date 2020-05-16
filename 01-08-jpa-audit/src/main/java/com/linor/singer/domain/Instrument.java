@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 //@Table(name = "instrument")
@@ -14,7 +15,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Instrument{
+@ToString(callSuper = true)
+public class Instrument extends Auditable<String>{
 	@Id
 	//@Column(name = "instrument_id")
 	private String instrumentId;

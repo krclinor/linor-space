@@ -48,13 +48,14 @@ public class SingerDaoImpl implements SingerDao {
 	}
 
 	@Override
-	public List<Album> findBySinger(Singer singer) {
+	public List<Album> findAlbumsBySinger(Singer singer) {
 		return albumRepository.findBySinger(singer);
 	}
 
 	@Override
 	public List<Album> findAlbumsByTitle(String title) {
-		return albumRepository.findByTitle(title);
+		//return albumRepository.findByTitle(title);
+		return albumRepository.findByTitleContaining(title);
 	}
 
 	@Override

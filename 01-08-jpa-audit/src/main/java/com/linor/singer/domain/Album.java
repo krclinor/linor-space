@@ -27,7 +27,8 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Album{
+@ToString(callSuper = true)
+public class Album extends Auditable<String>{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;

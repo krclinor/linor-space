@@ -1,4 +1,4 @@
-spring.profiles.active: [h2, dev]
+spring.profiles.active: [postgres, dev]
 #로거
 logging:
   pattern:

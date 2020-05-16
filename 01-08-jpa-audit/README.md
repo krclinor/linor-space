@@ -46,65 +46,55 @@ Persistence Context에서 해당 엔티티를 AuditingEntityListener.class가 �
 @Entity
 @Table(name="singer", uniqueConstraints = {@UniqueConstraint(name = "singer_uq_01", columnNames = {"firstName", "lastName"})})
 @NamedQueries({
-    @NamedQuery(name="Singer.findById",
-            query="select distinct s from Singer s " +
-            "left join fetch s.albums a " +
-            "left join fetch s.instruments i " +
-            "where s.id = :id"),
-    @NamedQuery(name="Singer.findAllWithAlbum",
-            query="select distinct s from Singer s \n"
-                    + "left join fetch s.albums a \n"
-                    + "left join fetch s.instruments i"),
-    @NamedQuery(name="Singer.findByFirstName",
-    query="select distinct s from Singer s \n"
-            + "where s.firstName = :firstName")
+	@NamedQuery(name="Singer.findById",
+			query="select distinct s from Singer s " +
+			"left join fetch s.albums a " +
+			"left join fetch s.instruments i " +
+			"where s.id = :id"),
+	@NamedQuery(name="Singer.findAllWithAlbum",
+			query="select distinct s from Singer s \n"
+					+ "left join fetch s.albums a \n"
+					+ "left join fetch s.instruments i"),
+	@NamedQuery(name="Singer.findByFirstName",
+	query="select distinct s from Singer s \n"
+			+ "where s.firstName = :firstName")
 })
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper=false)
 @ToString(callSuper = true)
 public class Singer extends Auditable<String>{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    
-    //@Column(name="first_name")
-    private String firstName;
-    
-    //@Column(name="last_name")
-    private String lastName;
-    
-    //@Column(name="birth_date")
-    private LocalDate birthDate;
-    
-    @OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true)
-    //@ToString.Exclude
-    //@EqualsAndHashCode.Exclude
-    private Set<Album> albums = new HashSet<>();
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+	
+	//@Column(name="first_name")
+	private String firstName;
+	
+	//@Column(name="last_name")
+	private String lastName;
+	
+	//@Column(name="birth_date")
+	private LocalDate birthDate;
+	
+	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true)
+	//@ToString.Exclude
+	//@EqualsAndHashCode.Exclude
+	private Set<Album> albums;
 
-    @ManyToMany
-    @JoinTable(name="singer_instrument", 
-        joinColumns=@JoinColumn(name="singer_id"),
-        inverseJoinColumns=@JoinColumn(name="instrument_id"))
-    //@ToString.Exclude
-    //@EqualsAndHashCode.Exclude
-    private Set<Instrument> instruments = new HashSet<>();
-    
-    @Version
-    private int version;
-    
-    public boolean addAlbum(Album album) {
-        album.setSinger(this);
-        return getAlbums().add(album);
-    }
-    public void reoveAlbum(Album album) {
-        getAlbums().remove(album);
-    }
-    public boolean addInstrument(Instrument instrument) {
-        return getInstruments().add(instrument);
-    }
-    public void reoveInstrument(Instrument instrument) {
-        getInstruments().remove(instrument);
-    }
+	@ManyToMany
+	@JoinTable(name="singer_instrument", 
+		joinColumns=@JoinColumn(name="singer_id"),
+		inverseJoinColumns=@JoinColumn(name="instrument_id"))
+	//@ToString.Exclude
+	//@EqualsAndHashCode.Exclude
+	private Set<Instrument> instruments;
+	
+	@Version
+	private int version;
+
 }
 ```
 @EqualsAndHashCode(callSuper=false)를 선언하여 lombok가 hashCode()생성시 부모클래스를 적용하지 않도록 한다.  
