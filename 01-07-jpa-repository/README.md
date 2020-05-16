@@ -19,12 +19,10 @@ hibernate프로젝트와 동일하게 설정한 다음 아래 내용을 수정�
         physical-naming-strategy: com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy
         #format_sql: true
         #use_sql_comments: true
-        jdbc.lob.non_contextual_creation: true
-        enable_lazy_load_no_trans: true #일대다 매핑에서 fetch를 Lazy로하는 경우 오류 막음
+        #jdbc.lob.non_contextual_creation: true
+        #enable_lazy_load_no_trans: true #일대다 매핑에서 fetch를 Lazy로하는 경우 오류 막음
         #temp.use_jdbc_metadata_default: false
 ```
-enable_lazy_load_no_trans를 true로 설정하여 엔터티 매핑의 
-fetch 속성의 디폴트 값인 Lazy모드에 발생하는 오류를 막는다.  
 
 ### 엔터티 클래스 생성
 생성한 Singer, Album, Instrument 엔터티 및 SingerSummary 도메인 클래스 jpa 프로젝트와 동일하다.  
@@ -346,20 +344,44 @@ SingerRepository에서 선언한 findAllByNativeQuery()메서드를 호출한다
 소스 : [AppStartupRunner.java](src/main/java/com/linor/singer/config/AppStartupRunner.java)
 
 ### Junit 테스팅
-Junit으로 SingerDaoTests를 실행한다.
+Junit으로 SingerDaoTests를 실행한다.  
+소스 : [SingerDaoTests.java](src/test/java/com/linor/singer/SingerDaoTests.java)    
 
 #### 주의사항
-JpaRepository를 사용하는 경우 테스트케이스에 @Transactional어노테이션을 사용하지 말아야 한다.  
 JpaRepository는 트랜잭션이 커밋될 때 update sql문을 생성하는 듯 하다.  
 따라서 테스트케이스에서 트랜잭션을 사용하면 테스트가 종료되는 시점에 롤백이 발생하여 update sql문이 만들어 지지 않는다.  
-
-소스 : [SingerDaoTests.java](src/test/java/com/linor/singer/SingerDaoTests.java)    
-```java
-@RunWith(SpringRunner.class)
-@SpringBootTest
-//@Transactional
-@Slf4j
-public class SingerDaoTests {
+testUpdateSinger()테스트케이스의 로그를 확인해보면 update sql문이 만들어지지 않았다.  
+```log
+INFO  SingerDaoTests - >>> 김종서 수정 전 >>>
+Hibernate: 
+    select
+        albums0_.singer_id as singer_i5_0_0_,
+        albums0_.id as id1_0_0_,
+        albums0_.id as id1_0_1_,
+        albums0_.release_date as release_2_0_1_,
+        albums0_.singer_id as singer_i5_0_1_,
+        albums0_.title as title3_0_1_,
+        albums0_.version as version4_0_1_ 
+    from
+        album albums0_ 
+    where
+        albums0_.singer_id=?
+Hibernate: 
+    select
+        instrument0_.singer_id as singer_i1_3_0_,
+        instrument0_.instrument_id as instrume2_3_0_,
+        instrument1_.instrument_id as instrume1_1_1_ 
+    from
+        singer_instrument instrument0_ 
+    inner join
+        instrument instrument1_ 
+            on instrument0_.instrument_id=instrument1_.instrument_id 
+    where
+        instrument0_.singer_id=?
+INFO  SingerDaoTests - Singer(id=1, firstName=종서, lastName=김, birthDate=1970-12-09, albums=[Album(id=1, title=아름다운 구속, releaseDate=2019-01-01, version=0), Album(id=2, title=날개를 활짝펴고, releaseDate=2019-02-01, version=0)], instruments=[Instrument(instrumentId=피아노), Instrument(instrumentId=기타)], version=0)
+INFO  SingerDaoTests - >>> 김종서 수정 후 >>>
+INFO  SingerDaoTests - Singer(id=1, firstName=종서, lastName=김, birthDate=1977-10-16, albums=[Album(id=1, title=아름다운 구속, releaseDate=2019-01-01, version=0), Album(id=2, title=날개를 활짝펴고, releaseDate=2019-02-01, version=0)], instruments=[Instrument(instrumentId=피아노), Instrument(instrumentId=기타)], version=0)
+INFO  TransactionContext - Rolled back transaction for test: [DefaultTestContext@420a85c4 testClass = SingerDaoTests, testInstance = com.linor.singer.SingerDaoTests@50e6ee24, testMethod = testUpdateSinger@SingerDaoTests, testException = [null], mergedContextConfiguration = [MergedContextConfiguration@1c39680d testClass = SingerDaoTests, locations = '{}', classes = '{class com.linor.singer.JdbcApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@636be97c, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@6ca8564a, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@708f5957, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@1d9b7cce], contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map[[empty]]]
 ```
 
 ## 정리
