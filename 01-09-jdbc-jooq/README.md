@@ -45,7 +45,7 @@ todo 프로젝트 의존성 라이브러리에 spring-boot-starter-jooq, jooq-co
 	</dependencies>
 ```   
 
-plugins에 jooq-codegen-maven, build-helper-maven-plugin플러그인을 추가한다.
+plugins에 jooq-codegen-maven, build-helper-maven-plugin플러그인을 추가한다.  
 소스 : [pom.xml](pom.xml)
 ```xml   
 		<plugins>

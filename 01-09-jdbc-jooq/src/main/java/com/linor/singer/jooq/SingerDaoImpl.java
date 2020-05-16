@@ -3,7 +3,9 @@ package com.linor.singer.jooq;
 import static com.linor.jooq.model.tables.Album.ALBUM;
 import static com.linor.jooq.model.tables.Instrument.INSTRUMENT;
 import static com.linor.jooq.model.tables.Singer.SINGER_;
-import static org.jooq.impl.DSL.*;
+import static org.jooq.impl.DSL.concat;
+import static org.jooq.impl.DSL.max;
+import static org.jooq.impl.DSL.select;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -15,8 +17,7 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.impl.DSL;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.jooq.model.tables.records.AlbumRecord;
@@ -27,11 +28,14 @@ import com.linor.singer.domain.Instrument;
 import com.linor.singer.domain.Singer;
 import com.linor.singer.domain.SingerSummary;
 
-@Service
+import lombok.RequiredArgsConstructor;
+
+@Repository
 @Transactional
+@RequiredArgsConstructor
 public class SingerDaoImpl implements SingerDao {
-	@Autowired
-	private DSLContext dsl;
+	
+	private final DSLContext dsl;
 
 	private Singer getSingerDomain(Record record) {
 		return Singer.builder()

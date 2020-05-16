@@ -2,12 +2,49 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.linor.singer.dao.SingerDao">
 
-<select id="findAllCamelCaseMap" resultType="CamelCaseMap">
+<select id="findAll" resultType="CamelCaseMap">
 	select * from singer
 </select>
 
-<select id="findAll" resultType="Singer">
+<select id="findAllByNativeQuery" resultType="CamelCaseMap">
 	select * from singer
+</select>
+
+<!-- findByFirstName 첫 번째 방법 -->
+<!-- <select id="findByFirstName" parameterType="string" resultMap="singerWithAlbumMap2">
+	select s.id, s.first_name, s.last_name, s.birth_date,
+			a.id album_id, a.singer_id, a.title, a.release_date
+	from	singer s
+	left outer join album a on a.singer_id = s.id
+	where	s.first_name = #{first_name}
+</select>
+ --> 
+<!-- findByFirstName 두 번째 방법 -->
+<select id="findByFirstName" resultMap="singerWithAlbumMap2">
+	select s.id, s.first_name, s.last_name, s.birth_date,
+			a.id album_id, a.singer_id, a.title, a.release_date
+	from	singer s
+	left outer join album a on a.singer_id = s.id
+	<where>
+		<if test="firstName != null">
+		s.first_name = #{firstName}
+		</if>
+	</where>
+</select>
+
+<select id="findByFirstNameAndLastName" resultMap="singerWithAlbumMap2">
+	select s.id, s.first_name, s.last_name, s.birth_date,
+			a.id album_id, a.singer_id, a.title, a.release_date
+	from	singer s
+	left outer join album a on a.singer_id = s.id
+	<where>
+		<if test="firstName != null">
+		s.first_name = #{firstName}
+		</if>
+		<if test="lastName != null">
+		and s.first_name = #{firstName}
+		</if>
+	</where>
 </select>
 
 <!-- findAllWithAllbums 첫 번째 방법 -->
@@ -24,72 +61,89 @@
 	where	singer_id = #{id}
 </select>
  -->
-
+ 
 <!-- findAllWithAllbums 두 번째 방법 -->
-<resultMap type="Singer" id="singerWithAlbumMap">
+<resultMap id="singerWithAlbumMap2" type="Singer" >
 	<id property="id" column="id"/>
 	<result property="firstName" column="first_name"/>
 	<result property="lastName" column="last_name"/>
 	<result property="birthDate" column="birth_date"/>
-	<collection property="albums" ofType="Album">
+	<collection property="albums" ofType="CamelCaseMap">
 		<id property="id" column="album_id"/>
-		<result property="singerId" column="singer_id"/>
+		<result property="singer_id" column="singer_id"/>
 		<result property="title" column="title"/>
-		<result property="releaseDate" column="release_date"/>
+		<result property="release_date" column="release_date"/>
+	</collection>
+	<collection property="instruments" ofType="CamelCaseMap">
+		<id property="id" column="instrument_id"/>
 	</collection>
 </resultMap>
-<select id="findAllWithAlbums" resultMap="singerWithAlbumMap">
+<select id="findAllWithAlbums" resultMap="singerWithAlbumMap2">
 	select s.id, s.first_name, s.last_name, s.birth_date,
-			a.id album_id, a.singer_id, a.title, a.release_date
+			a.id album_id, a.singer_id, a.title, a.release_date,
+			b.instrument_id
 	from	singer s
 	left outer join album a on a.singer_id = s.id
+	left outer join singer_instrument b on b.singer_id = s.id
+</select>
+
+<select id="findAlbumsBySinger" resultType="CamelCaseMap">
+	select * from album where singer_id = #{id}
+</select>
+
+<resultMap id="albumWithSinger" type="CamelCaseMap">
+	<id property="id" column="id"/>
+	<result property="singer_id" column="singer_id"/>
+	<result property="title" column="title"/>
+	<result property="release_date" column="release_date"/>
+	<association property="singer" javaType="CamelCaseMap">
+		<id property="id" column="singer_id"/>
+		<result property="first_name" column="first_name"/>
+		<result property="last_name" column="last_name"/>
+		<result property="birth_date" column="birth_date"/>
+	</association>
+</resultMap>
+
+<select id="findAlbumsByTitle" resultMap="albumWithSinger">
+	select a.id, a.singer_id, a.title, a.release_date,
+			s.first_name, s.last_name, s.birth_date
+	from	album a
+	inner join singer s on s.id = a.id
+	where a.title like #{title}||'%'
 </select>
 
 <!-- findById 첫 번째 방법-->
-<!-- <select id="findById" parameterType="int" resultType="Singer">
+<select id="findById" resultType="CamelCaseMap">
 	select * from singer where id = #{id}
 </select>
- -->
+
 <!-- findById 두 번째 방법-->
-<select id="findById" parameterType="int" resultMap="singerWithAlbumMap">
+<!-- <select id="findById" parameterType="int" resultMap="singerWithAlbumMap2">
 	select s.id, s.first_name, s.last_name, s.birth_date,
 			a.id album_id, a.singer_id, a.title, a.release_date
 	from	singer s
 	left outer join album a on a.singer_id = s.id
 	where	s.id = #{id}
+</select> -->
+
+<select id="findFirstNameById" resultType="string">
+	select first_name from singer where id = #{id}
 </select>
 
-<!-- findByFirstName 첫 번째 방법 -->
-<!-- <select id="findByFirstName" parameterType="string" resultMap="singerWithAlbumMap">
-	select s.id, s.first_name, s.last_name, s.birth_date,
-			a.id album_id, a.singer_id, a.title, a.release_date
+<select id="findNameById" resultType="string">
+	select s.first_name ||' '|| s.last_name as name
 	from	singer s
-	left outer join album a on a.singer_id = s.id
-	where	s.first_name = #{first_name}
-</select>
- -->
- 
-<!-- findByFirstName 첫 번째 방법 -->
-<select id="findByFirstName" parameterType="string" resultMap="singerWithAlbumMap">
-	select s.id, s.first_name, s.last_name, s.birth_date,
-			a.id album_id, a.singer_id, a.title, a.release_date
-	from	singer s
-	left outer join album a on a.singer_id = s.id
-	<where>
-		<if test="value != null">
-		s.first_name = #{first_name}
-		</if>
-	</where>
+	where	s.id = #{id}
 </select>
 
-<insert id="insert" parameterType="Singer"
+<insert id="insert"
 	useGeneratedKeys="true"
 	keyProperty="id">
 	insert into singer (first_name, last_name, birth_date)
 	values(#{firstName}, #{lastName}, #{birthDate})
 </insert>
 
-<update id="update" parameterType="Singer">
+<update id="update">
 	update singer
 	set		first_name = #{firstName},
 			last_name = #{lastName},
@@ -97,24 +151,40 @@
 	where	id = #{id}
 </update>
 
-<update id="delete" parameterType="int">
+<update id="delete">
 	delete from singer
 	where	id = #{id}
 </update>
 
-<insert id="insertWithAlbum" parameterType="Singer">
+<insert id="insertWithAlbum">
 	<selectKey keyProperty="id" resultType="int" order="BEFORE">
 		Select nextval(pg_get_serial_sequence('singer', 'id'))
 	</selectKey>
-	begin;
-		insert into singer(id, first_name, last_name, birth_date)
-		values(#{id}, #{firstName}, #{lastName}, #{birthDate});
-		<if test="albums != null">
-			<foreach collection="albums" item="album">
-				insert into album (singer_id, title, release_date)
-				values (#{id}, #{album.title}, #{album.releaseDate});
-			</foreach>
-		</if>
-	end;
+	insert into singer(id, first_name, last_name, birth_date)
+	values(#{id}, #{firstName}, #{lastName}, #{birthDate});
+	<if test="albums != null">
+		<foreach collection="albums" item="album">
+			insert into album (singer_id, title, release_date)
+			values (#{id}, #{album.title}, #{album.releaseDate});
+		</foreach>
+	</if>
+	<if test="instruments != null">
+		<foreach collection="instruments" item="instrument">
+			insert into singer_instrument(singer_id, instrument_id)
+			values (#{id},#{instrument.id});
+		</foreach>
+	</if>
 </insert>
+
+<insert id="insertInstrument">
+	insert into instrument (instrument_id)
+	values (#{id});
+</insert>
+
+<select id="listAllSingersSummary" resultType="CamelCaseMap">
+	select s.id, s.first_name, s.last_name, a.title last_album
+	from	singer s
+	left outer join album a on a.singer_id = s.id
+	where a.release_date = (select max(a2.release_date) from album a2 where a2.singer_id = s.id)
+</select>
 </mapper>

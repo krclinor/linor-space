@@ -28,4 +28,8 @@ public class CamelCaseMap extends HashMap<String, Object>{
 	public Object put(String key, Object value) {
 		return super.put(toCamelCase(key), value);
 	}
+	
+	public Object cput(String key, Object value) {
+		return super.put(key, value);
+	}
 }

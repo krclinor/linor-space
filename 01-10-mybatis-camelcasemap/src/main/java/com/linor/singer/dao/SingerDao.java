@@ -9,15 +9,27 @@ import com.linor.singer.domain.Singer;
 
 @Mapper
 public interface SingerDao {
-	List<CamelCaseMap> findAllCamelCaseMap();
-	List<Singer> findAll();
+	List<CamelCaseMap> findAll();
+	List<CamelCaseMap> findAllByNativeQuery();
+
 	List<Singer> findByFirstName(String firstName);
-	String findNameById(Integer id);
-	Singer findById(Integer id);
-	String findFirstNameById(Integer id);
-	void insert(Singer singer);
-	void update(Singer singer);
-	void delete(Integer singerId);
+	List<Singer> findByFirstNameAndLastName(CamelCaseMap singer);
 	List<Singer> findAllWithAlbums();
-	void insertWithAlbum(Singer singer);
+
+	List<CamelCaseMap> findAlbumsBySinger(CamelCaseMap singer);
+	List<CamelCaseMap> findAlbumsByTitle(String title);
+
+	String findNameById(Integer id);
+	String findFirstNameById(Integer id);
+
+	CamelCaseMap findById(Integer id);
+	void insert(CamelCaseMap singer);
+	void update(CamelCaseMap singer);
+	void delete(Integer singerId);
+	
+	void insertWithAlbum(CamelCaseMap singer);
+
+	void insertInstrument(CamelCaseMap instrument);
+
+	public List<CamelCaseMap> listAllSingersSummary();
 }
