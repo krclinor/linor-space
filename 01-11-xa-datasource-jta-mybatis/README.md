@@ -13,6 +13,7 @@ Spring Boot -> Spring Starter Project로 생성한다.
         </dependency>       
 ```
 datasource-multi-mybatis 프로젝트에 atomikos를 추가한다.  
+atomikos는 JTA(Java Transaction API)를 구현한 JTA구현체로 오픈소스로 제공한다.  
 
 ## 설정
 ### 어플리케이션 설정
@@ -52,8 +53,9 @@ db:
         URL: jdbc:postgresql://postgres:5432/spring?currentSchema=public
 ```
 spring.jta.enabled를 true로 설정하여 JTA를 사용하도록 한다.  
-db1과 db2의 데이타소스를 atomiko에 맞게 설정한다.  
-xa-data-source-class-name에 JTA용 데이타베이스 드라이버로 설정한다. postgresql의 경우 org.postgresql.xa.PGXADataSource이다.  
+db1과 db2의 데이타소스를 atomikos에 맞게 설정한다.  
+xa-data-source-class-name에 JTA용 데이타베이스 드라이버를 설정한다. 데이타베이스마다 JTA용 드라이버를 따로 제공한다.  
+postgresql의 경우 org.postgresql.xa.PGXADataSource이다.  
 
 ### 1번 데이타소스 및 Mybatis 설정
 소스 : [Datasource1Config.java](src/main/java/com/linor/singer/config/Datasource1Config.java) 
@@ -215,7 +217,31 @@ datasource-multi-mybatis 프로젝트와 내용이 동일하다.
 
 ## 결과 테스트
 Junit으로 SingerDaoTests를 실행한다.  
-소스 : [SingerDaoTests.java](src/test/java/com/linor/singer/SingerDaoTests.java)  
+- 1번 데이타소스용 테스트 [SingerDaoTests1.java](src/test/java/com/linor/singer/SingerDaoTests1.java)  
+- 2번 데이타소스용 테스트 [SingerDaoTests2.java](src/test/java/com/linor/singer/SingerDaoTests2.java)  
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@Transactional
+@Slf4j
+public class SingerDaoTests2 {
+```
+이전 프로젝트에서 명시적으로 등록했던 txManger2를 @Transactional에 등록할 필요가 없어졌다.  
+- 1,2번 둘 다 테스트 [SingerDaoTests3.java](src/test/java/com/linor/singer/SingerDaoTests3.java)  
+```java
+	@Test
+	public void testFindAll2(){
+		List<Singer2> singers = singerDao2.findAll();
+		assertNotNull(singers);
+		assertTrue(singers.size() == 4);
+		log.info("가수목록");
+		listSingers2(singers);
+	}
+```
+이전 프로젝트에서 메서드레벨의 @Transactional내에 선언하던 트랜잭션을 등록할 필요가 없어졌다.  
+- 하나의 메서드 내에서 2개의 데이타소스 사용 [SingerDaoTests4.java](src/test/java/com/linor/singer/SingerDaoTests4.java)  
+![](./images/image01.png)  
+SingerDaoTests4를 JUnit으로 테스트하면 트랜잭션이 완벽히 처리되어 이전 프로젝트에서는 발생하던 오류가 나타나지 않는다.  
 
 ## 정리
 JTA를 이용하면 여러 데이타베이스의 트랜잭션을 묶어서 처리할 수 있다.  

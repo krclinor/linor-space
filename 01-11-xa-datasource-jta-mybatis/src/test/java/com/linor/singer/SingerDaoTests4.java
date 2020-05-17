@@ -53,7 +53,7 @@ public class SingerDaoTests4 {
 	}
 	
 	@Test
-	public void testFindNameById1() {
+	public void testFindNameById() {
 		String name = singerDao1.findNameById(1);
 		log.info("DB1 종서 김: {}", name );
 		assertTrue("1종서 김".equals(name));
@@ -65,7 +65,7 @@ public class SingerDaoTests4 {
 
 		
 	@Test
-	public void testDeleteSinger1() {
+	public void testDeleteSinger() {
 		singerDao1.delete(3);
 		List<Singer1> singers1 = singerDao1.findAll();
 		log.info("DB1 가수 삭제 후 가수 목록>>>");
@@ -100,7 +100,7 @@ public class SingerDaoTests4 {
 	}
 
 	@Test
-	public void testFindbyId1() {
+	public void testFindbyId() {
 		Singer1 singer1 = singerDao1.findById(1);
 		log.info("DB1 주키 검색 결과>>>");
 		log.info(singer1.toString());
@@ -128,7 +128,7 @@ public class SingerDaoTests4 {
 	}
 
 	@Test
-	public void testInsertSinger1() {
+	public void testInsertSinger() {
 		Singer1 singer1 = new Singer1();
 		singer1.setFirstName("조한");
 		singer1.setLastName("김");
@@ -157,7 +157,7 @@ public class SingerDaoTests4 {
 	}
 	
 	@Test
-	public void testUpdateSinger1() {
+	public void testUpdateSinger() {
 		Singer1 singerOldSinger1 = singerDao1.findById(1);
 		log.info(">>> DB1 김종서 수정 전 >>>");
 		log.info(singerOldSinger1.toString());
@@ -182,7 +182,7 @@ public class SingerDaoTests4 {
 	}
 	
 	@Test
-	public void testInsertSingerWithAlbum1() {
+	public void testInsertSingerWithAlbum() {
 		Singer1 singer1 = new Singer1();
 		singer1.setFirstName("태원");
 		singer1.setLastName("김");
