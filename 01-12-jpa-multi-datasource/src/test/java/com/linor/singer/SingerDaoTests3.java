@@ -46,6 +46,7 @@ public class SingerDaoTests3 {
 	}
 	
 	@Test
+	@Transactional(value="txManager2", readOnly = true)
 	public void test201FindAll(){
 		log.info("테스트201");
 		List<Singer2> singers = singerDao2.findAll();
@@ -75,6 +76,7 @@ public class SingerDaoTests3 {
 	}
 	
 	@Test
+	@Transactional(value="txManager2", readOnly = true)
 	public void test202FindAllByNativeQuery() {
 		log.info("테스트202");
 		log.info("네이티브 쿼리 실행 결과");
@@ -95,6 +97,7 @@ public class SingerDaoTests3 {
 	}
 	
 	@Test
+	@Transactional(value="txManager2", readOnly = true)
 	public void test203FindAllWidthAlbums() {
 		log.info("테스트203");
 		List<Singer2> singers = singerDao2.findAllWithAlbums();
@@ -119,6 +122,7 @@ public class SingerDaoTests3 {
 	}
 	
 	@Test
+	@Transactional(value="txManager2", readOnly = true)
 	public void test204FindbyId() {
 		log.info("테스트204");
 		Singer2 singer = singerDao2.findById(1);
@@ -138,6 +142,7 @@ public class SingerDaoTests3 {
 	}
 
 	@Test
+	@Transactional(value="txManager2", readOnly = true)
 	public void test205FindByFirstName() {
 		log.info("테스트205");
 		List<Singer2> singers = singerDao2.findByFirstName("종서");
@@ -155,6 +160,7 @@ public class SingerDaoTests3 {
 	}
 	
 	@Test
+	@Transactional(value="txManager2", readOnly = true)
 	public void test206ListSingersSummary() {
 		log.info("테스트206");
 		List<SingerSummary2> singers = singerDao2.listAllSingersSummary();
@@ -191,7 +197,7 @@ public class SingerDaoTests3 {
 	}
 	
 	@Test
-	@Transactional("transactionManager2")
+	@Transactional("txManager2")
 	public void test207InsertSinger() {
 		log.info("테스트207");
 		Singer2 singer = new Singer2();
@@ -220,7 +226,7 @@ public class SingerDaoTests3 {
 	}
 
 	@Test
-	@Transactional("transactionManager2")
+	@Transactional("txManager2")
 	public void test208UpdateSinger() {
 		log.info("테스트208");
 		Singer2 singerOldSinger = singerDao2.findById(1);
@@ -245,7 +251,7 @@ public class SingerDaoTests3 {
 	}
 
 	@Test
-	@Transactional("transactionManager2")
+	@Transactional("txManager2")
 	public void test209DeleteSinger() {
 		log.info("테스트209");
 		singerDao2.delete(3);
@@ -284,7 +290,7 @@ public class SingerDaoTests3 {
 	}
 	
 	@Test
-	@Transactional("transactionManager2")
+	@Transactional("txManager2")
 	public void test210InsertSingerWithAlbum() {
 		log.info("테스트210");
 		Singer2 singer = new Singer2();

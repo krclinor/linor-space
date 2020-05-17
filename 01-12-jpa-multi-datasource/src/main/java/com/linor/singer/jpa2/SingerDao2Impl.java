@@ -16,7 +16,7 @@ import com.linor.singer.domain2.SingerSummary2;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Transactional("transactionManager2")
+@Transactional("txManager2")
 @Repository
 @Slf4j
 public class SingerDao2Impl implements SingerDao2 {

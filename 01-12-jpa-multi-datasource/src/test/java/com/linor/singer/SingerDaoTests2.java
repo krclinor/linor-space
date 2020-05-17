@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
-@Transactional("transactionManager2")
+@Transactional("txManager2")
 public class SingerDaoTests2 {
 	@Autowired
 	private SingerDao2 singerDao;

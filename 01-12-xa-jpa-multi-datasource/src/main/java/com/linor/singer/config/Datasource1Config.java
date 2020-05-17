@@ -37,9 +37,9 @@ public class Datasource1Config {
 		return new AtomikosDataSourceBean();
 	}
 	
-	@Bean(name = "entityManagerFactory")
+	@Bean
 	@Primary
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory1(
 			EntityManagerFactoryBuilder builder,
 			@Qualifier("dataSource1") DataSource dataSource) {
 		Map<String, ?> jpaProperties = hibernateProperties();
@@ -66,19 +66,19 @@ public class Datasource1Config {
 		return hibernateProp;
 	}
 	
-	@Bean
-	public JpaVendorAdapter jpaVendorAdapter() {
-		HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
-		hibernateJpaVendorAdapter.setShowSql(true);
-		hibernateJpaVendorAdapter.setGenerateDdl(true);
-		hibernateJpaVendorAdapter.setDatabase(Database.POSTGRESQL);
-		return hibernateJpaVendorAdapter;
-	}
+//	@Bean
+//	public JpaVendorAdapter jpaVendorAdapter() {
+//		HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
+//		hibernateJpaVendorAdapter.setShowSql(true);
+//		hibernateJpaVendorAdapter.setGenerateDdl(true);
+//		hibernateJpaVendorAdapter.setDatabase(Database.POSTGRESQL);
+//		return hibernateJpaVendorAdapter;
+//	}
 
 //	@Primary
-//	@Bean(name = "transactionManager")
-//	public PlatformTransactionManager transactionManager(
-//			@Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory) {
+//	@Bean
+//	public PlatformTransactionManager txManager1(
+//			@Qualifier("entityManagerFactory1") EntityManagerFactory entityManagerFactory) {
 //		return new JpaTransactionManager(entityManagerFactory);
 //	}
 

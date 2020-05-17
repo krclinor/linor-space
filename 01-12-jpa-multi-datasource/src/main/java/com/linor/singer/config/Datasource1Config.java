@@ -25,16 +25,16 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 //		transactionManagerRef = "transactionManager",
 //		basePackages = {"com.linor.singer.db1.repository"})
 public class Datasource1Config {
-	@Bean(name = "dataSource1")
 	@ConfigurationProperties("db.db1.datasource")
 	@Primary
+	@Bean
 	public DataSource dataSource1() {
 		return DataSourceBuilder.create().build();
 	}
 	
-	@Bean(name = "entityManagerFactory")
 	@Primary
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+	@Bean
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory1(
 			EntityManagerFactoryBuilder builder,
 			@Qualifier("dataSource1") DataSource dataSource) {
 		Map<String, ?> jpaProperties = hibernateProperties();
@@ -59,9 +59,9 @@ public class Datasource1Config {
 	}
 	
 	@Primary
-	@Bean(name = "transactionManager")
-	public PlatformTransactionManager transactionManager(
-			@Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory) {
+	@Bean
+	public PlatformTransactionManager txManager1(
+			@Qualifier("entityManagerFactory1") EntityManagerFactory entityManagerFactory) {
 		return new JpaTransactionManager(entityManagerFactory);
 	}
 

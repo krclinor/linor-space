@@ -24,13 +24,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 //		transactionManagerRef = "transactionManager2",
 //		basePackages = {"com.linor.singer.db2.repository"})
 public class Datasource2Config {
-	@Bean(name = "dataSource2")
+
 	@ConfigurationProperties("db.db2.datasource")
+	@Bean
 	public DataSource dataSource2() {
 		return DataSourceBuilder.create().build();
 	}
 	
-	@Bean(name = "entityManagerFactory2")
+	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory2(
 			EntityManagerFactoryBuilder builder,
 			@Qualifier("dataSource2") DataSource dataSource) {
@@ -61,13 +62,13 @@ public class Datasource2Config {
 		hibernateProp.put("hibernate.use_sql_comments", "false");
 		hibernateProp.put("hibernate.show_sql", "true");
 		hibernateProp.put("hibernate.physical_naming_strategy", "com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy");
-		hibernateProp.put("hibernate.jdbc.lob.non_contextual_creation", "true");
-		hibernateProp.put("hibernate.enable_lazy_load_no_trans", "true");
+//		hibernateProp.put("hibernate.jdbc.lob.non_contextual_creation", "true");
+//		hibernateProp.put("hibernate.enable_lazy_load_no_trans", "true");
 		return hibernateProp;
 	}
 
-	@Bean(name = "transactionManager2")
-	public PlatformTransactionManager transactionManager2(
+	@Bean
+	public PlatformTransactionManager txManager2(
 			@Qualifier("entityManagerFactory2") EntityManagerFactory entityManagerFactory) {
 		return new JpaTransactionManager(entityManagerFactory);
 	}
