@@ -247,8 +247,8 @@ public interface SingerDao1 {
 
 ## 결과 테스트
 Junit으로 SingerDaoTests를 실행한다.  
-1번 데이타소스용 테스트 [SingerDaoTests1.java](src/test/java/com/linor/singer/SingerDaoTests1.java)  
-2번 데이타소스용 테스트 [SingerDaoTests2.java](src/test/java/com/linor/singer/SingerDaoTests2.java)  
+- 1번 데이타소스용 테스트 [SingerDaoTests1.java](src/test/java/com/linor/singer/SingerDaoTests1.java)  
+- 2번 데이타소스용 테스트 [SingerDaoTests2.java](src/test/java/com/linor/singer/SingerDaoTests2.java)  
 ```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -257,7 +257,7 @@ Junit으로 SingerDaoTests를 실행한다.
 public class SingerDaoTests2 {
 ```
 트랜잭션 메니저가 Primary로 txManager1으로 설정되어 있기 때문에 txManger2를 사용하기 위해 @Transactional에 등록해야 한다.  
-1,2번 둘 다 테스트 [SingerDaoTests3.java](src/test/java/com/linor/singer/SingerDaoTests3.java)  
+- 1,2번 둘 다 테스트 [SingerDaoTests3.java](src/test/java/com/linor/singer/SingerDaoTests3.java)  
 ```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -278,8 +278,10 @@ public class SingerDaoTests3 {
 	}
 ```
 txManager2트랜잭션 매니저를 사용하려면 메서드 레벨에서 @Transactional내에 선언하여 사용할 수 있다.  
-
+- 하나의 메서드 내에서 2개의 데이타소스 사용 [SingerDaoTests4.java](src/test/java/com/linor/singer/SingerDaoTests4.java)  
+![](./images/image01.png)  
+SingerDaoTests4를 JUnit으로 테스트하면 dataSource2의 트랜잭션매니저가 작동하지 않아 다음 테스트케이스에서 오류가 발생하는 것을 확인할 수 있다.  
 
 ## 정리
-데이타 소스 각각을 별개로 사용할 경우 트랜잭션에 문가 발생하지 않으나, 2개의 데이타소스를 동시에 사용하는 경우 Primary로 지정하지 않은 2번 데이타소스의 트랜잭션은 메서드 레벨에서 트랜잭션 매니저를 명시적으로 사요하여 해결 할 수 있니만 메서드 내에서 2개의 트랜잭션을 동시에 사용하는 경우에는 txManager2를 사용할 수 없다.     
+데이타 소스 각각을 별개로 사용할 경우 트랜잭션처리가 잘 되지만, 2개의 데이타소스를 동시에 사용하는 경우 Primary로 지정하지 않은 2번 데이타소스의 트랜잭션은 메서드 레벨에서 트랜잭션 매니저를 명시적으로 사요하여 해결 할 수 있니만 메서드 내에서 2개의 트랜잭션을 동시에 사용하는 경우에는 txManager2를 사용할 수 없다.     
 이를 해결하려면 JTA트랜잭션을 사용해야 한다.  
