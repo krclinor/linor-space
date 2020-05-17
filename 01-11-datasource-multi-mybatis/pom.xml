@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.linor</groupId>
-	<artifactId>01-11-jdbc-datasource-multi</artifactId>
+	<artifactId>01-11-mybatis-multi-datasource</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>01-11-jdbc-datasource-multi</name>
+	<name>01-11-mybatis-multi-datasource</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>

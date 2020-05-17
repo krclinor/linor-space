@@ -55,6 +55,7 @@ public class SingerDaoTests3 {
 	}
 
 	@Test
+	@Transactional(value = "txManager2", readOnly = true)
 	public void testFindAll2(){
 		List<Singer2> singers = singerDao2.findAll();
 		assertNotNull(singers);
@@ -70,6 +71,7 @@ public class SingerDaoTests3 {
 	}
 
 	@Test
+	@Transactional(value = "txManager2", readOnly = true)
 	public void testFindNameById2() {
 		String name = singerDao2.findNameById(1);
 		log.info("종서 이름: {}",name);
@@ -86,6 +88,7 @@ public class SingerDaoTests3 {
 	}
 
 	@Test
+	@Transactional("txManager2")
 	public void testDeleteSinger2() {
 		singerDao2.delete(3);
 		List<Singer2> singers = singerDao2.findAll();
@@ -104,6 +107,7 @@ public class SingerDaoTests3 {
 	}
 
 	@Test
+	@Transactional(value = "txManager2", readOnly = true)
 	public void testFindAllWidthAlbums2() {
 		List<Singer2> singers = singerDao2.findAllWithAlbums();
 		log.info("testFindAllWidthAlbums2 >>>");
@@ -121,6 +125,7 @@ public class SingerDaoTests3 {
 	}
 	
 	@Test
+	@Transactional(value = "txManager2", readOnly = true)
 	public void testFindbyId2() {
 		Singer2 singer = singerDao2.findById(1);
 		log.info("주키 검색 결과>>>");
@@ -135,8 +140,9 @@ public class SingerDaoTests3 {
 	}
 
 	@Test
+	@Transactional(value = "txManager2", readOnly = true)
 	public void testFindByFirstName2() {
-		List<Singer2> singers = singerDao2.findByFirstName("종서");
+		List<Singer2> singers = singerDao2.findByFirstName("2종서");
 		assertTrue(singers.size() == 1);
 		listSingers2(singers);
 	}
@@ -156,6 +162,7 @@ public class SingerDaoTests3 {
 	}
 	
 	@Test
+	@Transactional("txManager2")
 	public void testInsertSinger2() {
 		Singer2 singer = new Singer2();
 		singer.setFirstName("조한");
@@ -186,6 +193,7 @@ public class SingerDaoTests3 {
 	}
 	
 	@Test
+	@Transactional("txManager2")
 	public void testUpdateSinger2() {
 		Singer2 singerOldSinger = singerDao2.findById(1);
 		log.info(">>> 김종서 수정 전 >>>");
@@ -229,6 +237,7 @@ public class SingerDaoTests3 {
 	}
 
 	@Test
+	@Transactional("txManager2")
 	public void testInsertSingerWithAlbum2() {
 		Singer2 singer = new Singer2();
 		singer.setFirstName("태원");

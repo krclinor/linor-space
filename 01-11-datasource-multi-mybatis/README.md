@@ -35,7 +35,7 @@ db:
 datasource.initialization-mode를 always로 하여 스키마 생성과 데이타 로드를 스크립트 파일로 처리하도록 한다.  
 동일 데이타베이스에 대하여 스키마를 달리한 2개의 데이타소스를 설정한다.  
 db.db1의 데이타소스는 singer스키마를 사용하고, db.db2의 데이타소스는 public스키마를 사용하도록 한다.  
-이 설정값들은 스프링이 알아서 사용할 수 없기 때문에 이 값들을 이용하여 데이타소스를 정의하는 설정 빈을 생성해야 한다.  
+이 설정값들은 스프링이 알아서 사용할 수 없기 때문에 이 값들을 이용하여 데이타소스를 설정하는 빈을 생성해야 한다.  
 
 ### 1번 데이타소스 및 Mybatis 설정
 소스 : [Datasource1Config.java](src/main/java/com/linor/singer/config/Datasource1Config.java) 
@@ -61,7 +61,7 @@ public class Datasource1Config {
     }
 ```
 @Bean으로 해당 메서드가 빈임을 선언한다. name값을 지정하지 않으면 메서드 명이 name값으로 선언된다.    
-@ConfigurationProperties("db.db1.datasource")로 application.yml에 등록한 db.db1.datasource하위 프로퍼티들을 가져오도록 한다. 
+@ConfigurationProperties("db.db1.datasource")로 application.yml에 등록한 db.db1.datasource하위 프로퍼티들을 가져온다. 
 @Primary는 동일타입의 빈이 여러게 있을 경우 기본으로 사용할 빈을 설정한다.  
 
 #### SqlSessionFactory 빈 설정
@@ -83,9 +83,8 @@ public class Datasource1Config {
     }
 ```
 @Bean으로 선언한 메서드의 파라미터는 해당 타입의 빈이 존재할 경우 스피링이 알아서 파라미터 값을 주입한다. 
-SessionFactory 빈 등록으로 빈의 명칭은 sqlSessionFactory1로 @Primary를 선언하여 디폴트 SessionFactory 빈으로 선언한다.  
-데이타 소스는 위에서 정의한 dataSource1을 주입한다. dataSource1이 @Primary로 선언되어 있으므로 @Qualifier("dataSource1")어노테이션을 
-사용하지 않더라고 dataSource1이 주입된다.  
+SessionFactory 빈의 명칭은 sqlSessionFactory1로 @Primary를 선언하여 디폴트 SessionFactory 빈으로 선언한다.  
+데이타 소스는 위에서 정의한 dataSource1을 주입한다. dataSource1이 @Primary로 선언하여 @Qualifier("dataSource1")어노테이션을 사용하지 않더라도 dataSource1이 주입된다.  
 
 SqlSessionFactory의 setDataSource()로 사용할 데이타소스를 설정한다.  
 setTypeAliasesPackage()를 설정하여 도메인사용시 패키지명을 사용하지 않고도 도메인을 지정할 수 있다.  
@@ -250,9 +249,37 @@ public interface SingerDao1 {
 Junit으로 SingerDaoTests를 실행한다.  
 1번 데이타소스용 테스트 [SingerDaoTests1.java](src/test/java/com/linor/singer/SingerDaoTests1.java)  
 2번 데이타소스용 테스트 [SingerDaoTests2.java](src/test/java/com/linor/singer/SingerDaoTests2.java)  
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@Transactional("txManager2")
+@Slf4j
+public class SingerDaoTests2 {
+```
+트랜잭션 메니저가 Primary로 txManager1으로 설정되어 있기 때문에 txManger2를 사용하기 위해 @Transactional에 등록해야 한다.  
 1,2번 둘 다 테스트 [SingerDaoTests3.java](src/test/java/com/linor/singer/SingerDaoTests3.java)  
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@Transactional
+@Slf4j
+public class SingerDaoTests3 {
+```
+2개의 데이타소스를 동시에 사용하는 경우에는 @Traunsactinal에 1개의 트랜잭션 메니저만 등록할 수 있다. 명시적으로 선언하지 않았으므로 txManager1을 사용한다.  
+```java
+	@Test
+	@Transactional(value = "txManager2", readOnly = true)
+	public void testFindAll2(){
+		List<Singer2> singers = singerDao2.findAll();
+		assertNotNull(singers);
+		assertTrue(singers.size() == 4);
+		log.info("가수목록");
+		listSingers2(singers);
+	}
+```
+txManager2트랜잭션 매니저를 사용하려면 메서드 레벨에서 @Transactional내에 선언하여 사용할 수 있다.  
+
 
 ## 정리
-데이타 소스 각각을 별개로 사용할 경우 트랜잭션에 문가 발생하지 않으나, 2개의 데이타소스를 동시에 사용하는 경우 Primary로 지정하지 않은 2번 데이타소스의 
-트랜잭션은 롤백되지 않는 단점이 있다.(SingerDaoTests3를 테스트하면 오류가 발생함)    
+데이타 소스 각각을 별개로 사용할 경우 트랜잭션에 문가 발생하지 않으나, 2개의 데이타소스를 동시에 사용하는 경우 Primary로 지정하지 않은 2번 데이타소스의 트랜잭션은 메서드 레벨에서 트랜잭션 매니저를 명시적으로 사요하여 해결 할 수 있니만 메서드 내에서 2개의 트랜잭션을 동시에 사용하는 경우에는 txManager2를 사용할 수 없다.     
 이를 해결하려면 JTA트랜잭션을 사용해야 한다.  
