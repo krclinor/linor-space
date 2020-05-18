@@ -6,22 +6,37 @@
 	select * from singer
 </select>
 
-<!-- findAllWithAllbums 첫 번째 방법 -->
-<!-- <resultMap type="Singer2" id="singerWithAlbumMap">
-	<collection property="albums" ofType="Album2"
-		column="id" select="selectAlbumsForSinger"/>
-</resultMap>
-<select id="findAllWithAlbums" resultMap="singerWithAlbumMap">
+<select id="findAllByNativeQuery" resultType="Singer2">
 	select * from singer
 </select>
-<select id="selectAlbumsForSinger" parameterType="int" resultType="Album2">
-	select *
-	from	album
-	where	singer_id = #{id}
+
+<select id="findByFirstName" parameterType="string" resultMap="singerWithAlbumMap2">
+	select s.id, s.first_name, s.last_name, s.birth_date,
+			a.id album_id, a.singer_id, a.title, a.release_date
+	from	singer s
+	left outer join album a on a.singer_id = s.id
+	<where>
+		<if test="firstName != null">
+		s.first_name = #{firstName}
+		</if>
+	</where>
 </select>
- -->
- 
-<!-- findAllWithAllbums 두 번째 방법 -->
+
+<select id="findByFirstNameAndLastName" resultMap="singerWithAlbumMap2">
+	select s.id, s.first_name, s.last_name, s.birth_date,
+			a.id album_id, a.singer_id, a.title, a.release_date
+	from	singer s
+	left outer join album a on a.singer_id = s.id
+	<where>
+		<if test="firstName != null">
+		s.first_name = #{firstName}
+		</if>
+		<if test="lastName != null">
+		and s.first_name = #{firstName}
+		</if>
+	</where>
+</select>
+
 <resultMap type="Singer2" id="singerWithAlbumMap2">
 	<id property="id" column="id"/>
 	<result property="firstName" column="first_name"/>
@@ -33,66 +48,67 @@
 		<result property="title" column="title"/>
 		<result property="releaseDate" column="release_date"/>
 	</collection>
+	<collection property="instruments" ofType="Instrument2">
+		<id property="id" column="instrument_id"/>
+	</collection>
 </resultMap>
 <select id="findAllWithAlbums" resultMap="singerWithAlbumMap2">
 	select s.id, s.first_name, s.last_name, s.birth_date,
-			a.id album_id, a.singer_id, a.title, a.release_date
+			a.id album_id, a.singer_id, a.title, a.release_date,
+			b.instrument_id
 	from	singer s
 	left outer join album a on a.singer_id = s.id
+	left outer join singer_instrument b on b.singer_id = s.id
 </select>
 
+<select id="findAlbumsBySinger" resultType="Album2">
+	select * from album where singer_id = #{id}
+</select>
+
+<resultMap id="albumWithSinger" type="Album2">
+	<id property="id" column="id"/>
+	<result property="singerId" column="singer_id"/>
+	<result property="title" column="title"/>
+	<result property="releaseDate" column="release_date"/>
+	<association property="singer" javaType="Singer2">
+		<id property="id" column="singer_id"/>
+		<result property="firstName" column="first_name"/>
+		<result property="lastName" column="last_name"/>
+		<result property="birthDate" column="birth_date"/>
+	</association>
+</resultMap>
+
+<select id="findAlbumsByTitle" resultMap="albumWithSinger">
+	select a.id, a.singer_id, a.title, a.release_date,
+			s.first_name, s.last_name, s.birth_date
+	from	album a
+	inner join singer s on s.id = a.id
+	where a.title like #{title}||'%'
+</select>
 
 <!-- findById 첫 번째 방법-->
-<select id="findById" parameterType="int" resultType="Singer2">
+<select id="findById" resultType="Singer2">
 	select * from singer where id = #{id}
 </select>
 
-<!-- findById 두 번째 방법-->
-<!-- <select id="findById" parameterType="int" resultMap="singerWithAlbumMap2">
-	select s.id, s.first_name, s.last_name, s.birth_date,
-			a.id album_id, a.singer_id, a.title, a.release_date
-	from	singer s
-	left outer join album a on a.singer_id = s.id
-	where	s.id = #{id}
-</select> -->
-
-<!-- findByFirstName 첫 번째 방법 -->
-<!-- <select id="findByFirstName" parameterType="string" resultMap="singerWithAlbumMap2">
-	select s.id, s.first_name, s.last_name, s.birth_date,
-			a.id album_id, a.singer_id, a.title, a.release_date
-	from	singer s
-	left outer join album a on a.singer_id = s.id
-	where	s.first_name = #{first_name}
-</select>
- --> 
-<!-- findByFirstName 두 번째 방법 -->
-<select id="findByFirstName" parameterType="string" resultMap="singerWithAlbumMap2">
-	select s.id, s.first_name, s.last_name, s.birth_date,
-			a.id album_id, a.singer_id, a.title, a.release_date
-	from	singer s
-	left outer join album a on a.singer_id = s.id
-	<where>
-		<if test="value != null">
-		s.first_name = #{first_name}
-		</if>
-	</where>
+<select id="findFirstNameById" resultType="string">
+	select first_name from singer where id = #{id}
 </select>
 
-
-<select id="findNameById" parameterType="int" resultType="string">
+<select id="findNameById" resultType="string">
 	select s.first_name ||' '|| s.last_name as name
 	from	singer s
 	where	s.id = #{id}
 </select>
 
-<insert id="insert" parameterType="Singer2"
+<insert id="insert"
 	useGeneratedKeys="true"
 	keyProperty="id">
 	insert into singer (first_name, last_name, birth_date)
 	values(#{firstName}, #{lastName}, #{birthDate})
 </insert>
 
-<update id="update" parameterType="Singer2">
+<update id="update">
 	update singer
 	set		first_name = #{firstName},
 			last_name = #{lastName},
@@ -100,22 +116,40 @@
 	where	id = #{id}
 </update>
 
-<update id="delete" parameterType="int">
+<update id="delete">
 	delete from singer
 	where	id = #{id}
 </update>
 
-<insert id="insertWithAlbum" parameterType="Singer2">
+<insert id="insertWithAlbum">
 	<selectKey keyProperty="id" resultType="int" order="BEFORE">
 		Select nextval(pg_get_serial_sequence('singer', 'id'))
 	</selectKey>
-		insert into singer(id, first_name, last_name, birth_date)
-		values(#{id}, #{firstName}, #{lastName}, #{birthDate});
-		<if test="albums != null">
-			<foreach collection="albums" item="album">
-				insert into album (singer_id, title, release_date)
-				values (#{id}, #{album.title}, #{album.releaseDate});
-			</foreach>
-		</if>
+	insert into singer(id, first_name, last_name, birth_date)
+	values(#{id}, #{firstName}, #{lastName}, #{birthDate});
+	<if test="albums != null">
+		<foreach collection="albums" item="album">
+			insert into album (singer_id, title, release_date)
+			values (#{id}, #{album.title}, #{album.releaseDate});
+		</foreach>
+	</if>
+	<if test="instruments != null">
+		<foreach collection="instruments" item="instrument">
+			insert into singer_instrument(singer_id, instrument_id)
+			values (#{id},#{instrument.id});
+		</foreach>
+	</if>
 </insert>
+
+<insert id="insertInstrument">
+	insert into instrument (instrument_id)
+	values (#{id});
+</insert>
+
+<select id="listAllSingersSummary" resultType="SingerSummary2">
+	select s.id, s.first_name, s.last_name, a.title last_album
+	from	singer s
+	left outer join album a on a.singer_id = s.id
+	where a.release_date = (select max(a2.release_date) from album a2 where a2.singer_id = s.id)
+</select>
 </mapper>
