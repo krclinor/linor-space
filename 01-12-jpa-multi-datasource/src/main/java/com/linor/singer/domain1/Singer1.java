@@ -1,7 +1,8 @@
 package com.linor.singer.domain1;
-import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -21,27 +22,37 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Singular;
 
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(name = "singer1_uq_01", columnNames = {"firstName", "lastName"})})
+@Table(name="singer", uniqueConstraints = {@UniqueConstraint(name = "singer_uq_01", columnNames = {"firstName", "lastName"})})
 @NamedQueries({
-	@NamedQuery(name="Singer1.findById",
-			query="select distinct s from Singer1 s " +
-			"left join fetch s.albums a " +
-			"left join fetch s.instruments i " +
-			"where s.id = :id"),
-	@NamedQuery(name="Singer1.findAllWithAlbum",
+	@NamedQuery(name="Singer.findById",
+			query="select distinct s from Singer1 s "
+					+ "left join fetch s.albums a "
+					+ "left join fetch s.instruments i "
+					+ "where s.id = :id"),
+	@NamedQuery(name="Singer.findAllWithAlbum",
 			query="select distinct s from Singer1 s \n"
 					+ "left join fetch s.albums a \n"
 					+ "left join fetch s.instruments i"),
-	@NamedQuery(name="Singer1.findByFirstName",
-	query="select distinct s from Singer1 s \n"
-			+ "where s.firstName = :firstName")
+	@NamedQuery(name="Singer.findByFirstName",
+			query="select distinct s from Singer1 s \n"
+					+ "where s.firstName = :firstName"),
+	@NamedQuery(name="Singer.findByFirstNameAndLastName",
+			query="select distinct s from Singer1 s \n"
+					+ "where s.firstName = :firstName\n"
+					+ "and s.lastName = :lastName")
 })
 @Data
-public class Singer1 implements Serializable{
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Singer1{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -56,36 +67,20 @@ public class Singer1 implements Serializable{
 	//@Column(name="birth_date")
 	private LocalDate birthDate;
 	
-	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true)
+	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL)
 	//@ToString.Exclude
 	//@EqualsAndHashCode.Exclude
-	@Singular
-	private Set<Album1> albums = new HashSet<>();
+	private Set<Album1> albums;
 
 	@ManyToMany
-	@JoinTable(name="singer1_instrument1", 
-		joinColumns=@JoinColumn(name="singer_id",foreignKey = @ForeignKey(name="fk_singer1_instrument1_fk_01")),
-		inverseJoinColumns=@JoinColumn(name="instrument_id",foreignKey = @ForeignKey(name="fk_singer1_instrument1_fk_02")))
+	@JoinTable(name="singer_instrument", 
+		joinColumns=@JoinColumn(name="singer_id",foreignKey = @ForeignKey(name="fk_singer_instrument_fk_01")),
+		inverseJoinColumns=@JoinColumn(name="instrument_id",foreignKey = @ForeignKey(name="fk_singer_instrument_fk_02")))
 	//@ToString.Exclude
 	//@EqualsAndHashCode.Exclude
-	@Singular
-	private Set<Instrument1> instruments = new HashSet<>();
+	private Set<Instrument1> instruments;
 	
 	@Version
 	private int version;
 	
-	public boolean addAlbum(Album1 album) {
-		album.setSinger(this);
-		return getAlbums().add(album);
-	}
-	public void removeAlbum(Album1 album) {
-		getAlbums().remove(album);
-	}
-
-	public boolean addInstrument(Instrument1 instrument) {
-		return getInstruments().add(instrument);
-	}
-	public void removeInstrument(Instrument1 instrument) {
-		getInstruments().remove(instrument);
-	}
 }
