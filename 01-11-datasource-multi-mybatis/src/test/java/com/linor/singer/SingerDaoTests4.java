@@ -39,7 +39,7 @@ public class SingerDaoTests4 {
 	private SingerDao2 singerDao2;
 
 	@Test
-	public void testFindAll1(){
+	public void testFindAll(){
 		log.info("testFindAll1---->>");
 		List<Singer1> singers1 = singerDao1.findAll();
 		assertNotNull(singers1);
@@ -68,7 +68,7 @@ public class SingerDaoTests4 {
 	}
 
 	@Test
-	public void testFindAllByNativeQuery1() {
+	public void testFindAllByNativeQuery() {
 		log.info("testFindAllByNativeQuery1---->>");
 		List<Singer1> singers1 = singerDao1.findAllByNativeQuery();
 		log.info("네이티브 쿼리 실행 결과");
@@ -87,7 +87,7 @@ public class SingerDaoTests4 {
 	}
 
 	@Test
-	public void testFindAllWidthAlbums1() {
+	public void testFindAllWidthAlbums() {
 		log.info("testFindAllWidthAlbums1---->>");
 		List<Singer1> singers1 = singerDao1.findAllWithAlbums();
 		assertTrue(singers1.size() == 4);
@@ -104,7 +104,7 @@ public class SingerDaoTests4 {
 	}
 
 	@Test
-	public void testFindbyId1() {
+	public void testFindbyId() {
 		log.info("testFindbyId1---->>");
 		Singer1 singer1 = singerDao1.findById(1);
 		log.info(singer1.toString());
@@ -117,7 +117,7 @@ public class SingerDaoTests4 {
 	}
 
 	@Test
-	public void testFindByFirstName1() {
+	public void testFindByFirstName() {
 		log.info("testFindByFirstName1---->>");
 		List<Singer1> singers1 = singerDao1.findByFirstName("종서");
 		listSingers1(singers1);
@@ -130,7 +130,7 @@ public class SingerDaoTests4 {
 	}
 
 	@Test
-	public void testFindByFirstNameAndLastName1() {
+	public void testFindByFirstNameAndLastName() {
 		log.info("findByFirstNameAndLastName1---->>");
 		Singer1 singer1 = new Singer1();
 		singer1.setFirstName("종서");
@@ -153,7 +153,7 @@ public class SingerDaoTests4 {
 	}
 
 	@Test
-	public void testFindByTitle1() {
+	public void testFindByTitle() {
 		log.info("testFindByTitle1---->>");
 		List<Album1> albums1 = singerDao1.findAlbumsByTitle("황혼의");
 		assertTrue(albums1.size() > 0);
@@ -168,7 +168,7 @@ public class SingerDaoTests4 {
 	}
 	
 	@Test
-	public void testInsertSinger1() {
+	public void testInsertSinger() {
 		log.info("testInsertSinger1---->>");
 		List<Singer1> oldSingers1 = singerDao1.findAllWithAlbums();
 		log.info(">>> 김조한 추가전");
@@ -203,7 +203,7 @@ public class SingerDaoTests4 {
 	}
 
 	@Test
-	public void testUpdateSinger1() {
+	public void testUpdateSinger() {
 		log.info("testUpdateSinger1---->>");
 		Singer1 singerOldSinger1 = singerDao1.findById(1);
 		log.info(">>> 김종서 수정 전 >>>");
@@ -238,7 +238,7 @@ public class SingerDaoTests4 {
 	}
 
 	@Test
-	public void testDeleteSinger1() {
+	public void testDeleteSinger() {
 		log.info("testDeleteSinger1---->>");
 		List<Singer1> oldSingers1 = singerDao1.findAllWithAlbums();
 		singerDao1.delete(3);
@@ -257,7 +257,7 @@ public class SingerDaoTests4 {
 	}
 	
 	@Test
-	public void testInsertSingerWithAlbum1() {
+	public void testInsertSingerWithAlbum() {
 		log.info("testInsertSingerWithAlbum1---->>");
 		List<Singer1> oldSingers1 = singerDao1.findAllWithAlbums();
 		Singer1 singer1 = Singer1.builder()
@@ -318,7 +318,7 @@ public class SingerDaoTests4 {
 	}
 
 	@Test
-	public void testListSingersSummary1() {
+	public void testListSingersSummary() {
 		log.info("testListSingersSummary1---->>");
 		List<SingerSummary1> singers1 = singerDao1.listAllSingersSummary();
 		listSingerSummary1(singers1);
