@@ -1,8 +1,5 @@
 spring.profiles.active: dev
-
-spring:
-  jta:
-    enabled: true
+spring.jta.enabled: true
     
 #Multi DataSource 설정
 db:

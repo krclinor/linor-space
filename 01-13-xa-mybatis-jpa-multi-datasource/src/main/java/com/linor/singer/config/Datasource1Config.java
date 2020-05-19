@@ -48,8 +48,8 @@ public class Datasource1Config {
     @Bean
     public DataSourceInitializer dataSourceInitializer1(@Qualifier("dataSource1") DataSource datasource) {
         ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
-        resourceDatabasePopulator.addScript(new ClassPathResource("schema-post1.sql"));
-        resourceDatabasePopulator.addScript(new ClassPathResource("data-post1.sql"));
+        resourceDatabasePopulator.addScript(new ClassPathResource("schema.sql"));
+        resourceDatabasePopulator.addScript(new ClassPathResource("data.sql"));
 
         DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
         dataSourceInitializer.setDataSource(datasource);

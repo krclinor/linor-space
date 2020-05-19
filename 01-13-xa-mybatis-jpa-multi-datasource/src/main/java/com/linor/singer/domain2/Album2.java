@@ -1,6 +1,5 @@
 package com.linor.singer.domain2;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -11,18 +10,34 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"singer_id", "title"})})
+@Table(name="album", uniqueConstraints = {@UniqueConstraint(name = "album_uq_01", columnNames = {"singer_id", "title"})})
+@NamedQueries({
+	@NamedQuery(name="Album.findAlbumsBySinger",
+			query="select a from Album2 a "
+					+ "where a.singer.id = :singer_id"),
+	@NamedQuery(name="Album.findByTitle",
+			query="select a from Album2 a "
+					+ "where a.title like :title||'%'")
+})
 @Data
-public class Album2 implements Serializable{
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Album2{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -34,7 +49,7 @@ public class Album2 implements Serializable{
 	private LocalDate releaseDate;
 
 	@ManyToOne
-	@JoinColumn(name = "singer_id", foreignKey = @ForeignKey(name="album2_fk_01"))
+	@JoinColumn(name = "singer_id", foreignKey = @ForeignKey(name="album_fk_01"))
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	private Singer2 singer;
