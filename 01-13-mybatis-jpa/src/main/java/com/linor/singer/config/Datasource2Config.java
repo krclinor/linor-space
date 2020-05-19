@@ -6,33 +6,33 @@ import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import org.hibernate.dialect.PostgreSQL10Dialect;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
-
-import com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-//@EnableTransactionManagement
+@EnableTransactionManagement
 //@EnableJpaRepositories(
 //		entityManagerFactoryRef = "entityManagerFactory2",
-//		transactionManagerRef = "transactionManager2",
-//		basePackages = {"com.linor.singer.db2.repository"})
+//		transactionManagerRef = "txManager2",
+//		basePackages = {"com.linor.singer.jpa2"})
 public class Datasource2Config {
-	@Bean(name = "dataSource2")
+
 	@ConfigurationProperties("db.db2.datasource")
+	@Bean
 	public DataSource dataSource2() {
 		return DataSourceBuilder.create().build();
 	}
 	
-	@Bean(name = "entityManagerFactory2")
+	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory2(
 			EntityManagerFactoryBuilder builder,
 			@Qualifier("dataSource2") DataSource dataSource) {
@@ -50,17 +50,26 @@ public class Datasource2Config {
 	private Map<String, ?> hibernateProperties() {
 		
 		Map<String, Object> hibernateProp = new HashMap<>();
-		hibernateProp.put("hibernate.dialect", PostgreSQL10Dialect.class.getName());
+//		hibernateProp.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+//		hibernateProp.put("hibernate.hbm2ddl.auto", "create");
+//		hibernateProp.put("hibernate.format_sql", "false");
+//		hibernateProp.put("hibernate.use_sql_comments", "false");
+//		hibernateProp.put("hibernate.show_sql", "false");
+//		hibernateProp.put("hibernate.physical_naming_strategy", "com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy");
+
+		hibernateProp.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
 		hibernateProp.put("hibernate.hbm2ddl.auto", "create");
 		hibernateProp.put("hibernate.format_sql", "false");
 		hibernateProp.put("hibernate.use_sql_comments", "false");
 		hibernateProp.put("hibernate.show_sql", "true");
-		hibernateProp.put("hibernate.physical_naming_strategy", CamelCaseToSnakeCaseNamingStrategy.class.getName());
+		hibernateProp.put("hibernate.physical_naming_strategy", "com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy");
+//		hibernateProp.put("hibernate.jdbc.lob.non_contextual_creation", "true");
+//		hibernateProp.put("hibernate.enable_lazy_load_no_trans", "true");
 		return hibernateProp;
 	}
 
-	@Bean(name = "transactionManager2")
-	public PlatformTransactionManager transactionManager2(
+	@Bean
+	public PlatformTransactionManager txManager2(
 			@Qualifier("entityManagerFactory2") EntityManagerFactory entityManagerFactory) {
 		return new JpaTransactionManager(entityManagerFactory);
 	}

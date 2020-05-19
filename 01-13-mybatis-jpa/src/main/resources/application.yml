@@ -1,21 +1,19 @@
 spring.profiles.active: dev
 
-spring:
-  datasource:
-    initialization-mode: always
+spring.datasource.initialization-mode: always
 
 #Multi DataSource 설정
 db:
   db1: 
     datasource:
       driverClassName: org.postgresql.Driver
-      jdbcUrl: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+      jdbcUrl: jdbc:postgresql://postgres:5432/spring?currentSchema=singer
       username: linor
       password: linor1234
       
   db2: 
     datasource:
       driverClassName: org.postgresql.Driver
-      jdbcUrl: jdbc:postgresql://localhost:5432/spring?currentSchema=public
+      jdbcUrl: jdbc:postgresql://postgres:5432/spring?currentSchema=public
       username: linor
       password: linor1234

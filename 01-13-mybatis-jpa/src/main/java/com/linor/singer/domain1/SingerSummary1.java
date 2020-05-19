@@ -1,11 +1,15 @@
-package com.linor.singer.domain2;
+package com.linor.singer.domain1;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
-public class SingerSummary2{
+@NoArgsConstructor
+public class SingerSummary1{
 	private String firstName;
 	private String lastName;
 	private String lastAlbum;

@@ -5,21 +5,21 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.linor.singer.dao2.SingerDao2;
+import com.linor.singer.domain2.Album2;
 import com.linor.singer.domain2.Instrument2;
 import com.linor.singer.domain2.Singer2;
 import com.linor.singer.domain2.SingerSummary2;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Transactional("transactionManager2")
+@Transactional(value = "txManager2", rollbackFor = Exception.class)
 @Repository
 @Slf4j
-public class SingerDao2Impl implements SingerDao2 {
+public class SingerDaoImpl2 implements SingerDao2 {
 	
 	@PersistenceContext(unitName = "db2")
 	private EntityManager entityManager;
@@ -31,7 +31,7 @@ public class SingerDao2Impl implements SingerDao2 {
 	}
 
 	private static final String ALL_SINGER_NATIVE_SQL =
-			"select id, first_name, last_name, birth_date, version from singer2";
+			"select id, first_name, last_name, birth_date, version from singer";
 	@Override
 	public List<Singer2> findAllByNativeQuery() {
 		return entityManager.createNativeQuery(ALL_SINGER_NATIVE_SQL, Singer2.class)
@@ -40,7 +40,7 @@ public class SingerDao2Impl implements SingerDao2 {
 
 	@Override
 	public List<Singer2> findByFirstName(String firstName) {
-		return entityManager.createNamedQuery("Singer2.findByFirstName", Singer2.class)
+		return entityManager.createNamedQuery("Singer.findByFirstName", Singer2.class)
 				.setParameter("firstName", firstName)
 				.getResultList();
 	}
@@ -53,7 +53,7 @@ public class SingerDao2Impl implements SingerDao2 {
 
 	@Override
 	public Singer2 findById(Integer id) {
-		return entityManager.createNamedQuery("Singer2.findById",Singer2.class).
+		return entityManager.createNamedQuery("Singer.findById",Singer2.class).
 				setParameter("id", id).getSingleResult();
 	}
 
@@ -87,7 +87,7 @@ public class SingerDao2Impl implements SingerDao2 {
 
 	@Override
 	public void delete(Integer singerId) {
-		Singer2 singer = entityManager.createNamedQuery("Singer2.findById",Singer2.class).
+		Singer2 singer = entityManager.createNamedQuery("Singer.findById",Singer2.class).
 				setParameter("id", singerId).getSingleResult();
 		if(singer != null) {
 			entityManager.remove(singer);
@@ -97,7 +97,7 @@ public class SingerDao2Impl implements SingerDao2 {
 	@Override
 	@Transactional(readOnly=true)
 	public List<Singer2> findAllWithAlbums() {
-		return entityManager.createNamedQuery("Singer2.findAllWithAlbum",Singer2.class).getResultList();
+		return entityManager.createNamedQuery("Singer.findAllWithAlbum",Singer2.class).getResultList();
 	}
 
 	@Override
@@ -106,8 +106,31 @@ public class SingerDao2Impl implements SingerDao2 {
 	}
 
 	@Override
-	public void insert(Instrument2 instrument) {
+	public void insertInstrument(Instrument2 instrument) {
 		entityManager.persist(instrument);
 	}
 
+	@Override
+	public List<Singer2> findByFirstNameAndLastName(Singer2 singer) {
+		return entityManager.createNamedQuery("Singer.findByFirstNameAndLastName",Singer2.class)
+				.setParameter("firstName", singer.getFirstName())
+				.setParameter("lastName", singer.getLastName())
+				.getResultList();
+	}
+
+	@Override
+	public List<Album2> findAlbumsBySinger(Singer2 singer) {
+		return entityManager.createNamedQuery("Album.findAlbumsBySinger", Album2.class)
+				.setParameter("singer_id", singer.getId())
+				.getResultList();
+	}
+
+	@Override
+	public List<Album2> findAlbumsByTitle(String title) {
+		return entityManager.createNamedQuery("Album.findByTitle", Album2.class)
+				.setParameter("title", title)
+				.getResultList();
+	}
+
+	
 }
