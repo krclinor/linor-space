@@ -20,7 +20,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.webjars.bower</groupId>
+			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
 			<version>4.5.0</version>
 		</dependency>
