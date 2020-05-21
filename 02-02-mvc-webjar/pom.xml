@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.linor</groupId>
-	<artifactId>11-mvc-webjar</artifactId>
+	<artifactId>mvc-webjar</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>11-mvc-webjar</name>
+	<name>mvc-webjar</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -29,19 +29,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.webjars.bower</groupId>
+			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
 			<version>4.5.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars.bower</groupId>
-			<artifactId>jquery</artifactId>
-			<version>3.5.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars.bower</groupId>
-			<artifactId>popper.js</artifactId>
-			<version>1.16.0</version>
 		</dependency>
 	</dependencies>
 	<build>

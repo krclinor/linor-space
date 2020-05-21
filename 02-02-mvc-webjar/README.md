@@ -19,23 +19,13 @@ Webjar는 프론트엔드에서 사용하는 Jquery 자바스크립트 라이브
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.webjars.bower</groupId>
+			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
 			<version>4.5.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.webjars.bower</groupId>
-			<artifactId>jquery</artifactId>
-			<version>3.5.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars.bower</groupId>
-			<artifactId>popper.js</artifactId>
-			<version>1.16.0</version>
-		</dependency>
 	</dependencies>
 ```
-많이 사용하는 bootstrap CSS프레임워크와, jquery 자바스크립트 라이브러리, popper.js자바스크립트 라이브러리를 추가한다.  
+많이 사용하는 bootstrap CSS프레임워크를 추가한다. org.webjars에서 제공하는 bootstrap을 추가하면 알아서 bootstrap에서 필요로하는 jquery, popper.js를 같이 임포트한다.  
 
 Maven Dependency의 bootstrap-4.5.0.jar파일을 열면 다음과 같은 구조로 되어 있다.
 ![](images/image01.png)  
