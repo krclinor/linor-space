@@ -21,12 +21,12 @@ Webjar는 프론트엔드에서 사용하는 Jquery 자바스크립트 라이브
 		<dependency>
 			<groupId>org.webjars.bower</groupId>
 			<artifactId>bootstrap</artifactId>
-			<version>4.3.1</version>
+			<version>4.5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars.bower</groupId>
 			<artifactId>jquery</artifactId>
-			<version>3.4.1</version>
+			<version>3.5.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars.bower</groupId>
@@ -35,63 +35,27 @@ Webjar는 프론트엔드에서 사용하는 Jquery 자바스크립트 라이브
 		</dependency>
 	</dependencies>
 ```
-많이 사용하는 bootstrap CSS프레임워크와, jquery 자바스크립트 라이브러리, popper.js자바스크립트 라이브러리를 webjar로 추가한다.
+많이 사용하는 bootstrap CSS프레임워크와, jquery 자바스크립트 라이브러리, popper.js자바스크립트 라이브러리를 추가한다.  
 
-![부트스트랩 이미지](images/bootstrap.png)  
-Maven Dependency의 bootstrap-4.3.1.jar파일을 열면 위와 같은 구조로 되어 있다.
-
+Maven Dependency의 bootstrap-4.5.0.jar파일을 열면 다음과 같은 구조로 되어 있다.
+![](images/image01.png)  
 
 ## html에서 webjar 사용
 소스 : index.html(src/main/resources/public/index.html)
 ```html
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<title>홈화면</title>
-	<link rel="stylesheet" href="/webjars/bootstrap/4.3.1/dist/css/bootstrap.css"/>
+	<link rel="stylesheet" href="/webjars/bootstrap/4.5.0/dist/css/bootstrap.css"/>
 	<link rel="sytlesheet" href="/css/styles.css"/>	
-	<script src="/webjars/jquery/3.4.1/dist/jquery.slim.min.js"></script>
+	<script src="/webjars/jquery/3.5.1/dist/jquery.slim.min.js"></script>
 	<script src="/webjars/popper.js/1.16.0/dist/umd/popper.min.js"></script>
-	<script src="/webjars/bootstrap/4.3.1/dist/js/bootstrap.min.js"></script>
-</head>
-<body>
-	<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
-		<a href="#" class="navbar-brand">프로젝트 명</a>
-		<button class="navbar-toggler" 
-				type="button" 
-				data-toggle="collapse" 
-				data-target="#navbarNav" 
-				aria-controls="navbarNav" 
-				aria-expanded="false" 
-				aria-label="Toggle navigation">
-    		<span class="navbar-toggler-icon"></span>
-  		</button>
-		<div id="navbarNav" class="collapse navbar-collapse">
-			<ul class="navbar-nav">
-				<li class="nav-item active">
-					<a href="#" class="nav-link">홈</a>
-				</li>
-				<li class="nav-item">
-					<a href="#about" class="nav-link">소개</a>
-				</li>
-				<li class="nav-item">
-					<a href="#contact" class="nav-link">연락처</a>
-				</li>
-				<li class="nav-item">
-					<a href="/hello.html" class="nav-link">페이지 이동</a>
-				</li>
-			</ul>
-		</div>
-	</nav>
-	<div class="container mt-2">
-		<h2>환영합니다!!</h2>
-		<img src="/images/spring-boot.jpeg" alt="스프링 부트">
-	</div>
-</body>
-</html>
+	<script src="/webjars/bootstrap/4.5.0/dist/js/bootstrap.min.js"></script>
 ```
+js나 css파일의 위치는 jar파일을 열었을 때  /META-INF/resources/의 하위 디렉토리부터 표시한다.  
+
 ## 결과 테스트
 브라우저에서 다음 주소를 호출한다.  
-http://localhost:8080
- 
+http://localhost:8080  
+![](images/image02.png)  
+"페이지 이동" 메뉴늘 클릭한다.  
+
+![](images/image03.png)  
+bootstrap이 적용된 각종 버튼들을 확인할 수 있다.  
