@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>org.webjars.bower</groupId>
 			<artifactId>bootstrap</artifactId>
-			<version>4.3.1</version>
+			<version>4.5.0</version>
 		</dependency>
 	</dependencies>
 ```
@@ -32,11 +32,11 @@ bootstrap은 다음 프로젝트에서 설명할 webjar 패키지이다.
 소스 : [application.yml](src/main/resources/application.yml)  
 ```yml
 server:
-  port: 8080
+  port: 8888
   servlet:
     context-path: /
 ```
-사용할 서버의 포트를 8080으로 설정하였다.  
+사용할 서버의 포트를 8888으로 설정하였다.  
 컨텍스트 패스는 /로 설정하였다.
 
 ## 정적 페이지 구현
@@ -49,7 +49,7 @@ server:
 <head>
 	<meta charset="UTF-8">
 	<title>홈화면</title>
-	<link rel="stylesheet" href="/webjars/bootstrap/4.3.1/dist/css/bootstrap.css"/>
+	<link rel="stylesheet" href="/webjars/bootstrap/4.5.0/dist/css/bootstrap.css"/>
 	<link rel="sytlesheet" href="/css/styles.css"/>	
 </head>
 <body>
@@ -83,7 +83,7 @@ server:
 </body>
 </html>
 ```
-위 파일의 URL은 http://localhost:8080/ 또는 http://localhost:8080/index.html이다.
+위 파일의 URL은 http://localhost:8888/ 또는 http://localhost:8888/index.html이다.
  
 ### Cascading StyleSheet 구현
 보통 css는 /src/main/resources/static/css에 구현한다.  
@@ -95,12 +95,12 @@ body {
 	padding-top: 50px;
 }
 ```
-위에 만든 css파일의 URL은 http://localhost:8080/css/style.css가 된다.
+위에 만든 css파일의 URL은 http://localhost:8888/css/style.css가 된다.
 
 ### 이미지 파일 위치
 보통 이미지 파일은 /src/main/resources/static/images 하위폴더에 위치시킨다.
 
 ## 결과 테스트
 브라우저에서 다음 주소를 호출한다.  
-https://localhost:8080
+https://localhost:8888
  
