@@ -46,7 +46,7 @@ Spring initializer로 생성시 기본 dependency는 Web, DevTools, Lombok를 �
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
-			<version>4.3.1</version>
+			<version>4.5.0</version>
 		</dependency>
 	</dependencies>
 ```
@@ -105,7 +105,7 @@ yml설정파일에 있는 welcom.message값을 담을 message 인스턴스 변�
 루트 URL호출시 welcom메서드가 실행되도록 @RequestMapping("/")를 지정한다.
 welcom메서드에서 "welcome"를 리턴하면 스프링은 yml설정의 prefix와 suffix를 조합하여 /WEB-INF/jsp/welcome.jsp파일을 호출한다.  
 
-### 뷰 JSP(
+### 뷰 JSP
 소스 [welcome.jsp](src/main/webapp/WEB-INF/jsp/welcom.jsp)
 ```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -116,12 +116,12 @@ welcom메서드에서 "welcome"를 리턴하면 스프링은 yml설정의 prefix
 <head>
 <meta charset="UTF-8">
 <title>환영합니다!!</title>
-	<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/4.5.0/css/bootstrap.min.css"/>
 	<c:url value="/css/main.css" var="jstlCss" />
 	<link href="${jstlCss}" rel="stylesheet"/> 
-	<script src="/webjars/jquery/3.0.0/jquery.min.js"></script>
-	<script src="/webjars/popper.js/1.14.3/umd/popper.min.js"></script>
-	<script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+	<script src="/webjars/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="/webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
