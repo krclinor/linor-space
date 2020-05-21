@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>org.webjars.bower</groupId>
 			<artifactId>bootstrap</artifactId>
-			<version>4.3.1</version>
+			<version>4.5.0</version>
 		</dependency>
 	</dependencies>
 ```
@@ -30,10 +30,8 @@
 ```bash
 keytool -genkey -alias linor-ssl -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
 ```
-- -alias linor-ssl  
- key alias를 linor-ssl로 지정  
-- -keystore keystore.p12  
- key store이름을 keystore.p12로 지정  
+- -alias linor-ssl : key alias를 linor-ssl로 지정  
+- -keystore keystore.p12 : key store이름을 keystore.p12로 지정  
 
 생성된 keystore.p12파일은 /src/main/resources폴더에 저장한다.
 
