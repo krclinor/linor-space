@@ -8,46 +8,7 @@
 validation-api를 이용하여 유효성 체크를 하는데, 이 라이브러리는 spring-boot-starter-web에 포함되어 있다.
 
 소스 : [pom.xml](pom.xml)
-```xml
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
- 		<!-- JSTL for JSP -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-		</dependency>
-		<!-- Need this to compile JSP -->
-		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-jasper</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- Optional for static content. bootstrap CSS -->
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>bootstrap</artifactId>
-			<version>4.3.1</version>
-		</dependency>
-	</dependencies>
-```
+의존성 라이브러리는 mvc-form프로젝트와 동일하다.  
 
 ## 설정
 ### 어플리케이션 설정
@@ -66,8 +27,8 @@ spring:
 ```
 사용포트는 설정하지 않으면 디폴트가 8080포트를 사용한다.  
 jsp파일의 위치를 설정하기 위해 sprint.mvc.view.prefix와 suffix를 설정한다.
-spring.messages는 메시지를 설정하기 위해 사용한다.  
--  basename : 프로퍼티파일명을 설정한다. messages.properties파일로 설정하기 위해 messages로 입력함.
+spring.messages는 메시지 Properties파일을 설정하기 위해 사용한다.  
+-  basename : Properties파일명을 설정한다. messages.properties파일로 설정하기 위해 messages로 입력함.
 -  cache-duraton : -1로 입력하면 시작시 메모리에 올려서 서버가 죽을 때까지 사용한다.
 
 ### 메시지 프로퍼티파일 설정
@@ -134,19 +95,21 @@ public class User {
 }
 ```
 유효성 체크를 위해 Validation어노테이션들을 추가한다.  
--  @Size(min = 2, max = 10, message = "{error.name}") : 최소 2문자, 최해 10문자로 제한하고 체크에서 벝어 나는 경우 messsages.properties파일의 error.name메시지를 메시지로 제공한다.  
+-  @Size(min = 2, max = 10, message = "{error.name}") : 최소 2문자, 최해 10문자로 제한하고 체크에서 벗어 나는 경우 messsages.properties파일의 error.name메시지를 메시지로 제공한다.  
 -  @NotEmpty(message = "{error.lastName}") : 필수 입력 설정으로 값이 없을 경우 error.lastName메시지를 제공한다.
 -  @Email(message = "{error.email}") : 데이타가 이메일 패턴에 맞는지 체크한다.
 -  @Pattern(regexp = "^[a-zA-Z]\\w{3,14}$") : 정규 표현식에 맞는지 체크
 -  @Past : 날짜관련 타입이 과거인지 체크
 -  @Min(value = 100) : 최소값이 설정된 값 이상인지 체크
-
 ### 컨트롤러 생성
 소스 :[UserController.java](src/main/java/com/linor/singer/controller/UserController.java)  
 
 ```java
 @Controller
 public class UserController {
+	@Autowired
+	private UserValidator userValidator;
+	
 	private static final String[] countries =
 		{"대한민국", "터어키", "미국", "일본"};
 	
@@ -160,6 +123,7 @@ public class UserController {
 	
 	@RequestMapping(value = "/result")
 	public String processUser(@Valid User user, BindingResult result, Model model) {
+		
 		if(result.hasErrors()) {
 			model.addAttribute("user", user);
 			model.addAttribute("genders", Gender.values());
