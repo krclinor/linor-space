@@ -46,7 +46,7 @@ Spring initializer로 생성시 기본 dependency는 Web, DevTools, Lombok를 �
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
-			<version>4.3.1</version>
+			<version>4.5.0</version>
 		</dependency>
 	</dependencies>
 ```
@@ -188,9 +188,6 @@ JSP뷰 파일인 /WEB-INF/js/userForm.jsp를 호출한다.
 <head>
 <meta charset="UTF-8">
 <title>MVC 폼처리 예제</title>
-<style type="text/css">
-	.formFieldError {background-color: #ffffcc;}
-</style>
 </head>
 <body>
 <h2>사용자 등록 폼</h2>
@@ -198,52 +195,48 @@ JSP뷰 파일인 /WEB-INF/js/userForm.jsp를 호출한다.
 	<table>
 		<tr>
 			<td><form:label path="lastName">성</form:label></td>
-			<td><form:input path="lastName" cssErrorClass="formFieldError"/></td>
-			<td><form:errors path="lastName"/></td>
+			<td><form:input path="lastName"/></td>
 		</tr>
 		<tr>
 			<td><form:label path="name">이름</form:label></td>
-			<td><form:input path="name" cssErrorClass="formFieldError"/></td>
-			<td><form:errors path="name"/></td>
+			<td><form:input path="name"/></td>
 		</tr>
 		<tr>
 			<td><form:label path="email">이메일</form:label></td>
 			<td><form:input path="email"/></td>
-			<td><form:errors path="email"/></td>
 		</tr>
 		<tr>
 			<td><form:label path="password">비밀번호</form:label></td>
-			<td><form:password path="password" cssErrorClass="formFieldError"/></td>
-			<td><form:errors path="password"/></td>
+			<td><form:password path="password"/></td>
 		</tr>
 		<tr>
 			<td><form:label path="detail">소개</form:label></td>
-			<td colspan="2"><form:textarea path="detail"/></td>
+			<td><form:textarea path="detail"/></td>
 		</tr>
 		<tr>
 			<td><form:label path="birthDate">생일</form:label></td>
-			<td><form:input path="birthDate" cssErrorClass="formFieldError"/></td>
-			<td><form:errors path="birthDate"/></td>
+			<td><form:input path="birthDate"/></td>
 		</tr>
 		<tr>
 			<td><form:label path="gender">성별</form:label></td>
-			<td colspan="2"><form:select path="gender" items="${genders}"/></td>
+			<td>
+				<form:radiobuttons path="gender" items="${genders}" itemValue="key" itemLabel="value"/>
+			 </td>
 		</tr>
 		<tr>
 			<td><form:label path="country">국가</form:label></td>
-			<td colspan="2"><form:select path="country" items="${countries}"/></td>
+			<td><form:select path="country" items="${countries}"/></td>
 		</tr>
 		<tr>
 			<td><form:label path="nonSmoking">금연여부</form:label></td>
-			<td colspan="2"><form:checkbox path="nonSmoking"/></td>
+			<td><form:checkbox path="nonSmoking"/></td>
 		</tr>
 		<tr>
 			<td><form:label path="salary">월급여</form:label></td>
 			<td><form:input path="salary"/></td>
-			<td><form:errors path="salary"/></td>
 		</tr>
 		<tr>
-			<td colspan="3"><input type="submit" value="전송"/>
+			<td colspan="2"><input type="submit" value="전송"/>
 		</tr>
 	</table>
 </form:form>	
@@ -254,7 +247,85 @@ JSP뷰 파일인 /WEB-INF/js/userForm.jsp를 호출한다.
 ```jsp
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 ```
-스프링에서 제공하는 form태그라이브러리를 사용하기 위해 선언한다.
+스프링에서 제공하는 form태그라이브러리를 사용하기 위해 선언한다.   
+
+브라우저로 전송되는 HTML은 다음과 같다.
+```html
+<html><head>
+<meta charset="UTF-8">
+<title>MVC 폼처리 예제</title>
+</head>
+<body>
+<h2>사용자 등록 폼</h2>
+<form id="user" action="result" method="post">
+	<table>
+		<tbody><tr>
+			<td><label for="lastName">성</label></td>
+			<td><input id="lastName" name="lastName" type="text" value=""></td>
+		</tr>
+		<tr>
+			<td><label for="name">이름</label></td>
+			<td><input id="name" name="name" type="text" value=""></td>
+		</tr>
+		<tr>
+			<td><label for="email">이메일</label></td>
+			<td><input id="email" name="email" type="text" value=""></td>
+		</tr>
+		<tr>
+			<td><label for="password">비밀번호</label></td>
+			<td><input id="password" name="password" type="password" value=""></td>
+		</tr>
+		<tr>
+			<td><label for="detail">소개</label></td>
+			<td><textarea id="detail" name="detail"></textarea></td>
+		</tr>
+		<tr>
+			<td><label for="birthDate">생일</label></td>
+			<td><input id="birthDate" name="birthDate" type="text" value=""></td>
+		</tr>
+		<tr>
+			<td><label for="gender">성별</label></td>
+			<td>  
+				<span>
+					<input id="gender1" name="gender" type="radio" value="MALE">
+					<label for="gender1">남</label>
+				</span>
+				<span>
+					<input id="gender2" name="gender" type="radio" value="FEMALE">
+					<label for="gender2">여</label>
+				</span>
+			 </td>
+		</tr>
+		<tr>
+			<td><label for="country">국가</label></td>
+			<td>
+				<select id="country" name="country">
+					<option value="대한민국">대한민국</option>
+					<option value="터어키">터어키</option>
+					<option value="미국">미국</option>
+					<option value="일본">일본</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td><label for="nonSmoking">금연여부</label></td>
+			<td>
+				<input id="nonSmoking1" name="nonSmoking" type="checkbox" value="true">
+				<input type="hidden" name="_nonSmoking" value="on">
+			</td>
+		</tr>
+		<tr>
+			<td><label for="salary">월급여</label></td>
+			<td><input id="salary" name="salary" type="text" value="0"></td>
+		</tr>
+		<tr>
+			<td colspan="2"><input type="submit" value="전송">
+		</td></tr>
+	</tbody></table>
+</form>	
+
+</body></html>
+```
 
 ## 결과 테스트
 브라우저에서 다음 주소를 호출한다.  

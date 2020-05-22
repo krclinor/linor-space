@@ -19,6 +19,10 @@
 			<td>${u.name}</td>
 		</tr>
 		<tr>
+			<td>이메일</td>
+			<td>${u.email}</td>
+		</tr>
+		<tr>
 			<td>비밀번호</td>
 			<td>${u.password}</td>
 		</tr>

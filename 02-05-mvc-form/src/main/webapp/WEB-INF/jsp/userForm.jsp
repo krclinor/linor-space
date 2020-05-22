@@ -20,6 +20,10 @@
 			<td><form:input path="name"/></td>
 		</tr>
 		<tr>
+			<td><form:label path="email">이메일</form:label></td>
+			<td><form:input path="email"/></td>
+		</tr>
+		<tr>
 			<td><form:label path="password">비밀번호</form:label></td>
 			<td><form:password path="password"/></td>
 		</tr>
@@ -34,7 +38,7 @@
 		<tr>
 			<td><form:label path="gender">성별</form:label></td>
 			<td>
-				<form:select path="gender" items="${genders}" itemValue="key" itemLabel="value"/>
+				<form:radiobuttons path="gender" items="${genders}" itemValue="key" itemLabel="value"/>
 			 </td>
 		</tr>
 		<tr>

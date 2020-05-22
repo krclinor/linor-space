@@ -1,5 +1,7 @@
 package com.linor.singer.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,17 @@ public class UserController {
 	
 	@RequestMapping(value="/form")
 	public String user(Model model) {
+		User user = User.builder()
+				.country("대한민국")
+				.birthDate(LocalDate.parse("2019-01-01"))
+				.lastName("노")
+				.name("병기")
+				.password("secret")
+				.email("linor@ekr.or.kr")
+				.gender(Gender.MALE)
+				.nonSmoking(true)
+				.salary(300000)
+				.build();
 		model.addAttribute("user", new User());
 		model.addAttribute("genders", Gender.values());
 		model.addAttribute("countries", countries);
