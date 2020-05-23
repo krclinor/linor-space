@@ -29,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FileController {
 	private final ServletContext servletContext;
+	
 	private MediaType getMediaTypeForFileName(String fileName) {
 		String mimeType = servletContext.getMimeType(fileName);
 		try {
@@ -39,10 +40,15 @@ public class FileController {
 		}
 	}
 	
-	@Value("${myapp.download-folder:/test}")
+	@Value("${myapp.download-folder:test}")
 	private String DOWNLOAD_FOLDER;
 	
 	private final String FILE_NAME = "test.txt";
+	
+	@RequestMapping("/")
+	public String index() {
+		return "index";
+	}
 	
 	/**
 	 * ResponseEntity<InputStreamResource>를 이용한 방법

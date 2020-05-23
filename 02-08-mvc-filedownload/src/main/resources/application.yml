@@ -4,4 +4,4 @@ spring:
       prefix: /WEB-INF/jsp/
       suffix: .jsp
 
-myapp.download-folder: /temp
+myapp.download-folder: test

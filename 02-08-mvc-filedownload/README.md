@@ -8,7 +8,7 @@ Spring boot Starter로 프로젝트 생성시 패키징은 war로 설정한다.
 
 ### 의존성 라이브러리
 Spring initializer로 생성시 기본 dependency는 Web, DevTools, Lombok를 선택한다.
-프로젝트 생성 후 pom.xml에 JSP사용을 위해 tomcat-jasper를 추가한다.
+프로젝트 생성 후 pom.xml에 JSP사용을 위해 tomcat-jasper를 추가한다.  
 소스 : [pom.xml](pom.xml)
 ```xml
 	<dependencies>
@@ -178,6 +178,7 @@ public class FileController {
 
 ## 결과 테스트
 브라우저에서 다음 주소를 호출한다.  
+http://localhost:8080/
 http://localhost:8080/download1?fileName=test.txt  
 http://localhost:8080/download2?fileName=test.txt  
 http://localhost:8080/download3?fileName=test.txt
