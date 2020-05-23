@@ -8,7 +8,7 @@ Spring boot Starter로 프로젝트 생성시 패키징은 war로 설정한다.
 
 ### 의존성 라이브러리
 Spring initializer로 생성시 기본 dependency는 Web, DevTools, Lombok를 선택한다.
-프로젝트 생성 후 pom.xml에 JSP사용을 위해 tomcat-jasper, jstl을 추가하고, CSS프레임워크인 bootstrap을 추가한다.
+프로젝트 생성 후 pom.xml에 JSP사용을 위해 tomcat-jasper, jstl을 추가하고, CSS프레임워크인 bootstrap을 추가한다.  
 소스 : [pom.xml](pom.xml)
 ```xml
 	<dependencies>
@@ -149,6 +149,39 @@ uploadForm()메서드는 업로드 폼 뷰 화면으로 이동하도록 한다.
 		</form>
 ```
 파일 업로드를 위해서는 enctype을 "multipart/form-data"로 지정하고 method를 "post"로 지정해야 한다.  
+
+
+### 여러개의 파일 업로드
+```java
+	@PostMapping("/uploadMyFiles")
+	public String uploadFiles(@RequestParam("myFiles") MultipartFile[] files, ModelMap modelMap) {
+		if(files != null && files.length > 0) {
+			for(MultipartFile file: files) {
+				if(!file.isEmpty()) {
+					try {
+						file.transferTo(new File( UPLOAD_FOLDER + File.separator + file.getOriginalFilename()));
+					}catch(Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			modelMap.addAttribute("files", files);
+			return "viewUploadFiles";
+		}
+		return "redirect:/";
+	}
+```
+여러개의 파일을 한꺼번에 업로드하는 경우 MultipartFile을 배열로 처리한다.  
+
+```jsp
+		<h2>여러 파일 업로드</h2>
+		<form action="/uploadMyFiles" 
+			method="post" enctype="multipart/form-data">
+			<input type="file" name="myFiles" multiple="multiple"/>
+			<button type="submit">전송</button>
+		</form>
+```
+jsp에서는 input태그에 multiple="multiple"을 추가한다.  
 
 ## 결과 테스트
 브라우저에서 다음 주소를 호출한다.  

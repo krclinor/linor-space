@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class FileController {
-	
 	@Value("${myapp.upload-folder:/temp}")
 	private String UPLOAD_FOLDER;
 	
