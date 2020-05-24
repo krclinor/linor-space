@@ -1,14 +1,13 @@
 # Spring Boot에서 JSTL Form 유효성 체크
-02-05-mvc-form프로젝트에서 처리했던 폼처리에 유효성(Validation) 체크를 추가해 본다.  
+mvc-form프로젝트에서 처리했던 폼처리에 유효성(Validation)을 추가한다.  
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
-프로젝트 생성은 02-05-mvc-form을 복사하여 진행한다.  
+프로젝트 생성은 mvc-form을 복사하여 진행한다.  
 
 ### 의존성 라이브러리
-validation-api를 이용하여 유효성 체크를 하는데, 이 라이브러리는 spring-boot-starter-web에 포함되어 있다.
-
-소스 : [pom.xml](pom.xml)
+validation-api를 이용하여 유효성 체크를 하는데, 이 라이브러리는 spring-boot-starter-validation에 포함되어 있다.
 의존성 라이브러리는 다음과 같다.  
+소스 : [pom.xml](pom.xml)  
 ```xml
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -269,8 +268,8 @@ form:form태그는 스프링의 form태그라이브러리로 modelAttribute에 u
 			<td><form:input path="lastName" cssErrorClass="formFieldError"/></td>
 			<td><form:errors path="lastName"/></td>
 ```
-form:input의 path는 user의 속성을(lastName)을 지정한다.  
-cssErrorClass는 요효성 체크 후 오류인 경우 css클래스를 지정한다.  
+&lt;form:input&gt;의 path는 user의 속성을(lastName)을 지정한다.  
+cssErrorClass는 요효성 체크 후 오류인 경우 사용할 css클래스를 지정한다.  
 <form:errors path="lastName"/>는 lastName유효성에 오류가 발생한 경우 메시지를 출력한다.  
 
 ## 결과 테스트
@@ -279,7 +278,7 @@ http://localhost:8080/form
 
 ## CustomValidation 구현
 org.springframework.validation.Validator를 이용하여 복잡한 유효성 체크를 구현할 수 있다.  
-입력한 email이 linor@gmail.com이면 이미 등록한 이메일 임을 알리는 오류표시를 해보자.  
+입력한 email이 linor@gmail.com이면 이미 등록한 이메일 임을 알리는 유효성체크를 구현한다.  
 소스 [UserValidator.java](src/main/java/com/linor/singer/validators/UserValidator.java)
 ```java
 @Component
@@ -304,14 +303,14 @@ public class UserValidator implements Validator {
 }
 ```
 
-이제 컨트롤러에서 User Validator를 사용한다.
+이제 컨트롤러에서 User Validator를 사용한다.  
 소스 [UserController.java](src/main/java/com/linor/singer/controller/UserController.java)
 
 ```java
 	@Autowired
 	private UserValidator userValidator;
 ```
-UserValidator를 맴버번수로 등록한다.
+UserValidator를 맴버번수로 등록한다.  
 
 ```java
 	@RequestMapping(value = "/result")

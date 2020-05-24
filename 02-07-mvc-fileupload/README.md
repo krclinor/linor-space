@@ -62,7 +62,7 @@ sspring:
       file-size-threshold: 5MB
 
 #업로드파일 저장 위치
-myapp.upload-folder: /temp/
+myapp.upload-folder: temp
 ```
 servlet.multipart를 이용하여 업로드를 설정할 수 있다
 -  enabled : true로 설정하여 파일업로드를 사용하도록 한다.
@@ -72,12 +72,6 @@ servlet.multipart를 이용하여 업로드를 설정할 수 있다
 
 myapp.upload-folder는 프로그램에서 사용하기 위해 만든 것으로 업로드된 파일을 저장할 폴더 위치를 지정한다.  
 
-```bash
-linor@mylinor:~$ sudo mkdir /temp
-linor@mylinor:~$ sudo chmod 777 /temp
-```
-업로드 파일을 저장할 수 있도록 /temp디렉토리를 생성하고 모드를 777로 설정하여 모든 사용자가 사용할 수 있도록 한다.  
-
 ### 컨트롤러 생성
 소스 :[FileController.java](src/main/java/com/linor/singer/controller/FileController.java)  
 
@@ -86,7 +80,7 @@ linor@mylinor:~$ sudo chmod 777 /temp
 @RequiredArgsConstructor
 public class FileController {
 	
-	@Value("${myapp.upload-folder:/temp}")
+	@Value("${myapp.upload-folder:temp}")
 	private String UPLOAD_FOLDER;
 	
 	@GetMapping("/")
