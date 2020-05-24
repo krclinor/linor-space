@@ -14,6 +14,11 @@ public class UserController {
 	private static final String[] countries =
 		{"대한민국", "터어키", "미국", "일본"};
 	
+	@RequestMapping("/")
+	public String index() {
+		return "redirect:/form";
+	}
+	
 	@RequestMapping(value="/form")
 	public String user(Model model) {
 		User user = User.builder()

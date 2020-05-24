@@ -8,7 +8,49 @@
 validation-api를 이용하여 유효성 체크를 하는데, 이 라이브러리는 spring-boot-starter-web에 포함되어 있다.
 
 소스 : [pom.xml](pom.xml)
-의존성 라이브러리는 mvc-form프로젝트와 동일하다.  
+의존성 라이브러리는 다음과 같다.  
+```xml
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+ 		<!-- JSTL for JSP -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+		</dependency>
+		<!-- Need this to compile JSP -->
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Optional for static content. bootstrap CSS -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap</artifactId>
+			<version>4.5.0</version>
+		</dependency>
+```
 
 ## 설정
 ### 어플리케이션 설정
@@ -26,13 +68,13 @@ spring:
     fallback-to-system-locale: true
 ```
 사용포트는 설정하지 않으면 디폴트가 8080포트를 사용한다.  
-jsp파일의 위치를 설정하기 위해 sprint.mvc.view.prefix와 suffix를 설정한다.
+jsp파일의 위치를 설정하기 위해 sprint.mvc.view.prefix와 suffix를 설정한다.  
 spring.messages는 메시지 Properties파일을 설정하기 위해 사용한다.  
 -  basename : Properties파일명을 설정한다. messages.properties파일로 설정하기 위해 messages로 입력함.
 -  cache-duraton : -1로 입력하면 시작시 메모리에 올려서 서버가 죽을 때까지 사용한다.
 
 ### 메시지 프로퍼티파일 설정
-설정파일에서 설정한 메시지 파일
+설정파일에서 설정한 메시지 내용은 다음과 같다.  
 소스 : [messages.properties](src/main/resources/messages.properties)
 
 ```properties
@@ -59,6 +101,7 @@ public class WebConfig implements WebMvcConfigurer{
 }
 ```
 Validation에서 사용할 메시지 소스를 지정하기 위해 WebMvcConfigurer를 상속받아 WebConfig설정 클래스를 생성한다.    
+메시지 소스는 applicaition.yml에서 설정한 messages.properties파일이 설정된다.  
 위 설정 클래스를 생성하지 않으면 디폴트로 /ValidationMessages.properties를 사용한다.  
 
 ### 폼데이터 유효성 체크를 위한 모델 클래스 수정
@@ -107,9 +150,6 @@ public class User {
 ```java
 @Controller
 public class UserController {
-	@Autowired
-	private UserValidator userValidator;
-	
 	private static final String[] countries =
 		{"대한민국", "터어키", "미국", "일본"};
 	
@@ -239,7 +279,7 @@ http://localhost:8080/form
 
 ## CustomValidation 구현
 org.springframework.validation.Validator를 이용하여 복잡한 유효성 체크를 구현할 수 있다.  
-입력한 email이 linor@gmailcom이면 이미 등록한 이메일 임을 알리는 오류표시를 해보자.  
+입력한 email이 linor@gmail.com이면 이미 등록한 이메일 임을 알리는 오류표시를 해보자.  
 소스 [UserValidator.java](src/main/java/com/linor/singer/validators/UserValidator.java)
 ```java
 @Component

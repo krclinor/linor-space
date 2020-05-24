@@ -26,7 +26,7 @@
 		</tr>
 		<tr>
 			<td><form:label path="email">이메일</form:label></td>
-			<td><form:input path="email"/></td>
+			<td><form:input path="email" cssErrorClass="formFieldError"/></td>
 			<td><form:errors path="email"/></td>
 		</tr>
 		<tr>

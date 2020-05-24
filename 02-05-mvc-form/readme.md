@@ -4,7 +4,7 @@
 사용자의 성, 이름, 이메일, 비밀번호, 생일, 성별, 국가, 흡연여부 등을 입력하여 처리하는 웹화면을 구현해 보자.  
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
-프로젝트 생성은 02-04-mvc-jstl프로젝트와 동일한 방식으로 생성한다.  
+프로젝트 생성은 mvc-jstl프로젝트와 동일한 방식으로 생성한다.  
 
 ### 의존성 라이브러리
 Spring initializer로 생성시 기본 dependency는 Web, DevTools, Lombok를 선택한다.
@@ -175,7 +175,7 @@ public class UserController {
 		return "userForm";
 ```   
  
-JSP뷰 파일인 /WEB-INF/js/userForm.jsp를 호출한다.
+JSP뷰 파일인 /WEB-INF/jsp/userForm.jsp를 호출한다.
 
 ### 뷰 JSP 
 소스 [userForm.jsp](src/main/webapp/WEB-INF/jsp/userForm.jsp)

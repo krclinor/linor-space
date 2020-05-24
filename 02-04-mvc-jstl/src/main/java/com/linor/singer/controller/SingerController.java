@@ -12,7 +12,7 @@ public class SingerController {
 	private String message;
 	
 	@RequestMapping("/")
-	public String welcom(Map<String, Object> model) {
+	public String welcome(Map<String, Object> model) {
 		model.put("message", this.message);
 		return "welcome";
 	}
