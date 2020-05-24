@@ -5,17 +5,17 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.6.RELEASE</version>
+		<version>2.3.0.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.linor</groupId>
-	<artifactId>01-11-mybatis-jta-multi-datasource</artifactId>
+	<artifactId>mybatis-jta-multi-datasource</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>01-11-mybatis-jta-multi-datasource</name>
+	<name>mybatis-jta-multi-datasource</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
-		<java.version>8</java.version>
+		<java.version>1.8</java.version>
 	</properties>
 
 	<dependencies>
