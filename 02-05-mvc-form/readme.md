@@ -7,8 +7,8 @@
 프로젝트 생성은 mvc-jstl프로젝트와 동일한 방식으로 생성한다.  
 
 ### 의존성 라이브러리
-Spring initializer로 생성시 기본 dependency는 Web, DevTools, Lombok를 선택한다.
-프로젝트 생성 후 pom.xml에 tomcat-jasper, jstl, bootstrap을 추가한다.
+Spring initializer로 생성시 기본 dependency는 Web, DevTools, Lombok를 선택한다.  
+프로젝트 생성 후 pom.xml에 tomcat-jasper, jstl, bootstrap을 추가한다.  
 소스 : [pom.xml](pom.xml)
 ```xml
 	<dependencies>
@@ -173,11 +173,26 @@ public class UserController {
 
 ```java
 		return "userForm";
-```   
- 
-JSP뷰 파일인 /WEB-INF/jsp/userForm.jsp를 호출한다.
+```
+
+#### Model, ModelMap, ModelAndView 차이
+model.addAttribute()와 modelmap.addAttribute() 함수를 사용하여 Model에 데이터를 저장 후 view에서 데이터에 접근이 가능하다.  
+차이점으로는 Model은 인터페이스이며 ModelMap은 구현체이다.  
+Spring에서 내부적으로 사용하는 객체의 타입은 동일하며 사용의 구분은 개발자의 취향  
+
+ModelAndView는 Model과 View를 동시에 설정이 가능하며 컨트롤러는 ModelAndView객체를 리턴
+```java
+	@RequestMapping(value = "/result")
+	public ModelAndView processUser(User user) {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("userResult");
+		modelAndView.addObject("u", user);
+		return modelAndView;
+	}
+```
 
 ### 뷰 JSP 
+JSP뷰 파일인 /WEB-INF/jsp/userForm.jsp를 호출한다.  
 소스 [userForm.jsp](src/main/webapp/WEB-INF/jsp/userForm.jsp)
 ```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -221,7 +236,7 @@ JSP뷰 파일인 /WEB-INF/jsp/userForm.jsp를 호출한다.
 			<td><form:label path="gender">성별</form:label></td>
 			<td>
 				<form:radiobuttons path="gender" items="${genders}" itemValue="key" itemLabel="value"/>
-			 </td>
+			</td>
 		</tr>
 		<tr>
 			<td><form:label path="country">국가</form:label></td>
@@ -236,7 +251,7 @@ JSP뷰 파일인 /WEB-INF/jsp/userForm.jsp를 호출한다.
 			<td><form:input path="salary"/></td>
 		</tr>
 		<tr>
-			<td colspan="2"><input type="submit" value="전송"/>
+			<td colspan="2"><input type="submit" value="전송"/></td>
 		</tr>
 	</table>
 </form:form>	
@@ -319,9 +334,9 @@ JSP뷰 파일인 /WEB-INF/jsp/userForm.jsp를 호출한다.
 			<td><input id="salary" name="salary" type="text" value="0"></td>
 		</tr>
 		<tr>
-			<td colspan="2"><input type="submit" value="전송">
-		</td></tr>
-	</tbody></table>
+			<td colspan="2"><input type="submit" value="전송">	</td>
+		</tr></tbody>
+	</table>
 </form>	
 
 </body></html>
