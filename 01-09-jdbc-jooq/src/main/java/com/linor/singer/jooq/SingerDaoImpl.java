@@ -133,7 +133,7 @@ public class SingerDaoImpl implements SingerDao {
 				//.set(SINGER_.ID, singer.getId())
 				.set(SINGER_.FIRST_NAME, singer.getFirstName())
 				.set(SINGER_.LAST_NAME, singer.getLastName())
-				.set(SINGER_.BIRTH_DATE, Date.valueOf(singer.getBirthDate()))
+				.set(SINGER_.BIRTH_DATE, singer.getBirthDate())
 				.returning(SINGER_.ID)
 				.fetchOne();
 		
@@ -145,7 +145,7 @@ public class SingerDaoImpl implements SingerDao {
 		dsl.update(SINGER_)
 			.set(SINGER_.FIRST_NAME, singer.getFirstName())
 			.set(SINGER_.LAST_NAME, singer.getLastName())
-			.set(SINGER_.BIRTH_DATE, Date.valueOf(singer.getBirthDate()))
+			.set(SINGER_.BIRTH_DATE, singer.getBirthDate())
 			.where(SINGER_.ID.eq(singer.getId()))
 			.execute();
 	}
@@ -165,7 +165,7 @@ public class SingerDaoImpl implements SingerDao {
 				//.set(ALBUM.ID, album.getId())
 				.set(ALBUM.SINGER_ID, singer.getId())
 				.set(ALBUM.TITLE, album.getTitle())
-				.set(ALBUM.RELEASE_DATE, Date.valueOf(album.getReleaseDate()))
+				.set(ALBUM.RELEASE_DATE, album.getReleaseDate())
 				.returning(ALBUM.ID)
 				.fetchOne();
 			
