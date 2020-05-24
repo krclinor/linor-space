@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.6.RELEASE</version>
+		<version>2.3.0.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.linor</groupId>
-	<artifactId>mybatis-jpa-jta</artifactId>
+	<artifactId>jta-mybatis-jpa</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mybatis-jpa-jta</name>
+	<name>jta-mybatis-jpa</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -52,12 +52,12 @@
 		<dependency>
 			<groupId>com.vladmihalcea</groupId>
 			<artifactId>hibernate-types-52</artifactId>
-			<version>2.7.1</version>
+			<version>2.9.10</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>2.1.1</version>
+			<version>2.1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
