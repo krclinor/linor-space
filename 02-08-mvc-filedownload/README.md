@@ -7,7 +7,7 @@ Spring boot Starter로 프로젝트 생성시 패키징은 war로 설정한다.
 ```
 
 ### 의존성 라이브러리
-Spring initializer로 생성시 기본 dependency는 Web, DevTools, Lombok를 선택한다.
+Spring initializer로 생성시 추가할 dependency는 Web, DevTools, Lombok이다.  
 프로젝트 생성 후 pom.xml에 JSP사용을 위해 tomcat-jasper를 추가한다.  
 소스 : [pom.xml](pom.xml)
 ```xml
@@ -55,13 +55,14 @@ spring:
       prefix: /WEB-INF/jsp/
       suffix: .jsp
 
-myapp.download-folder: /temp
+myapp.download-folder: test
 ```
 
 myapp.download-folder는 프로그램에서 사용하기 위해 만든 것으로 다운로드할 파일의 위치를 지정한다.  
 
 테스트 파일은 간단하게 다음가 같이 생성해 놓는다.  
-파일명 :/temp/test.txt  
+루트 폴더는 프로젝트 폴더이다.  
+파일명 :test/test.txt  
 ```txt
 안녕하세요..
 연습용 파일 입니다.
@@ -70,7 +71,7 @@ myapp.download-folder는 프로그램에서 사용하기 위해 만든 것으로
 소스 :[FileController.java](src/main/java/com/linor/singer/controller/FileController.java)  
 
 ```java
-Controller
+@Controller
 @RequiredArgsConstructor
 public class FileController {
 	private final ServletContext servletContext;
@@ -84,7 +85,7 @@ public class FileController {
 		}
 	}
 	
-	@Value("${myapp.download-folder:/test}")
+	@Value("${myapp.download-folder:test}")
 	private String DOWNLOAD_FOLDER;
 	
 	private final String FILE_NAME = "test.txt";
@@ -178,7 +179,7 @@ public class FileController {
 
 ## 결과 테스트
 브라우저에서 다음 주소를 호출한다.  
-http://localhost:8080/
+http://localhost:8080/  
 http://localhost:8080/download1?fileName=test.txt  
 http://localhost:8080/download2?fileName=test.txt  
 http://localhost:8080/download3?fileName=test.txt
