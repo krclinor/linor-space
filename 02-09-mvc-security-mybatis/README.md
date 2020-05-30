@@ -1,6 +1,6 @@
 # Mybatis를 활용한 Spring Boot 보안개발
-이 프로젝트에서 설명하고자 하는 것은 사용자가 특정URL에 접근하려 할 때 인증을 거쳤는지, 접근권한이 있는지를 체크하는 것을 구현해 본다.  
-사용자와 접근권한을 데이타베이스로 관리하며, Mybatis로 데이타베이스 연동하도록 한다.  
+사용자가 특정URL에 접근할 때 인증을 거쳤는지, 접근권한이 있는지 체크하는 것을 구현한다.  
+사용자와 접근권한은 데이타베이스로 관리하며, Mybatis로 데이타베이스 연동한다.  
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
 Spring boot Starter로 프로젝트 생성시 패키징은 war로 설정한다.
@@ -9,7 +9,7 @@ Spring boot Starter로 프로젝트 생성시 패키징은 war로 설정한다.
 ```
 
 ### 의존성 라이브러리
-Spring initializer로 생성시 기본 dependency는 Web, DevTools, Lombok, postgresSQL Driver, Spring Security를 선택한다. 
+Spring initializer로 생성시 추가 dependency는 Web, DevTools, Lombok, postgresSQL Driver, Spring Security를 선택한다.  
 소스 : [pom.xml](pom.xml)
 ```xml
 	<dependencies>
@@ -55,7 +55,7 @@ Spring initializer로 생성시 기본 dependency는 Web, DevTools, Lombok, post
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>2.1.1</version>
+			<version>2.1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -70,12 +70,12 @@ Spring initializer로 생성시 기본 dependency는 Web, DevTools, Lombok, post
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
-			<version>4.3.1</version>
+			<version>4.5.0</version>
 		</dependency>
  	</dependencies>
 ```
 프로젝트 생성 후 pom.xml에 JSP사용을 위해 tomcat-jasper를 추가하고,    
-bootstrap을 추가한다.  
+부트스트랩을 사용하기 위해 bootstrap webjar를 추가한다.  
 
 ## 설정
 ### 데이타베이스처리를 위한 sql문 생성
@@ -106,10 +106,10 @@ create table user_role(
 	primary key(user_id, role_id)
 );
 ```
-스프링 웹보안을 위해서는 사용자와 역할을 관리하기위한 테이블이 필요하다.  
-USERS는 사용자정보를 관리하기 위한 테이블로, ID, 이름, 이메일, 비밀번호를 관리한다.  
-ROLES는 권한을 관리하기 위한테이블 이다.  
-USER_ROLE은 사용자에게 부여한 권한을 관리하기 위한 테이블이다.  
+스프링 시큐리티는 사용자와 역할을 관리하기 위한 테이블이 필요하다.  
+- USERS는 사용자정보 테이블로, ID, 이름, 이메일, 비밀번호를 관리한다.  
+- ROLES는 권한 테이블이다.  
+- USER_ROLE은 사용자에게 부여한 권한관리용 테이블이다.  
 
 #### 기초데이타 적제를 위한 데이타 스크립트
 소스 : [data.sql](src/main/resources/data.sql)
@@ -129,10 +129,10 @@ insert into user_role(user_id, role_id) values
 ('user', 'ROLE_USER');
 ```
 사용자, 권한를 테스트 하기 위해 기본 데이타를 테이블에 추가하는 데이타 스크립트이다.  
-사용자 데이블에 admin, linor, user를 추가하여 테스트 본다.  
-비밀번호는 WebSecurityConfig에서 설정한 BCryptPasswordEncoder를 이용하여 인코딩한 비밀번호로 설정한다. 
-비밀번호를 변경하려면 테스트 프로그램인 ApplicationsTest클래스에서 비밀번호를 수정하여 JUnit테스트를 실행하면 콘솔에 나타나도록 하였다.
-테스트 프로그램 [ApplicationTets.java](src/test/java/com/linor/singer/ApplicationTests.java)  
+사용자 테이블에 admin, linor, user를 추가하여 테스트한다.  
+비밀번호는 WebSecurityConfig에서 설정한 BCryptPasswordEncoder를 이용하여 인코딩한 비밀번호로 설정한다.  
+비밀번호를 변경하려면 테스트 프로그램인 ApplicationsTest클래스에서 비밀번호를 수정하여 JUnit테스트를 실행하면 콘솔에 나타나도록 하였다.  
+테스트케이스 [ApplicationTets.java](src/test/java/com/linor/singer/ApplicationTests.java)  
 ```java
 	@Test
 	public void testPassword() {
@@ -165,7 +165,7 @@ spring:
     fallback-to-system-locale: true
   datasource: #데이타소스
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+    url: jdbc:postgresql://postgres:5432/spring?currentSchema=singer
     username: linor
     password: linor1234
     initialization-mode: always
@@ -190,6 +190,7 @@ public class MvcConfig implements WebMvcConfigurer{
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/login").setViewName("login");
+		registry.addViewController("/").setViewName("redirect:home");
 		registry.addViewController("/home").setViewName("home");
 		registry.addViewController("/admin/home").setViewName("adminhome");
 		registry.addViewController("/user/linor/home").setViewName("linorsHome");
@@ -344,7 +345,8 @@ public class MyWebSecurity {
 				.permitAll()
 ```
 loginPage에 로그인화면을 제공하는 URL을 등록한다.  
-로그인시 사용될 사용자명과 비밀번호 파라미터는 username과 password가 디폴드이다. 만일이 파라미터명을 변경하려면 usernameParameter와 passwordParameter를 선언하여 사용할 수 있다.  
+로그인시 사용될 사용자명과 비밀번호 파라미터는 username과 password가 디폴트이다.  
+파라미터명을 변경하려면 usernameParameter와 passwordParameter를 선언하여 사용할 수 있다.  
 defaultSuccessUrl은 로그인 성공 후 이동할 페이지가 정해지지 않은 경우 디폴트 Url을 지정할 수 있다.  
 로그인 실패시 이동할 페이지 설정을 위해 failureUrl을 사용한다. 설정하지 않으면 디폴트는 /login?error이다.    
 인증에 필요한 모든 URL은 permitAll로 설정한다.  
@@ -374,7 +376,7 @@ defaultSuccessUrl은 로그인 성공 후 이동할 페이지가 정해지지 �
 
 ### UserDetailsService 구현
 로그인한 사용자의 인증과 권한체크를 위해서 UserDetailsService를 구현한다.  
-이를 구현하기 위해 먼저 데이타베이스를 처리하기 위한 도메인 클래스, Mybatis인터페이스 구현 매퍼등을 만든다.  
+이를 구현하기 위해 먼저 데이타베이스를 처리하기 위한 도메인 클래스, Mybatis인터페이스및 구현매퍼를 만든다.  
 
 다음은 사용자 정보를 담을 MyUser클래스를 생성한다.  
 소스: [MyUser.java](src/main/java/com/linor/singer/domain/MyUser.java)
@@ -461,5 +463,5 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 ```
 
 ## 결과 테스트
-브라우저에서 다음 주소를 호출하여 이것 저것 테스트 해 본다.    
+브라우저에서 다음 주소를 호출하여 테스트한다.    
 http://localhost:8080/  
