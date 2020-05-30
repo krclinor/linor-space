@@ -31,10 +31,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	 * 동시사용 세션 제어를 위한 설정
 	 * @return
 	 */
-	@Bean
-	public HttpSessionEventPublisher httpSessionEventPublisher() {
-		return new HttpSessionEventPublisher();
-	}
+//	@Bean
+//	public HttpSessionEventPublisher httpSessionEventPublisher() {
+//		return new HttpSessionEventPublisher();
+//	}
 	
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -74,11 +74,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		//유저당 세션관리
 		http.sessionManagement()
 			.maximumSessions(1)	//유저당 최대 세션수
-			.maxSessionsPreventsLogin(true)//최대 세션수 초과시 접속 불가처리
+			.maxSessionsPreventsLogin(false)//최대 세션수 초과시 접속 불가처리
 			.expiredUrl("/sessionExpired.html");
 		
-		//Basic인증 사용
-		http.httpBasic();
+//		//Basic인증 사용
+//		http.httpBasic();
 	}
 
 	@Override
