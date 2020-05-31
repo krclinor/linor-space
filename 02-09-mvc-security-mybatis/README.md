@@ -32,7 +32,26 @@ Spring initializer로 생성시 추가 dependency는 Web, DevTools, Lombok, post
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
- 		<!-- JSTL for JSP -->
+ 		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>${mybatis-spring-boot-starter.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- JSTL for JSP -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
  			<artifactId>jstl</artifactId>
@@ -47,30 +66,11 @@ Spring initializer로 생성시 추가 dependency는 Web, DevTools, Lombok, post
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-taglibs</artifactId>
 		</dependency>
- 		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>2.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
-			<scope>test</scope>
-		</dependency>
 		<!-- Optional for static content. bootstrap CSS -->
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
-			<version>4.5.0</version>
+			<version>${bootstrap.version}</version>
 		</dependency>
  	</dependencies>
 ```
@@ -204,7 +204,7 @@ public class MvcConfig implements WebMvcConfigurer{
 /logoutSuccess는 로그아웃 후 이동할 페이지를 설정한다.  
 /home은 인증후 일반사용자가 접속할 수 있는 페이지로 사용할 예정이며, /admin/home은 ROLE_ADMIN권한을 가진 사용자만 접근할 수 있도록 한다.  
 
-### 페이지별 보안 설정
+### 페이지별 권한 설정
 소스 : [WebSecurityConfig.java](src/main/java/com/linor/singer/config/WebSecurityConfig.java)
 ```java
 @Configuration
@@ -275,12 +275,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 ```java
 	@Autowired
 	private UserDetailsService userDetailsService;
-	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService)
@@ -461,7 +459,75 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	}
 }
 ```
+ 
+### 화면 구현
+#### 로그인 화면 CRSF 보안 처리
+소스 : [login.jsp](src/main/webapp/WEB-INF/jsp/login.jsp)
+```jsp
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+```
+core 태그라이브러리는 이전 프로젝트에서 설명하였으므로 생략.  
+sec태크라이브러리를 추가하여 스프링 보안 태그를 사용할 수 있도록 한다.  
 
+```jsp
+<form action="<c:url value="/login"/>" method="POST">
+	<font color="red">
+		${SPRING_SECURITY_LAST_EXCEPTION.message}
+	</font><br/>
+	<input type="text" name="username" placeholder="사용자ID"/>
+	<input type="password" name="password" placeholder="비밀번호"/>
+	<sec:csrfInput /> 
+	<button type="submit">로그인</button>
+</form>
+```
+${SPRING_SECURITY_LAST_EXCEPTION.message}를 이용하여 인증실패시 에러 메시지를 화면에 보여준다.  
+CRSF본안 적용을 위해 &lt;sec:csrfInput /&gt;를 사용한다.  
+form태그를 스프링 &lt;form:form&gt;태그로 변경하면 csrfInput태그를 사용하지 않더라도 스프링이 알아서 crsf처리를 해 준다.  
+csrfInput은 다음과 같이 html로 변환된다.  
+```html
+<input type="hidden" name="_csrf" value="a7dacea9-bfc5-4870-bf4f-37550796f1c7">
+```
+
+#### 보안 관련 태그 모음  
+소스 : [welcome.jsp](src/main/webapp/WEB-INF/jsp/welcome.jsp)  
+##### authorize태그
+###### access속성
+authorize태그의 access 속성에 표현식을 추가하여 처리할 수 있다.  
+다음은 access에 isAuthenticated()표현식을 추가하여 로그인한 사용자의 경우 로그아웃 링크를, 로그인하지 않은 사용자는 로그인 링크를 보여주도록 한다.  
+```jsp
+<sec:authorize access="!isAuthenticated()">
+  <a class="nav-link" href="/login">로그인</a>
+</sec:authorize>
+<sec:authorize access="isAuthenticated()">
+  <a class="nav-link" href="/logout">로그아웃</a>
+</sec:authorize>
+```
+보안 표현식
+- hasAnyRole('ADMIN','USER') : 현 사용자가 나열한 권한중 하나이상을 가지면 true
+- isAnonymouse() : 비인가 사용자이면 true
+- isRememberMe() : 현 사용자가 remember-me 사용자이면 true
+- isFullyAuthentiated() : 비인가 사용자도, remember-me사용자도 아닌 인가된 사용자이면 true
+
+###### url 속성
+url에 부여된 권한을 가진 사용자만 해당 컨텐츠를 표시한다.  
+```jsp
+<sec:authorize url="/home">
+<li class="nav-item active">
+	<a class="nav-link" href="/home">홈 <span class="sr-only">(current)</a>
+</li>
+</sec:authorize>
+```
+/home을 접속할 수 있는 사용자만 홈 메뉴를 볼 수 있다.  
+
+##### authentication태그
+사용자의 인증정보를 표시하기 위해 사용한다.  
+```jsp
+<sec:authorize access="isAuthenticated()">
+	<p>환영합니다 <sec:authentication property="name"/>님!!</p>
+</sec:authorize>
+```
+ 
 ## 결과 테스트
 브라우저에서 다음 주소를 호출하여 테스트한다.    
 http://localhost:8080/  
