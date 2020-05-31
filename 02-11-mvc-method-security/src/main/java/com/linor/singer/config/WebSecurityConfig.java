@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,6 +17,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
@@ -38,9 +40,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/", "/logoutSuccess")
 					.permitAll()
 				.antMatchers("/admin/**")
-					.hasAuthority("ADMIN")
-//				.antMatchers("/user/**")
-//					.access("@webSecurity.check(authentication, request)")
+//					.hasAuthority("ROLE_ADMIN")
+//					.hasRole("ADMIN")//데이타베이스에는 ROLE_ADMIN으로 저장되어 있어야 함
+//					.hasAnyAuthority("ROLE_ADMIN")
+					.hasAnyRole("ADMIN")//데이타베이스에는 ROLE_ADMIN으로 저장되어 있어야 함
+				.antMatchers("/user/{userId}/home")
+					.access("@myWebSecurity.checkUserId(authentication, #userId, request)")
 				.anyRequest()
 					.authenticated()
 			.and()
