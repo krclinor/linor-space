@@ -5,7 +5,20 @@
 모든 설정 및 구현은 mvc-security-mybatis프로젝트와 동일하다.
 
 ## 페이지별 보안 설정 수정
-소스 : [WebSecurityConfig.java](src/main/java/com/linor/singer/config/WebSecurityConfig.java)
+소스 : [WebSecurityConfig.java](src/main/java/com/linor/singer/config/WebSecurityConfig.java)  
+session의 동시사용자를 제어하기 위해 httpSessionEventPublisher빈을 생성한다.  
+```java
+	/**
+	 * 동시사용 세션 제어를 위한 설정
+	 * @return
+	 */
+	@Bean
+	public HttpSessionEventPublisher httpSessionEventPublisher() {
+		return new HttpSessionEventPublisher();
+	}
+```
+위 빈을 선언하지 않으면 로그아웃 시 세션종료가 제대로 되지 않아서, 다음에 선언하는 maxSessionsPreventsLogin을 true로 하여 세션 초과시 로그인 방지처리도 안된다.  
+
 ```java
 	protected void configure(HttpSecurity http) throws Exception{
 		http

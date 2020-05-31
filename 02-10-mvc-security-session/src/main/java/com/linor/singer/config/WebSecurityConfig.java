@@ -26,16 +26,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	/**
 	 * 동시사용 세션 제어를 위한 설정
 	 * @return
 	 */
-//	@Bean
-//	public HttpSessionEventPublisher httpSessionEventPublisher() {
-//		return new HttpSessionEventPublisher();
-//	}
-	
+	@Bean
+	public HttpSessionEventPublisher httpSessionEventPublisher() {
+		return new HttpSessionEventPublisher();
+	}
+
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService)
@@ -47,8 +47,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 				.antMatchers("/", "/logoutSuccess")
 					.permitAll()
-				.antMatchers("/admin/")
-					.hasAuthority("ADMIN")
+				.antMatchers("/admin/**")
+//					.hasAuthority("ROLE_ADMIN")
+//					.hasRole("ADMIN")//데이타베이스에는 ROLE_ADMIN으로 저장되어 있어야 함
+//					.hasAnyAuthority("ROLE_ADMIN")
+					.hasAnyRole("ADMIN")//데이타베이스에는 ROLE_ADMIN으로 저장되어 있어야 함
 				.antMatchers("/user/{userId}/home")
 					.access("@myWebSecurity.checkUserId(authentication, #userId, request)")
 				.anyRequest()
@@ -70,15 +73,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.exceptionHandling()
 				.accessDeniedPage("/accessDenied");
-		
+
 		//유저당 세션관리
 		http.sessionManagement()
 			.maximumSessions(1)	//유저당 최대 세션수
-			.maxSessionsPreventsLogin(false)//최대 세션수 초과시 접속 불가처리
+			.maxSessionsPreventsLogin(true)//최대 세션수 초과시 접속 불가처리
 			.expiredUrl("/sessionExpired.html");
-		
-//		//Basic인증 사용
-//		http.httpBasic();
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		web.ignoring()
 			.antMatchers(
 					HttpMethod.GET, 
-					"/", "/favicon.ico", "/*.html", "/**/*.html",
+					"/favicon.ico", "/*.html", "/**/*.html",
 					"/webjars/**", "/css/**", "/fonts/**", "/js/**", "/images/**");
 	}
 }
