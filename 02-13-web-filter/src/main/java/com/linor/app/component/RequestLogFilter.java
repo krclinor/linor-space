@@ -22,16 +22,12 @@ public class RequestLogFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-
 		HttpServletRequest req = (HttpServletRequest) request;
-		long startMilis = System.currentTimeMillis();
-
-		log.info("요청 로그 {}: {} - {} ", startMilis, req.getMethod(), req.getRequestURI());
+		log.info("요청 로그: {} - {} ", req.getMethod(), req.getRequestURI());
 
 		chain.doFilter(request, response);
 
-		log.info("응답 로그 {} : {}", startMilis, response.getContentType());
-		log.info("처리시간 {} : {}", startMilis, System.currentTimeMillis() - startMilis );
+		log.info("응답 로그: {}", response.getContentType());
 	}
 
 }

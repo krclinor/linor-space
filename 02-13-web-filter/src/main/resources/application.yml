@@ -1,0 +1,9 @@
+#로거
+logging:
+  pattern:
+    console: '[%p] [%t] %c{0}.%M[%L] - %m%n'
+    #'%d{HH:mm:ss.SSS} [%t] %-5level- %C.%M:%L%n%m%n' 
+    #'[%p] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c.%M[%L] - %m%n' 
+    #'%d{HH:mm:ss.SSS} [%thread] %-5level %logger.%M %L - %msg%n'
+  level:
+    root: info
