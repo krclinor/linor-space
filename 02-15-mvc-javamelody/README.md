@@ -11,14 +11,14 @@ JavaMelody는 자바기반 웹시스템을 모니터링하는 툴이다.
 ### 의존성 라이브러리
 소스 : [pom.xml](pom.xml)
 ```xml
-	<dependencies>
+<dependencies>
 ...
-		<dependency>
-			<groupId>net.bull.javamelody</groupId>
-			<artifactId>javamelody-spring-boot-starter</artifactId>
-			<version>1.81.0</version>
-		</dependency>
-	</dependencies>
+	<dependency>
+		<groupId>net.bull.javamelody</groupId>
+		<artifactId>javamelody-spring-boot-starter</artifactId>
+		<version>${javamelody-spring-boot-starter.version}</version>
+	</dependency>
+</dependencies>
 ```
 의존성 라이브러리에 javamelody-spring-boot-starter를 추가하여 JavaMelody라이브러리를 추가한다.
 
@@ -47,7 +47,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	}
 }
 ```
-JavaMelody 모니터링 툴이 정보를 수집할 수 있도록 Filter와 ServletListener에 등록한다.
+JavaMelody 모니터링 툴이 정보를 수집할 수 있도록 Filter와 ServletListener에 등록한다.  
+FilterRegistrationBean.addUrlPatterns()로 모니터링할 URL패턴을 등록한다.  
+
 
 ## 결과 테스트
 브라우저에서 다음 주소를 호출한다.  
