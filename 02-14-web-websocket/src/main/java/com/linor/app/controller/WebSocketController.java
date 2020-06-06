@@ -1,22 +1,24 @@
 package com.linor.app.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.linor.app.model.Message;
 import com.linor.app.model.OutputMessage;
 
-@Controller
+@RestController
 public class WebSocketController {
 	
 	@MessageMapping("/chatting")
 	@SendTo("/topic/messages")
 	public OutputMessage send(Message message) throws Exception{
-		String time = new SimpleDateFormat("HH:mm").format(new Date());
-		return new OutputMessage(message.getFrom(), message.getText(), time);
+		return OutputMessage.builder()
+				.from(message.getFrom())
+				.text(message.getText())
+				.time(LocalDateTime.now())
+				.build();
 	}
 }

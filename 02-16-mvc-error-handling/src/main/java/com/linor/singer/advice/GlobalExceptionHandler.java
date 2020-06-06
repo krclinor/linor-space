@@ -1,28 +1,50 @@
 package com.linor.singer.advice;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.linor.singer.exception.BizException;
-
-import lombok.extern.slf4j.Slf4j;
+import com.linor.singer.exception.DataAccessException;
+import com.linor.singer.exception.ResourceNotFoundException;
 
 @ControllerAdvice
-@Slf4j
 public class GlobalExceptionHandler {
 
-	@ExceptionHandler(BizException.class)
-	public String handleBizException(HttpServletRequest req, BizException bizEx) {
-		log.info("BizException Occurred:: URL=" + req.getRequestURL());
-		return "biz_error";
+	@ExceptionHandler(DataAccessException.class)
+	@ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+	public String handleDataAccessException(DataAccessException e, Model model) {
+		model.addAttribute("exception", e);
+		return "dbError";
 	}
-	
-	@ExceptionHandler(ServletRequestBindingException.class)
-	public String servletRequestBindingException(ServletRequestBindingException ex) {
-		log.error("ServletRequestBindingException occurred: " + ex.getMessage());
-		return "validation_error";
+
+	@ExceptionHandler(BizException.class)
+	@ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+	public String handleBizException(BizException e, Model model) {
+		model.addAttribute("exception", e);
+		return "bizError";
+	}
+
+	@ExceptionHandler(RuntimeException.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public String handleRuntimeException(RuntimeException e, Model model) {
+		model.addAttribute("exception", e);
+		return "runError";
+	}
+
+	@ExceptionHandler(ResourceNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public String handleResourceNotFoundException(ResourceNotFoundException e, Model model) {
+		model.addAttribute("exception", e);
+		return "404Error";
+	}
+
+	@ExceptionHandler(Exception.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public String handleException(Exception e, Model model) {
+		model.addAttribute("exception", e);
+		return "customError";
 	}
 }
