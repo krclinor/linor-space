@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class SingerRestTest {
 	
 	@Test
 	public void test01ListSingers() {
-		ResponseEntity<Singer[]> responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/api/singer", Singer[].class);
+		ResponseEntity<Singer[]> responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
 		List<Singer> singers = Arrays.asList(responseEntity.getBody());
 		assertNotNull(singers);
 		assertTrue(singers.size() == 4);
@@ -48,7 +49,7 @@ public class SingerRestTest {
 	
 	@Test
 	public void test02GetSingerById() {
-		Singer singer = restTemplate.getForObject(ROOT_URL + port + "/api/singer/1", Singer.class);
+		Singer singer = restTemplate.getForObject(ROOT_URL + port + "/rest/singer/1", Singer.class);
 		assertNotNull(singer);
 		log.info("가수 1 : {}", singer);
 	}
@@ -59,9 +60,9 @@ public class SingerRestTest {
 		singer.setFirstName("조한");
 		singer.setLastName("김");
 		singer.setBirthDate(LocalDate.parse("1990-10-16"));
-		restTemplate.postForLocation(ROOT_URL + port + "/api/singer", singer);
+		restTemplate.postForLocation(ROOT_URL + port + "/rest/singer", singer);
 
-		ResponseEntity<Singer[]> responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/api/singer", Singer[].class);
+		ResponseEntity<Singer[]> responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
 		List<Singer> singers = Arrays.asList(responseEntity.getBody());
 		assertNotNull(singers);
 		assertTrue(singers.size() == 5);
@@ -71,7 +72,7 @@ public class SingerRestTest {
 	
 	@Test
 	public void test04UpdateSinger() {
-		Singer singerOldSinger = restTemplate.getForObject(ROOT_URL + port + "/api/singer/1", Singer.class);
+		Singer singerOldSinger = restTemplate.getForObject(ROOT_URL + port + "/rest/singer/1", Singer.class);
 		log.info(">>> 김종서 수정 전 >>>");
 		log.info(singerOldSinger.toString());
 		Singer singer = new Singer();
@@ -79,41 +80,46 @@ public class SingerRestTest {
 		singer.setFirstName("종서");
 		singer.setLastName("김");
 		singer.setBirthDate(LocalDate.parse("1977-10-16"));
-		restTemplate.put(ROOT_URL + port + "/api/singer/1", singer);
-		Singer singerNewSinger = restTemplate.getForObject(ROOT_URL + port + "/api/singer/1", Singer.class);
+		restTemplate.put(ROOT_URL + port + "/rest/singer/1", singer);
+		Singer singerNewSinger = restTemplate.getForObject(ROOT_URL + port + "/rest/singer/1", Singer.class);
 		log.info(">>> 김종서 수정 후 >>>");
 		log.info(singerNewSinger.toString());
 	}
 	
 	@Test
 	public void test05InsertSingerWithAlbum() {
-		ResponseEntity<Singer[]> responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/api/singer", Singer[].class);
+		ResponseEntity<Singer[]> responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
 		List<Singer> singers = Arrays.asList(responseEntity.getBody());
 		int singerCount = singers.size();
+		List<Album> albums = new ArrayList<Album>();
+		Singer singer = Singer.builder()
+				.firstName("태원")
+				.lastName("김")
+				.birthDate(LocalDate.parse("1965-04-12"))
+				.albums(albums)
+				.build();
 		
-		Singer singer = new Singer();
-		singer.setFirstName("태원");
-		singer.setLastName("김");
-		singer.setBirthDate(LocalDate.parse("1965-04-12"));
+		Album album = Album.builder()
+				.title("Never Ending Story")
+				.releaseDate(LocalDate.parse("2001-08-31"))
+				.build();
+		albums.add(album);
 		
-		Album album = new Album();
-		album.setTitle("Never Ending Story");
-		album.setReleaseDate(LocalDate.parse("2001-08-31"));
-		singer.addAlbum(album);
+		album = Album.builder()
+				.title("생각이나")
+				.releaseDate(LocalDate.parse("2009-08-14"))
+				.build();
+		albums.add(album);
 		
-		album = new Album();
-		album.setTitle("생각이나");
-		album.setReleaseDate(LocalDate.parse("2009-08-14"));
-		singer.addAlbum(album);
-		
-		album = new Album();
-		album.setTitle("사랑할수록");
-		album.setReleaseDate(LocalDate.parse("1993-11-01"));
-		singer.addAlbum(album);
-		
-		restTemplate.postForLocation(ROOT_URL + port + "/api/singer", singer);
+		album = Album.builder()
+				.title("사랑할수록")
+				.releaseDate(LocalDate.parse("1993-11-01"))
+				.build();
+		albums.add(album);
 
-		responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/api/singer", Singer[].class);
+		restTemplate.postForLocation(ROOT_URL + port + "/rest/singer", singer);
+
+		responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
 		singers = Arrays.asList(responseEntity.getBody());
 		assertNotNull(singers);
 		assertTrue(singers.size() == (singerCount+1));
@@ -123,9 +129,9 @@ public class SingerRestTest {
 	
 	@Test
 	public void test06DeleteSinger() {
-		restTemplate.delete(ROOT_URL + port + "/api/singer/1");
+		restTemplate.delete(ROOT_URL + port + "/rest/singer/1");
 		try {
-			Singer singer = restTemplate.getForObject(ROOT_URL + port +"/api/singer/1", Singer.class);
+			Singer singer = restTemplate.getForObject(ROOT_URL + port +"/rest/singer/1", Singer.class);
 			log.info("삭제되지 않은 경우 가수: {}", singer);
 		}catch(final HttpClientErrorException e) {
 			assertEquals(e.getStatusCode(), HttpStatus.NOT_FOUND);
