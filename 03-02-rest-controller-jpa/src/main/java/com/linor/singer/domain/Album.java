@@ -1,6 +1,5 @@
 package com.linor.singer.domain;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -30,7 +29,7 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Album{
+public class Album {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -38,7 +37,6 @@ public class Album{
 	@Column(length = 100)
 	private String title;
 
-	//@Column(name = "release_date")
 	private LocalDate releaseDate;
 
 	@ManyToOne
