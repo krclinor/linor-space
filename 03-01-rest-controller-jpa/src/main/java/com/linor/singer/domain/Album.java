@@ -17,14 +17,20 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(name = "album_uq_01", columnNames = {"singer_id", "title"})})
 @Data
-public class Album implements Serializable{
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Album{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -41,5 +47,8 @@ public class Album implements Serializable{
 	@EqualsAndHashCode.Exclude
 	@JsonIgnore
 	private Singer singer;
+
+	@Version
+	private int version;
 
 }

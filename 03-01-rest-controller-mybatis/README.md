@@ -69,6 +69,17 @@ intermediary 서버 등을 통해서 로드밸런싱/공유 캐시등을 통해 
 - Code-On-Demand  
 서버로부터 스크립트를 받아서 Client에서 실행하는 것으로 반드시 충족할 필요는 없다.  
 
+## 프로젝트 생성
+jdbc-mybatis를 복사하여 프로젝트를 생성한다.  
+의존성라이브러리에 spring-web을 추가한다.  
+소스 : [pom.xml](pom.xml)  
+```xml
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-web</artifactId>
+	</dependency>
+```
+
 ## 컨트롤러 생성
 DAO와 도메인은 기존 여러 jdbc프로젝트에서 설명하였으므로 생략한다.  
 Spring 4.0에서부터 @Controller와 @ResponseBody 을 합쳐놓은 @RestController를 추가했다. 컨트롤러 클래스에 @RestController 어노테이션을 작성함으로써 더 이상 @ResponseBody를 모든 요청 매핑 메소드에 추가 할 필요가 없다.    
@@ -107,8 +118,8 @@ public class SingerController {
 	}
 }
 ```
- @RequestMapping("/rest/singer")는 컨트롤러의 디폴트 경로를 설정한다.  
-@GetMapping(value="/listdata")은 @RequestMapping(value="/listdata", method=RequestMethod.GET)과 동일한 효과를 나타내며 최종 경로는 “/singer/listdata”이다.  
+@RequestMapping("/rest/singer")는 컨트롤러의 디폴트 경로를 설정한다.  
+@GetMapping은 @RequestMapping(method=RequestMethod.GET)과 동일한 효과를 나타내며 최종 경로는 “/rest/singer”이다.  
 @GetMapping(value="/{id}")의 id는 경로변수로 public Singer findBySingerId(@PathVariable("id") long id)에서와 같이 경로변수를 파라미터로 사용하기 위하여 @PathVariable을 선언한다.  
 
 ## 테스트

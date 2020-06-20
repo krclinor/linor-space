@@ -22,6 +22,6 @@ public interface SingerRepository extends JpaRepository<Singer, Integer> {
 				+ "from Album a2 where a2.singer.id = s.id)")
 	public List<SingerSummary> listAllSingersSummary();
 	
-	@Query(value = "select id, first_name, last_name, birth_date from singer", nativeQuery = true)
+	@Query(value = "select id, first_name, last_name, birth_date, version from singer", nativeQuery = true)
 	public List<Singer> findAllByNativeQuery();
 }

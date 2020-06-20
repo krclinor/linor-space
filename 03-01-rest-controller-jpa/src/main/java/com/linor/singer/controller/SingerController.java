@@ -2,11 +2,9 @@ package com.linor.singer.controller;
 
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +18,7 @@ import com.linor.singer.domain.Singer;
 import com.linor.singer.exception.ResourceNotFoundException;
 
 @RestController
-@RequestMapping("/api/singer")
+@RequestMapping("/rest/singer")
 public class SingerController {
 	@Autowired
 	private SingerDao singerDao;

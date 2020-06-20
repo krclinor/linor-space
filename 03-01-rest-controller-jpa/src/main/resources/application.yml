@@ -11,10 +11,10 @@ spring:
   datasource:
     platform: postgresql
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+    url: jdbc:postgresql://postgres:5432/spring?currentSchema=singer
     username: linor
     password: linor1234
-    initialization-mode: always
+#    initialization-mode: always
 
     #hikari Connection Pull 설정
 #    hikari:
@@ -36,3 +36,6 @@ spring:
         #jdbc.lob.non_contextual_creation: true
         #enable_lazy_load_no_trans: true #일대다 매핑에서 fetch를 Lazy로하는 경우 오류 막음
         #temp.use_jdbc_metadata_default: false
+  data.rest:
+    base-path: /api 
+    default-page-size: 5

@@ -1,7 +1,5 @@
 package com.linor.singer.domain;
-import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -22,8 +20,10 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.Singular;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name="singer", uniqueConstraints = {@UniqueConstraint(name = "singer_uq_01", columnNames = {"firstName", "lastName"})})
@@ -42,48 +42,31 @@ import lombok.Singular;
 			+ "where s.firstName = :firstName")
 })
 @Data
-public class Singer implements Serializable{
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Singer{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	//@Column(name="first_name")
 	@Column(length = 60)
 	private String firstName;
 	
 	@Column(length = 60)
 	private String lastName;
 	
-	//@Column(name="birth_date")
 	private LocalDate birthDate;
 	
-	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true)
-	//@ToString.Exclude
-	//@EqualsAndHashCode.Exclude
-	@Singular
-	private Set<Album> albums = new HashSet<>();
+	@OneToMany(mappedBy="singer", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.LAZY)
+	private Set<Album> albums;
 
 	@ManyToMany
 	@JoinTable(name="singer_instrument", 
 		joinColumns=@JoinColumn(name="singer_id",foreignKey = @ForeignKey(name="fk_singer_instrument_fk_01")),
 		inverseJoinColumns=@JoinColumn(name="instrument_id",foreignKey = @ForeignKey(name="fk_singer_instrument_fk_02")))
-	//@ToString.Exclude
-	//@EqualsAndHashCode.Exclude
-	@Singular
-	private Set<Instrument> instruments = new HashSet<>();
+	private Set<Instrument> instruments;
 	
-	public boolean addAlbum(Album album) {
-		album.setSinger(this);
-		return getAlbums().add(album);
-	}
-	public void removeAlbum(Album album) {
-		getAlbums().remove(album);
-	}
-
-	public boolean addInstrument(Instrument instrument) {
-		return getInstruments().add(instrument);
-	}
-	public void removeInstrument(Instrument instrument) {
-		getInstruments().remove(instrument);
-	}
+	@Version
+	private int version;
 }

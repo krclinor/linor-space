@@ -1,7 +1,7 @@
 #로거
 logging:
   pattern:
-    console: '%-5level %logger{0} - %msg%n'
+    console: '%d{HH:mm:ss.SSS} [%thread] %-5level %logger{0} - %msg%n'
   level:
     root: info
     com.linor.singer.dao: info

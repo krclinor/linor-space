@@ -1,24 +1,18 @@
 package com.linor.singer.domain;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Singular;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
 @Entity
 //@Table(name = "instrument")
 @Data
-public class Instrument implements Serializable{
+@AllArgsConstructor
+@NoArgsConstructor
+public class Instrument{
 	@Id
 	//@Column(name = "instrument_id")
 	private String instrumentId;
