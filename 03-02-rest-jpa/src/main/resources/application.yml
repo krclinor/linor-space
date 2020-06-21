@@ -1,0 +1,41 @@
+#로거
+logging:
+  pattern:
+    console: '%-5level %logger{0} - %msg%n'
+  level:
+    root: info
+    com.linor.singer.dao: trace
+
+#데이타소스
+spring: 
+  datasource:
+    platform: postgresql
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgres:5432/spring?currentSchema=singer
+    username: linor
+    password: linor1234
+#    initialization-mode: always
+
+    #hikari Connection Pull 설정
+#    hikari:
+#      maximum-pool-size: 20
+#      idle-timeout: 1
+#      minimum-idle: 0
+
+  jpa:
+    show-sql: true
+#    open-in-view: false  #Entity Join시 fetch타입이 디폴트인 LAZY가 가능하도록 
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        physical-naming-strategy: com.vladmihalcea.hibernate.type.util.CamelCaseToSnakeCaseNamingStrategy
+        format_sql: true
+        use_sql_comments: true
+        #jdbc.lob.non_contextual_creation: true
+        #enable_lazy_load_no_trans: true #일대다 매핑에서 fetch를 Lazy로하는 경우 오류 막음
+        #temp.use_jdbc_metadata_default: false
+  data.rest:
+    base-path: /api 
+    default-page-size: 5
