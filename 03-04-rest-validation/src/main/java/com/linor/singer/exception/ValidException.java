@@ -12,5 +12,4 @@ public class ValidException extends RuntimeException{
 		super(message);
 		this.errors = errors;
 	}
-	
 }

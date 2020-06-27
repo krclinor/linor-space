@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.linor.singer.dao.SingerDao;
 import com.linor.singer.domain.Singer;
+import com.linor.singer.exception.BizException;
+import com.linor.singer.exception.DataAccessException;
 import com.linor.singer.exception.ResourceNotFoundException;
 import com.linor.singer.exception.ValidException;
 
 @RestController
-@RequestMapping("/api/singer")
+@RequestMapping("/rest/singer")
 public class SingerController {
 	@Autowired
 	private SingerDao singerDao;
@@ -37,6 +39,7 @@ public class SingerController {
 		Singer singer = singerDao.findById(id);
 		if(singer == null)
 			throw new ResourceNotFoundException();
+		
 		return singer;
 	}
 	
@@ -45,6 +48,8 @@ public class SingerController {
 		if(result.hasErrors()) {
 			throw new ValidException("유효성 체크 오류", result);
 		}
+		if(null != singer.getId())
+			throw new BizException("비즈니스 오류 발생");
 		singerDao.insertWithAlbum(singer);
 	}
 	
@@ -58,7 +63,10 @@ public class SingerController {
 	}
 	
 	@DeleteMapping(value = "/{id}")
-	public void deleteSinger(@PathVariable("id") int id) {
+	public void deleteSinger(@PathVariable("id") int id) throws DataAccessException{
+		Singer singer = singerDao.findById(id);
+		if (singer == null)
+			throw new DataAccessException("데이타가 존재하지 않음");
 		singerDao.delete(id);
 	}
 }

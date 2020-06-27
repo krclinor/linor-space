@@ -6,7 +6,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -38,7 +40,7 @@ public class SingerRestTest {
 	
 	@Test
 	public void test01ListSingers() {
-		ResponseEntity<Singer[]> responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/api/singer", Singer[].class);
+		ResponseEntity<Singer[]> responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
 		List<Singer> singers = Arrays.asList(responseEntity.getBody());
 		assertNotNull(singers);
 		assertTrue(singers.size() == 4);
@@ -48,72 +50,75 @@ public class SingerRestTest {
 	
 	@Test
 	public void test02GetSingerById() {
-		Singer singer = restTemplate.getForObject(ROOT_URL + port + "/api/singer/1", Singer.class);
+		Singer singer = restTemplate.getForObject(ROOT_URL + port + "/rest/singer/1", Singer.class);
 		assertNotNull(singer);
 		log.info("가수 1 : {}", singer);
 	}
 	
 	@Test
 	public void test03InsertSinger() {
-		Singer singer = new Singer();
-		singer.setFirstName("조한");
-		singer.setLastName("김");
-		singer.setBirthDate(LocalDate.parse("1990-10-16"));
-		restTemplate.postForLocation(ROOT_URL + port + "/api/singer", singer);
+		ResponseEntity<Singer[]> responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
+		List<Singer> oldSingers = Arrays.asList(responseEntity.getBody());
+		Singer singer = Singer.builder()
+				.firstName("조한")
+				.lastName("김")
+				.birthDate(LocalDate.parse("1990-10-16"))
+				.build();
+		restTemplate.postForLocation(ROOT_URL + port + "/rest/singer", singer);
 
-		ResponseEntity<Singer[]> responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/api/singer", Singer[].class);
-		List<Singer> singers = Arrays.asList(responseEntity.getBody());
-		assertNotNull(singers);
-		assertTrue(singers.size() == 5);
+		responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
+		List<Singer> newSingers = Arrays.asList(responseEntity.getBody());
+		assertNotNull(newSingers);
+		assertEquals((oldSingers.size() + 1), newSingers.size());
 		log.info("추가후 가수목록");
-		listSingers(singers);
+		listSingers(newSingers);
 	}
 	
 	@Test
 	public void test04UpdateSinger() {
-		Singer singerOldSinger = restTemplate.getForObject(ROOT_URL + port + "/api/singer/1", Singer.class);
+		Singer oldSinger = restTemplate.getForObject(ROOT_URL + port + "/rest/singer/1", Singer.class);
 		log.info(">>> 김종서 수정 전 >>>");
-		log.info(singerOldSinger.toString());
-		Singer singer = new Singer();
-		singer.setId(1);
-		singer.setFirstName("종서");
-		singer.setLastName("김");
-		singer.setBirthDate(LocalDate.parse("1977-10-16"));
-		restTemplate.put(ROOT_URL + port + "/api/singer/1", singer);
-		Singer singerNewSinger = restTemplate.getForObject(ROOT_URL + port + "/api/singer/1", Singer.class);
+		log.info(oldSinger.toString());
+		oldSinger.setBirthDate(LocalDate.parse("1978-06-28"));
+		restTemplate.put(ROOT_URL + port + "/rest/singer/1", oldSinger);
+		Singer newSinger = restTemplate.getForObject(ROOT_URL + port + "/rest/singer/1", Singer.class);
 		log.info(">>> 김종서 수정 후 >>>");
-		log.info(singerNewSinger.toString());
+		log.info(newSinger.toString());
+		assertEquals(oldSinger.getBirthDate(), newSinger.getBirthDate());
 	}
 	
 	@Test
 	public void test05InsertSingerWithAlbum() {
-		ResponseEntity<Singer[]> responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/api/singer", Singer[].class);
+		ResponseEntity<Singer[]> responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
 		List<Singer> singers = Arrays.asList(responseEntity.getBody());
 		int singerCount = singers.size();
 		
-		Singer singer = new Singer();
-		singer.setFirstName("태원");
-		singer.setLastName("김");
-		singer.setBirthDate(LocalDate.parse("1965-04-12"));
+		Singer singer = Singer.builder()
+				.firstName("태원")
+				.lastName("김")
+				.birthDate(LocalDate.parse("1965-04-12"))
+				.albums(new HashSet<Album>())
+				.build();
+		Set<Album> ablums = singer.getAlbums();
+				ablums.add(Album.builder()
+						.title("Never Ending Story")
+						.releaseDate(LocalDate.parse("2001-08-31"))
+						.build()
+						);
+				ablums.add(Album.builder()
+						.title("생각이나")
+						.releaseDate(LocalDate.parse("2009-08-14"))
+						.build()
+						);
+				ablums.add(Album.builder()
+						.title("사랑할수록")
+						.releaseDate(LocalDate.parse("1993-11-01"))
+						.build()
+						);
 		
-		Album album = new Album();
-		album.setTitle("Never Ending Story");
-		album.setReleaseDate(LocalDate.parse("2001-08-31"));
-		singer.addAlbum(album);
-		
-		album = new Album();
-		album.setTitle("생각이나");
-		album.setReleaseDate(LocalDate.parse("2009-08-14"));
-		singer.addAlbum(album);
-		
-		album = new Album();
-		album.setTitle("사랑할수록");
-		album.setReleaseDate(LocalDate.parse("1993-11-01"));
-		singer.addAlbum(album);
-		
-		restTemplate.postForLocation(ROOT_URL + port + "/api/singer", singer);
+		restTemplate.postForLocation(ROOT_URL + port + "/rest/singer", singer);
 
-		responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/api/singer", Singer[].class);
+		responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
 		singers = Arrays.asList(responseEntity.getBody());
 		assertNotNull(singers);
 		assertTrue(singers.size() == (singerCount+1));
@@ -123,27 +128,16 @@ public class SingerRestTest {
 	
 	@Test
 	public void test06DeleteSinger() {
-		restTemplate.delete(ROOT_URL + port + "/api/singer/1");
+		restTemplate.delete(ROOT_URL + port + "/rest/singer/1");
 		try {
-			Singer singer = restTemplate.getForObject(ROOT_URL + port +"/api/singer/1", Singer.class);
+			Singer singer = restTemplate.getForObject(ROOT_URL + port +"/rest/singer/1", Singer.class);
 			log.info("삭제되지 않은 경우 가수: {}", singer);
 		}catch(final HttpClientErrorException e) {
 			assertEquals(e.getStatusCode(), HttpStatus.NOT_FOUND);
+			log.info(e.getMessage());
 		}
 	}
 	
-	@Test
-	public void test07InsertSingerWithError() {
-		Singer singer = new Singer();
-		singer.setFirstName("조한");
-		singer.setBirthDate(LocalDate.parse("2019-12-31"));
-		try {
-			restTemplate.postForLocation(ROOT_URL + port + "/api/singer", singer);
-		}catch(final HttpClientErrorException e) {
-			assertEquals(e.getStatusCode(), HttpStatus.UNPROCESSABLE_ENTITY);
-		}
-	}
-
 	private void listSingers(List<Singer> singers){
 		for(Singer singer: singers){
 			log.info(singer.toString());
