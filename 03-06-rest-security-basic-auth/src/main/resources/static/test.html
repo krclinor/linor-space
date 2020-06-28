@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>REST테스트</title>
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
-<script src="/webjars/jquery/3.4.0/dist/jquery.js"></script>
+<script src="/webjars/jquery/3.5.1/jquery.js"></script>
 <script>
 $(document).ready(function(){
 	$("#user").click(function(){
@@ -18,7 +18,7 @@ $(document).ready(function(){
 	});
 	
 	$("#singer").click(function(){
-		$.getJSON("/api/singer", function(data, status){
+		$.getJSON("/rest/singer", function(data, status){
 			var strData = JSON.stringify(data);
 			alert(strData);
 		}).fail(function(data){

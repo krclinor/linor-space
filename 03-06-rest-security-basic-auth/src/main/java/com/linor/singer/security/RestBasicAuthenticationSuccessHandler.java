@@ -35,6 +35,4 @@ public class RestBasicAuthenticationSuccessHandler extends SavedRequestAwareAuth
 		writer.flush();
 		writer.close();
 	}
-	
-	
 }
