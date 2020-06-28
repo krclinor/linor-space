@@ -16,23 +16,23 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Component
-public class RestBasicAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
-	private final ObjectMapper mapper;
-	
-	@Autowired
-	public RestBasicAuthenticationSuccessHandler(MappingJackson2HttpMessageConverter messageConverter) {
-		this.mapper = messageConverter.getObjectMapper();
-	}
-
-	@Override
-	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-			Authentication authentication) throws ServletException, IOException {
-		response.setStatus(HttpServletResponse.SC_OK);
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		PrintWriter writer = response.getWriter();
-		mapper.writeValue(writer, userDetails);
-		writer.flush();
-		writer.close();
-	}
-}
+//@Component
+//public class RestBasicAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+//	private final ObjectMapper mapper;
+//	
+//	@Autowired
+//	public RestBasicAuthenticationSuccessHandler(MappingJackson2HttpMessageConverter messageConverter) {
+//		this.mapper = messageConverter.getObjectMapper();
+//	}
+//
+//	@Override
+//	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+//			Authentication authentication) throws ServletException, IOException {
+//		response.setStatus(HttpServletResponse.SC_OK);
+//		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//		PrintWriter writer = response.getWriter();
+//		mapper.writeValue(writer, userDetails);
+//		writer.flush();
+//		writer.close();
+//	}
+//}

@@ -28,3 +28,4 @@ HELP.md
 ### VS Code ###
 .vscode/
 /.attach_pid15168
+/.mvn/
