@@ -1,3 +1,5 @@
+#spring.profiles.active: DEV
+---
 #로거
 logging:
   pattern:
@@ -10,7 +12,7 @@ logging:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/spring?currentSchema=singer
+    url: jdbc:postgresql://postgres:5432/spring?currentSchema=singer
     username: linor
     password: linor1234
     initialization-mode: always
