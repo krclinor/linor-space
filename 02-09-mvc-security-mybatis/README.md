@@ -132,7 +132,7 @@ insert into user_role(user_id, role_id) values
 사용자 테이블에 admin, linor, user를 추가하여 테스트한다.  
 비밀번호는 WebSecurityConfig에서 설정한 BCryptPasswordEncoder를 이용하여 인코딩한 비밀번호로 설정한다.  
 비밀번호를 변경하려면 테스트 프로그램인 ApplicationsTest클래스에서 비밀번호를 수정하여 JUnit테스트를 실행하면 콘솔에 나타나도록 하였다.  
-테스트케이스 [ApplicationTets.java](src/test/java/com/linor/singer/ApplicationTests.java)  
+테스트케이스 [ApplicationTest.java](src/test/java/com/linor/singer/ApplicationTest.java)  
 ```java
 	@Test
 	public void testPassword() {

@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import com.linor.singer.domain.Album;
 import com.linor.singer.domain.Singer;
@@ -34,16 +35,14 @@ import lombok.extern.slf4j.Slf4j;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SingerRestBasicAuthTest {
 	private static final String ROOT_URL = "http://localhost:";
-	
-	@Autowired
-	private TestRestTemplate template;
+	TestRestTemplate restTemplate = new TestRestTemplate("linor", "linor");
 	
 	@Value("${local.server.port:8080}")
 	private int port;
 	
 	@Test
 	public void test01ListSingers() {
-		ResponseEntity<Singer[]> responseEntity = template.withBasicAuth("linor", "linor")
+		ResponseEntity<Singer[]> responseEntity = restTemplate.withBasicAuth("linor", "linor")
 				.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
 		List<Singer> singers = Arrays.asList(responseEntity.getBody());
 		assertNotNull(singers);
@@ -54,27 +53,23 @@ public class SingerRestBasicAuthTest {
 	
 	@Test
 	public void test02GetSingerById() {
-		Singer singer = template.withBasicAuth("linor", "linor")
-				.getForObject(ROOT_URL + port + "/rest/singer/1", Singer.class);
+		Singer singer = restTemplate.getForObject(ROOT_URL + port + "/rest/singer/1", Singer.class);
 		assertNotNull(singer);
 		log.info("가수 1 : {}", singer);
 	}
 	
 	@Test
 	public void test03InsertSinger() {
-		ResponseEntity<Singer[]> responseEntity = template.withBasicAuth("linor", "linor")
-				.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
+		ResponseEntity<Singer[]> responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
 		List<Singer> oldSingers = Arrays.asList(responseEntity.getBody());
 		Singer singer = Singer.builder()
 				.firstName("조한")
 				.lastName("김")
 				.birthDate(LocalDate.parse("1990-10-16"))
 				.build();
-		template.withBasicAuth("linor", "linor")
-			.postForLocation(ROOT_URL + port + "/rest/singer", singer);
+		restTemplate.postForLocation(ROOT_URL + port + "/rest/singer", singer);
 
-		responseEntity = template.withBasicAuth("linor", "linor")
-				.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
+		responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
 		List<Singer> newSingers = Arrays.asList(responseEntity.getBody());
 		assertNotNull(newSingers);
 		assertEquals((oldSingers.size() + 1), newSingers.size());
@@ -84,15 +79,12 @@ public class SingerRestBasicAuthTest {
 	
 	@Test
 	public void test04UpdateSinger() {
-		Singer oldSinger = template.withBasicAuth("linor", "linor")
-				.getForObject(ROOT_URL + port + "/rest/singer/1", Singer.class);
+		Singer oldSinger = restTemplate.getForObject(ROOT_URL + port + "/rest/singer/1", Singer.class);
 		log.info(">>> 김종서 수정 전 >>>");
 		log.info(oldSinger.toString());
 		oldSinger.setBirthDate(LocalDate.parse("1978-06-28"));
-		template.withBasicAuth("linor", "linor")
-				.put(ROOT_URL + port + "/rest/singer/1", oldSinger);
-		Singer newSinger = template.withBasicAuth("linor", "linor")
-				.getForObject(ROOT_URL + port + "/rest/singer/1", Singer.class);
+		restTemplate.put(ROOT_URL + port + "/rest/singer/1", oldSinger);
+		Singer newSinger = restTemplate.getForObject(ROOT_URL + port + "/rest/singer/1", Singer.class);
 		log.info(">>> 김종서 수정 후 >>>");
 		log.info(newSinger.toString());
 		assertEquals(oldSinger.getBirthDate(), newSinger.getBirthDate());
@@ -100,8 +92,7 @@ public class SingerRestBasicAuthTest {
 	
 	@Test
 	public void test05InsertSingerWithAlbum() {
-		ResponseEntity<Singer[]> responseEntity = template.withBasicAuth("linor", "linor")
-				.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
+		ResponseEntity<Singer[]> responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
 		List<Singer> singers = Arrays.asList(responseEntity.getBody());
 		int singerCount = singers.size();
 		
@@ -128,11 +119,9 @@ public class SingerRestBasicAuthTest {
 						.build()
 						);
 		
-		template.withBasicAuth("linor", "linor")
-				.postForLocation(ROOT_URL + port + "/rest/singer", singer);
+		restTemplate.postForLocation(ROOT_URL + port + "/rest/singer", singer);
 
-		responseEntity = template.withBasicAuth("linor", "linor")
-				.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
+		responseEntity = restTemplate.getForEntity(ROOT_URL + port + "/rest/singer", Singer[].class);
 		singers = Arrays.asList(responseEntity.getBody());
 		assertNotNull(singers);
 		assertTrue(singers.size() == (singerCount+1));
@@ -142,14 +131,13 @@ public class SingerRestBasicAuthTest {
 	
 	@Test
 	public void test06DeleteSinger() {
-		template.withBasicAuth("linor", "linor")
-				.delete(ROOT_URL + port + "/rest/singer/1");
+		restTemplate.delete(ROOT_URL + port + "/rest/singer/1");
 		try {
-			Singer singer = template.withBasicAuth("linor", "linor")
-					.getForObject(ROOT_URL + port +"/rest/singer/1", Singer.class);
+			Singer singer = restTemplate.getForObject(ROOT_URL + port +"/rest/singer/1", Singer.class);
 			log.info("삭제되지 않은 경우 가수: {}", singer);
 		}catch(final HttpClientErrorException e) {
 			assertEquals(e.getStatusCode(), HttpStatus.NOT_FOUND);
+			log.info(e.getMessage());
 		}
 	}
 	

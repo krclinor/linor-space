@@ -7,23 +7,18 @@
 <script src="/webjars/jquery/3.5.1/jquery.js"></script>
 <script>
 $(document).ready(function(){
-	$("#user").click(function(){
-		alert($("#username").val());
+	$("#singer").click(function(){
 		base64Data =  btoa($("#username").val()+":"+$("#password").val());
 		$.ajaxSetup({
 			  headers: {
 			    Authorization: "Basic " + base64Data
 			  }
 			});
-	});
-	
-	$("#singer").click(function(){
 		$.getJSON("/rest/singer", function(data, status){
 			var strData = JSON.stringify(data);
 			alert(strData);
 		}).fail(function(data){
-			alert(data.status);
-			alert(data.responseJSON.message);
+			alert("상태코드: " + data.status + "\n" +data.responseJSON.errorMessage);
 		});;
 	});
 });
@@ -32,7 +27,6 @@ $(document).ready(function(){
 <body>
 	<input type="text" id="username"/><br/>
 	<input type="password" id="password"/><br/>
-	<button id="user">로그인 설정</button>
 	<p/>
 	<button id="singer">가져오기</button>
 </body>

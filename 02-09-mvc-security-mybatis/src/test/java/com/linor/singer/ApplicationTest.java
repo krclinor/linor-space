@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
-public class ApplicationTests {
+public class ApplicationTest {
 	@Autowired
 	private PasswordEncoder encoder;
 	
