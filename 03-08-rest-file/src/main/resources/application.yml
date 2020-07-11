@@ -1,0 +1,14 @@
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+  servlet:
+    multipart: #파일 업로드 설정
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 100MB
+      file-size-threshold: 5MB
+
+#업로드파일 저장 위치
+myapp.upload-folder: test/
