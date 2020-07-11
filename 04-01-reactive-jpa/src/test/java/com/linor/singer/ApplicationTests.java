@@ -1,7 +1,6 @@
 package com.linor.singer;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 
@@ -56,13 +55,13 @@ public class ApplicationTests {
 		
 		Singer singer = webClient.post().uri("/singers")
 				.contentType(MediaType.APPLICATION_JSON)
-				.body(BodyInserters.fromObject(newSinger))
+				.body(BodyInserters.fromValue(newSinger))
 				.retrieve()
 				.bodyToMono(Singer.class)
 				.block();
 		Integer id = singer.getId();
 		log.info("추가된 가수 ID : {}", id);
-		assertThat(singer.getFirstName(), is(newSinger.getFirstName()));
+		assertEquals(singer.getFirstName(), newSinger.getFirstName());
 	}
 	
 	@Test
@@ -87,7 +86,7 @@ public class ApplicationTests {
 				.returnResult(Singer.class).getResponseBody();
 		
 		StepVerifier.create(singers)
-			.expectNextCount(4)
+			.expectNextCount(104)
 			.verifyComplete();
 	}
 	
