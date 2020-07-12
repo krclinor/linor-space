@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.linor.singer.config.JwtProperties;
 import com.linor.singer.domain.JwtAuthUser;
 import com.linor.singer.domain.UserTokenState;
 import com.linor.singer.security.TokenHelper;
@@ -24,6 +25,9 @@ import com.linor.singer.security.TokenHelper;
 @RestController
 @RequestMapping(value = "/auth")
 public class AuthController {
+	@Autowired
+	JwtProperties props;
+	
 	@Autowired
 	TokenHelper tokenHelper;
 	
@@ -41,10 +45,10 @@ public class AuthController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
 		User user = (User)authentication.getPrincipal();
-		String jws = tokenHelper.generateToken(user.getUsername());
-		int expiresIn = tokenHelper.getExpiredIn();
+		String jws = tokenHelper.generateToken(user);
+		String refreshJws = tokenHelper.generateRefreshToken(user);
 		
-		return ResponseEntity.ok(new UserTokenState(jws, expiresIn));
+		return ResponseEntity.ok(new UserTokenState(jws, props.getExpiresIn(), refreshJws, props.getRefreshExpiresIn()));
 	}
 	
 	@PostMapping("/refresh")
@@ -55,9 +59,8 @@ public class AuthController {
 		String authToken = tokenHelper.getToken(request);
 		if(authToken != null && principal != null) {
 			String refreshToken = tokenHelper.refreshToken(authToken);
-			int expiredIn = tokenHelper.getExpiredIn();
 			
-			return ResponseEntity.ok(new UserTokenState(refreshToken, expiredIn));
+			return ResponseEntity.ok(new UserTokenState(refreshToken, props.getExpiresIn()));
 		}else {
 			UserTokenState userTokenState = new UserTokenState();
 			return ResponseEntity.ok(userTokenState);

@@ -67,7 +67,7 @@ public class RestSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 			.antMatchers("/", "/auth/*")
 				.permitAll()
-			.antMatchers("/api/**")
+			.antMatchers("/rest/**")
 				.hasAuthority("ADMIN")
 			.anyRequest()
 				.authenticated();

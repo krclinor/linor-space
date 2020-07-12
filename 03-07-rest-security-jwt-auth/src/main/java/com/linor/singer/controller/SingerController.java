@@ -17,7 +17,7 @@ import com.linor.singer.dao.SingerDao;
 import com.linor.singer.domain.Singer;
 
 @RestController
-@RequestMapping("/api/singer")
+@RequestMapping("/rest/singer")
 public class SingerController {
 	@Autowired
 	private SingerDao singerDao;

@@ -21,8 +21,7 @@ mybatis:
   configuration.map-underscore-to-camel-case: true
 
 jwt:
-  auth-header: Authorization
-  app-name: jwt-demo
-  expires-in: 300 #5분
+  issuer: http://linor.com
+  expires-in: 5 #5분
+  refresh-expires-in: 60 #1
   secret: linorJwt11123456123456awkfvmnajhfakwfhqiekcbkdjfbeasdfghjklzxcvbnm12345678901234567890qwertyuiopasdfgklzxcvbnmqwertyui
-  header-prefix: Bearer
