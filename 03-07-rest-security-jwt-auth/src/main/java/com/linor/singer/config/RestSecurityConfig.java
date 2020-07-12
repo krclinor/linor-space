@@ -15,7 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.linor.singer.security.JwtAuthenticationFilter;
 import com.linor.singer.security.RestAuthenticationEntryPoint;
@@ -75,13 +75,13 @@ public class RestSecurityConfig extends WebSecurityConfigurerAdapter {
 		//Authentication Filter
 		http.addFilterBefore(
 				new JwtAuthenticationFilter(tokenHelper, userDetailsService), 
-				BasicAuthenticationFilter.class);
+				UsernamePasswordAuthenticationFilter.class);
 	}
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring()
-			.antMatchers(HttpMethod.POST, "/auth/login");
+			.antMatchers(HttpMethod.POST, "/auth/*");
 		
 		web.ignoring()
 			.antMatchers(

@@ -25,6 +25,7 @@ import com.linor.security.auth.ajax.AjaxLoginProcessingFilter;
 import com.linor.security.auth.jwt.JwtAuthenticationProvider;
 import com.linor.security.auth.jwt.JwtTokenAuthenticationProcessingFilter;
 import com.linor.security.auth.jwt.SkipPathRequestMatcher;
+import com.linor.security.auth.jwt.TokenExtractor;
 
 @Configuration
 @EnableWebSecurity
@@ -40,6 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired private AjaxAuthenticationProvider ajaxAuthenticationProvider;
 	@Autowired private JwtAuthenticationProvider jwtAuthenticationProvider;
 	@Autowired private AuthenticationManager authenticationManager;
+	@Autowired private TokenExtractor tokenExtractor;
 	@Autowired private ObjectMapper objectMapper;
 
 	protected AjaxLoginProcessingFilter buildAjaxLoginProcessingFilter(String loginEntryPoint) throws Exception {
@@ -52,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected JwtTokenAuthenticationProcessingFilter buildJwtTokenAuthenticationProcessingFilter(
 			List<String> pathsToSkip, String pattern) throws Exception {
 		SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, pattern);
-		JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(failureHandler, matcher);
+		JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(failureHandler, tokenExtractor, matcher);
 		filter.setAuthenticationManager(this.authenticationManager);
 		return filter;
 	}

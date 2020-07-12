@@ -17,25 +17,27 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import com.linor.security.auth.JwtAuthenticationToken;
-import com.linor.security.common.WebUtil;
 import com.linor.security.config.WebSecurityConfig;
 import com.linor.security.model.token.RawAccessJwtToken;
 
 public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
     private final AuthenticationFailureHandler failureHandler;
+    private final TokenExtractor tokenExtractor;
     
     @Autowired
     public JwtTokenAuthenticationProcessingFilter(AuthenticationFailureHandler failureHandler, 
-            RequestMatcher matcher) {
+    		TokenExtractor tokenExtractor,
+    		RequestMatcher matcher) {
         super(matcher);
         this.failureHandler = failureHandler;
+        this.tokenExtractor = tokenExtractor;
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
         String tokenPayload = request.getHeader(WebSecurityConfig.AUTHENTICATION_HEADER_NAME);
-        RawAccessJwtToken token = new RawAccessJwtToken(WebUtil.tokenExtract(tokenPayload));
+        RawAccessJwtToken token = new RawAccessJwtToken(tokenExtractor.extract(tokenPayload));
         return getAuthenticationManager().authenticate(new JwtAuthenticationToken(token));
     }
 

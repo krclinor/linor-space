@@ -24,13 +24,6 @@ import lombok.RequiredArgsConstructor;
 public class JwtTokenFactory {
     private final JwtSettings settings;
 
-    /**
-     * Factory method for issuing new JWT Tokens.
-     * 
-     * @param username
-     * @param roles
-     * @return
-     */
     public AccessJwtToken createAccessJwtToken(UserContext userContext) {
         if (StringUtils.isEmpty(userContext.getUsername())) 
             throw new IllegalArgumentException("Cannot create JWT Token without username");

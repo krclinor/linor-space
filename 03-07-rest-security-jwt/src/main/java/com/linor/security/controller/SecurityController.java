@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.linor.security.auth.JwtAuthenticationToken;
-import com.linor.security.common.WebUtil;
+import com.linor.security.auth.jwt.TokenExtractor;
+import com.linor.security.auth.jwt.TokenVerifier;
 import com.linor.security.config.JwtSettings;
 import com.linor.security.config.WebSecurityConfig;
 import com.linor.security.exceptions.InvalidJwtToken;
@@ -37,6 +38,8 @@ public class SecurityController {
 	private final JwtTokenFactory tokenFactory;
 	private final JwtSettings jwtSettings;
 	private final UserService userService;
+	private final TokenVerifier tokenVerifier;
+	private final TokenExtractor tokenExtractor;
 
 	@GetMapping("/rest/me")
 	public @ResponseBody UserContext get(JwtAuthenticationToken token) {
@@ -46,11 +49,16 @@ public class SecurityController {
 	@GetMapping("/auth/token")
 	public @ResponseBody Map<String, String> refreshToken(HttpServletRequest request)
 			throws IOException, ServletException {
-		String tokenPayload = WebUtil.tokenExtract(request.getHeader(WebSecurityConfig.AUTHENTICATION_HEADER_NAME));
+		String tokenPayload = tokenExtractor.extract(request.getHeader(WebSecurityConfig.AUTHENTICATION_HEADER_NAME));
 
 		RawAccessJwtToken rawToken = new RawAccessJwtToken(tokenPayload);
 		RefreshToken refreshToken = RefreshToken.create(rawToken, jwtSettings.getKey())
-				.orElseThrow(() -> new InvalidJwtToken("Token is invalid."));
+				.orElseThrow(() -> new InvalidJwtToken());
+
+		String jti = refreshToken.getJti();
+		if (!tokenVerifier.verify(jti)) {
+			throw new InvalidJwtToken();
+		}
 
 		String subject = refreshToken.getSubject();
 		MyUser user = userService.getByUsername(subject)

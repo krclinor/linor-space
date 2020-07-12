@@ -23,8 +23,8 @@ mybatis:
   configuration.map-underscore-to-camel-case: true
 
 security.jwt:
-  tokenExpirationTime: 1 # Number of minutes
-  refreshTokenExpTime: 60 # Minutes
-  tokenIssuer: http://linor.com
-  tokenSigningKey: xm8EV6Hy5RMFK4EEACIDAwQusxm8EV6Hy5RMFK4EEACIDAwQusxm8EV6Hy5RMFK4EEACIDAwQusxm8EV6Hy5RMFK4EEACIDAwQusxm8EV6Hy5RMFK4EEACIDAwQus
+  token-expiration-time: 1 # Number of minutes
+  refresh-token-exp-time: 60 # Minutes
+  token-issuer: http://linor.com
+  token-signing-key: xm8EV6Hy5RMFK4EEACIDAwQusxm8EV6Hy5RMFK4EEACIDAwQusxm8EV6Hy5RMFK4EEACIDAwQusxm8EV6Hy5RMFK4EEACIDAwQusxm8EV6Hy5RMFK4EEACIDAwQus
   

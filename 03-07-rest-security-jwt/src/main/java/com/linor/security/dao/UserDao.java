@@ -14,5 +14,4 @@ import com.linor.security.model.Role;
 public interface UserDao {
 	MyUser findById(String id);
 	List<Role> listRolesByUser(MyUser user);
-	void updatePassword(MyUser user);
 }
