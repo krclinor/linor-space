@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>REST테스트</title>
+<script src="/webjars/jquery/3.5.1/jquery.js"></script>
+<script>
+	$(document).ready(function() {
+		$("#user").click(function() {
+			alert($("#username").val());
+			userInfo = {
+				username : $("#username").val(),
+				password : $("#password").val()
+			};
+			$.ajax({
+			    'type': 'POST',
+			    'url': '/auth/login',
+			    'contentType': 'application/json; charset=utf-8',
+			    'data': JSON.stringify(userInfo),
+			    'dataType': 'json',
+			    'success': function(data){
+					$.ajaxSetup({
+						headers : {
+							Authorization : "Bearer " + data.token
+						}
+					});
+			    }
+			  });
+		});
+
+		$("#singer").click(function() {
+			$.getJSON("/rest/singer", function(data, status) {
+				var strData = JSON.stringify(data);
+				alert(strData);
+			}).fail(function(error) {
+				console.log(error)
+			});
+		});
+	});
+</script>
+</head>
+<body>
+	<input type="text" id="username" />
+	<br />
+	<input type="password" id="password" />
+	<br />
+	<button id="user">로그인</button>
+	<p />
+	<button id="singer">가져오기</button>
+</body>
+</html>
