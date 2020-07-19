@@ -1,8 +1,6 @@
 package com.linor.singer.controller;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.linor.singer.domain.UploadFileResult;
-import com.linor.singer.service.FileStorageServiceImpl;
+import com.linor.singer.service.FileStorageService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class FileController {
 
-	private final FileStorageServiceImpl fileService;
+	private final FileStorageService fileService;
 	
 	@PostMapping("/uploadFile")
 	public UploadFileResult uploadFile(@RequestParam("file") MultipartFile file) {
@@ -79,5 +77,4 @@ public class FileController {
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment: filename=\"" + resource.getFilename() + "\"")
 				.body(resource);
 	}
-	
 }

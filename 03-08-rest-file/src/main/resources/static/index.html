@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html>
     <head>
+    	 <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-        <title>Spring Boot File Upload / Download Rest API Example</title>
+        <title>Spring Boot 파일 업로드/다운로드 REST API 예제</title>
         <link rel="stylesheet" href="/css/main.css" />
 		 <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
     </head>
     <body>
         <noscript>
-            <h2>Sorry! Your browser doesn't support Javascript</h2>
+            <h2>이 브라우저는 자바스크립트를 지원하지 않습니다.</h2>
         </noscript>
         <div class="upload-container">
             <div class="upload-header">
-                <h2>Spring Boot File Upload / Download Rest API Example</h2>
+                <h2>Spring Boot 파일 업로드/다운로드 REST API 예제</h2>
             </div>
             <div class="upload-content">
                 <div class="single-upload">
-                    <h3>Upload Single File</h3>
+                    <h3>단일 파일 업로드</h3>
                     <form id="singleUploadForm" name="singleUploadForm">
                         <input id="singleFileUploadInput" type="file" name="file" class="file-input" required />
-                        <button type="submit" class="primary submit-btn">Submit</button>
+                        <button type="submit" class="primary submit-btn">업로드</button>
                     </form>
                     <div class="upload-response">
                         <div id="singleFileUploadError"></div>
@@ -27,10 +28,10 @@
                     </div>
                 </div>
                 <div class="multiple-upload">
-                    <h3>Upload Multiple Files</h3>
+                    <h3>여러 파일 업로드</h3>
                     <form id="multipleUploadForm" name="multipleUploadForm">
                         <input id="multipleFileUploadInput" type="file" name="files" class="file-input" multiple required />
-                        <button type="submit" class="primary submit-btn">Submit</button>
+                        <button type="submit" class="primary submit-btn">업로드</button>
                     </form>
                     <div class="upload-response">
                         <div id="multipleFileUploadError"></div>

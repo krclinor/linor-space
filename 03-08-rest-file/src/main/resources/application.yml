@@ -1,8 +1,4 @@
 spring:
-  mvc:
-    view:
-      prefix: /WEB-INF/jsp/
-      suffix: .jsp
   servlet:
     multipart: #파일 업로드 설정
       enabled: true

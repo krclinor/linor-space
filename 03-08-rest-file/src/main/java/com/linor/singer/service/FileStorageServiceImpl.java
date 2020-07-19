@@ -17,9 +17,8 @@ import com.linor.singer.exception.FileStorageException;
 import com.linor.singer.exception.MyFileNotFoundException;
 
 @Service
-public class FileStorageServiceImpl {
+public class FileStorageServiceImpl implements FileStorageService {
 
-	
 	private Path fileStorageLocation;
 	
 	public FileStorageServiceImpl(@Value("${myapp.upload-dir:test}") String uploadDir) {
@@ -33,6 +32,7 @@ public class FileStorageServiceImpl {
 		}
 	}
 	
+	@Override
 	public String storeFile(MultipartFile file) {
 		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 		if(!file.isEmpty()) {
@@ -46,6 +46,7 @@ public class FileStorageServiceImpl {
 		return fileName;
 	}
 	
+	@Override
 	public ByteArrayResource loadFileAsResource(String fileName){
 		try {
 			Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
