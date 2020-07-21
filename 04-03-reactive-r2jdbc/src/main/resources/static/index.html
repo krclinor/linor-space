@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Movie</title>
+		<style>
+	    	*{padding:0; margin:0;}
+	    	table tr th{background-color: #FFBB00;}
+	    	table tr th, td{border: 1px solid black; text-align: center; width: 200px;}
+	    </style>
+	</head>
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+	 <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.1.0/rx.all.min.js"></script>
+	<body>
+		<h1>WebFlux Asynchronous</h1>
+		<br/><br/><br/>
+		<h1>Movie List</h1>
+			<table id="singerTable">
+				<tr>
+					<th>ID</th>
+					<th>성</th>
+					<th>이름</th>
+					<th>생일</th>
+				</tr>
+			</table>
+	</body>
+	<script>
+	$(document).ready(function(){
+//  		var evtSource = new EventSource("http://localhost:8080/singers");
+// 		evtSource.onmessage = function (event){
+// 			var data = JSON.parse(event.data);
+// 			var tag = "<tr>" +
+// 			"<td>" + data.id + "</td>" +
+// 			"<td>" + data.lastName + "</td>" +
+// 			"<td>" + data.firstName + "</td>" +
+// 			"<td>" + data.birthDate + "</td>" +
+// 		"</tr>";
+// 			$("#singerTable").append(tag);
+// 		};
+	 var promise = $.ajax({
+	        url: '/singers',
+	        dataType: 'json'
+	    }).promise();
+	 Rx.Observable.fromPromise(promise)
+		  .subscribe(
+				  function onNext(result) {
+					 console.log("정상");
+				     //console.log(result);
+				     result.forEach(data => {
+				 			var tag = "<tr>" +
+				 			"<td>" + data.id + "</td>" +
+				 			"<td>" + data.lastName + "</td>" +
+				 			"<td>" + data.firstName + "</td>" +
+				 			"<td>" + data.birthDate + "</td>" +
+				 		"</tr>";
+				 			$("#singerTable").append(tag);				     });
+				    },
+				    function onError(err) {
+				    	console.log("오류")
+				        console.log(err);
+				    },
+				    function onCompleted() {
+				       console.log("완료");
+				    }
+			);
+	});
+	</script>
+</html>

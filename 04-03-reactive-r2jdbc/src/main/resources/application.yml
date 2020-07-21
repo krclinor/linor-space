@@ -1,0 +1,13 @@
+#로거
+logging:
+  pattern:
+    console: '%-5level %logger{0} - %msg%n'
+  level:
+    root: info
+    com.linor.singer.repository: trace
+
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://postgres:5432/spring?currentSchema=singer
+    password: linor1234
+    username: linor
