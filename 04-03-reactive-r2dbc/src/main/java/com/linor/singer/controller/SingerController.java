@@ -1,7 +1,5 @@
 package com.linor.singer.controller;
 
-import java.time.Duration;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,10 +41,11 @@ public class SingerController {
 	}
 
 	//@GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	//@GetMapping(produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
 	@GetMapping
-	public ResponseEntity<Flux<Singer>> findAllFlux() {
+	public Flux<Singer> findAllFlux() {
 		Flux<Singer> flux = singerService.findAllFlux();
-		return ResponseEntity.ok().body(flux);
+		return flux;
 	}
 
 	@DeleteMapping("/{id}")
