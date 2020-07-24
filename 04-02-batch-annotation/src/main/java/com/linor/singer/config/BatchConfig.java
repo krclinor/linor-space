@@ -19,6 +19,7 @@ import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.core.io.FileSystemResource;
 
 import com.linor.singer.batch.SingerDbWriter;
@@ -53,7 +54,7 @@ public class BatchConfig {
 	}
 	
 	@Bean
-	public FlatFileItemReader<Singer> fileItemReader(@Value("${input}") String path){
+	public FlatFileItemReader<Singer> fileItemReader(@Value("${files.input-file}") String path){
 		FlatFileItemReader<Singer> flatFileItemReader = new FlatFileItemReader<>();
 		flatFileItemReader.setResource(new FileSystemResource(path));
 		flatFileItemReader.setLinesToSkip(1);//첫 라인 건너뜀
@@ -63,7 +64,7 @@ public class BatchConfig {
 	
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	@Bean
-	public FlatFileItemWriter<Singer> fileWriter(@Value("${output}") String path){
+	public FlatFileItemWriter<Singer> fileWriter(@Value("${files.output-file}") String path){
 		final FlatFileItemWriter<Singer> writer = new FlatFileItemWriter<>();
 		writer.setResource(new FileSystemResource(path));
 		writer.setHeaderCallback(headerWriter -> headerWriter.append("id, firstName, lastName, birthDate"));
@@ -80,7 +81,6 @@ public class BatchConfig {
 		writer.setSqlSessionFactory(sqlSessionFactory);
 		writer.setStatementId("com.linor.singer.dao.SingerDao.insert");
 		return writer;
-		
 	}
 	
 	@Bean
@@ -97,8 +97,8 @@ public class BatchConfig {
 				.<Singer, Singer>chunk(100)
 				.reader(fileItemReader(null))
 				.processor(singerProcessor)
-				//.writer(singerDbWriter)
-				.writer(dbWriter())
+				.writer(singerDbWriter)
+				//.writer(dbWriter())
 				.build();
 	}
 	

@@ -3,20 +3,20 @@ package com.linor.singer.batch;
 import java.util.List;
 
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.linor.singer.dao.SingerDao;
 import com.linor.singer.domain.Singer;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class SingerDbWriter implements ItemWriter<Singer> {
 
-	@Autowired
-	private SingerDao singerDao;
+	private final SingerDao singerDao;
 	
 	@Override
 	public void write(List<? extends Singer> items) throws Exception {

@@ -21,6 +21,4 @@ public class SingerProcessor implements ItemProcessor<Singer, Singer> {
 		log.info("{} 에서 {}로 변환됨.", firstName, item.getFirstName());
 		return item;
 	}
-	
-
 }

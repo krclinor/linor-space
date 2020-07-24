@@ -8,7 +8,6 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -24,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 public class ScheduleConfig {
 	private final JobLauncher jobLauncher;
 	
-	@Autowired
 	@Qualifier("job1")
 	private final Job job1;
 	

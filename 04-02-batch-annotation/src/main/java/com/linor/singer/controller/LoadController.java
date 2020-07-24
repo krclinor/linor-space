@@ -14,7 +14,6 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,21 +21,20 @@ import org.springframework.web.bind.annotation.RestController;
 import com.linor.singer.dao.SingerDao;
 import com.linor.singer.domain.Singer;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
+@RequiredArgsConstructor
 public class LoadController {
 	
-	@Autowired
-	SingerDao dao;
+	private final SingerDao dao;
 	
-	@Autowired
-	JobLauncher jobLauncher;
+	private final JobLauncher jobLauncher;
 	
-	@Autowired 
 	@Qualifier("job2")
-	Job job2;
+	private final Job job2;
 	
 	@GetMapping("/load")
 	public BatchStatus load() throws JobExecutionAlreadyRunningException,

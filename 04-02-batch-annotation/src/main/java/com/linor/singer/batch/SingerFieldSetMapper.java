@@ -19,5 +19,4 @@ public class SingerFieldSetMapper implements FieldSetMapper<Singer> {
 				.birthDate(LocalDate.parse(fieldSet.readString(3)))
 				.build();
 	}
-
 }
