@@ -1,5 +1,6 @@
 package com.linor.singer.serviceImpl;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +43,16 @@ public class SingerServiceImpl implements SingerService {
 		return Mono.just(singer);
 	}
 
+	
 	@Override
-	public Flux<Singer> findAll() {
+	public List<Singer> findAllList() {
+		return singerDao.findAllLIst();
+	}
+
+	@Override
+	public Flux<Singer> findAllFlux() {
 		Flux<Singer> flux = Flux.push(fluxSink -> {
-			singerDao.findAll(resultContext -> fluxSink.next(resultContext.getResultObject()));
+			singerDao.findAllFlux(resultContext -> fluxSink.next(resultContext.getResultObject()));
 			fluxSink.complete();
 		});
 		return flux.publishOn(Schedulers.elastic()).subscribeOn(Schedulers.elastic());

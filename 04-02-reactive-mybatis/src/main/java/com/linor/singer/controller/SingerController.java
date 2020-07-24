@@ -1,5 +1,7 @@
 package com.linor.singer.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,10 +42,19 @@ public class SingerController {
 		HttpStatus status = mono != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
 		return new ResponseEntity<Mono<Singer>>(mono, status);
 	}
+
+	@GetMapping("/list")
+	public ResponseEntity<List<Singer>> findAllList(){
+		List<Singer> list = singerService.findAllList();
+		
+		return ResponseEntity.ok().contentType(MediaType.APPLICATION_STREAM_JSON)
+				.body(list);
+
+	}
 	
-	@GetMapping
-	public ResponseEntity<Flux<Singer>> findAll(){
-		Flux<Singer> flux = singerService.findAll();
+	@GetMapping("/flux")
+	public ResponseEntity<Flux<Singer>> findAllFlux(){
+		Flux<Singer> flux = singerService.findAllFlux();
 		
 		return ResponseEntity.ok().contentType(MediaType.APPLICATION_STREAM_JSON)
 				.body(flux.publishOn(Schedulers.elastic()).subscribeOn(Schedulers.elastic()));

@@ -1,5 +1,7 @@
 package com.linor.singer.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -14,8 +16,12 @@ import com.linor.singer.domain.Singer;
 @Mapper
 public interface SingerDao {
 	@Select("select * from singer")
+	List<Singer> findAllLIst();
+
+	@Select("select * from singer")
 	@ResultType(Singer.class)
-	void findAll(ResultHandler<Singer> handler);
+	@Options(fetchSize = 1)
+	void findAllFlux(ResultHandler<Singer> handler);
 
 	@Insert("insert into singer(id, first_name, last_name, birth_date)\n" + 
 			"values\n" + 
