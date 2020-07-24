@@ -1,5 +1,6 @@
 package com.linor.singer.serviceImpl;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import javax.transaction.Transactional;
@@ -30,8 +31,14 @@ public class SingerServiceImpl implements SingerService {
 		return Mono.just(singerRepository.findById(id).orElseThrow(NoSuchElementException::new));
 	}
 
+	
 	@Override
-	public Flux<Singer> findAll() {
+	public List<Singer> findAllList() {
+		return singerRepository.findAll();
+	}
+
+	@Override
+	public Flux<Singer> findAllFlux() {
 		return Flux.fromIterable(singerRepository.findAll());
 	}
 
