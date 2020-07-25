@@ -31,5 +31,4 @@ public class MyMessageConverter implements MessageConverter {
 		String messageData = textMessage.getText();
 		return messageData;
 	}
-
 }

@@ -5,23 +5,19 @@
 	xmlns:int-ftp="http://www.springframework.org/schema/integration/ftp"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/integration/ftp http://www.springframework.org/schema/integration/ftp/spring-integration-ftp.xsd
-		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
-
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-5.2.xsd">
 	<bean id="ftpFactory"
 		class="org.springframework.integration.ftp.session.DefaultFtpSessionFactory">
 		<property name="host" value="localhost"></property>
 		<property name="username" value="ftpuser"></property>
 		<property name="password" value="init0000"></property>
 	</bean>
-
 	<int:channel id="channel"/>
-	
 	<int-ftp:inbound-channel-adapter session-factory="ftpFactory"
 		channel="channel" remote-directory="/test1/" 
 		local-directory="source"
 		delete-remote-files="true"
-		preserve-timestamp="true"
-		>
+		preserve-timestamp="true">
 		<int:poller fixed-rate="5000"/>
 	</int-ftp:inbound-channel-adapter>
 	<int-ftp:outbound-channel-adapter session-factory="ftpFactory"

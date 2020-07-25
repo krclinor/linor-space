@@ -39,10 +39,10 @@ dataSource1의 item_source테이블의 polled칼럼이 false인 모든 레코드
 		</dependency>		
 	</dependencies>
 ```
-spring-boot-starter-integration라이브러리가 스프링 Integration을 사용하기 위한 라이브러리 이다.
-spring-integration-jdbc를 추가하여 jdbc Channel Adapter를 사용한다.  
-사용 데이터베이스는 postgresql로 한다.  
-보통 JDBC어뎁터를 사용하는 경우 2개 이상의 데이타베이스를 사용한다. JTA데이타소스를 사용하여 트랜잭션을 보장하도록 한다.  
+- spring-boot-starter-integration: 스프링 Integration을 사용하기 위한 라이브러리.  
+- spring-integration-jdbc: jdbc Channel Adapter를 사용을 위한 라이브러리.  
+- 사용 데이터베이스는 postgresql로 한다.  
+- spring-boot-starter-jta-atomikos: 보통 JDBC어뎁터를 사용하는 경우 2개 이상의 데이타베이스를 사용한다. JTA데이타소스를 사용하여 트랜잭션을 보장하도록 한다.  
 
 ## 소스 데이타소스 스키마 및 입력 데이타
 소스: [schema1.sql](src/main/resources/schema1.sql)  
@@ -186,14 +186,14 @@ public class DatasourceConfig {
 	</int-jdbc:outbound-channel-adapter>	
 </beans>
 ```
-- <int:channel/>: 채널을 생성한다.  
-- <int-jdbc:inbound-channel-adapter/>: 인바운드 채널 어뎁터를 생성한다.  
+- &lt;int:channel/&gt;: 채널을 생성한다.  
+- &lt;int-jdbc:inbound-channel-adapter/&gt;: 인바운드 채널 어뎁터를 생성한다.  
   - data-source: dataSource1을 등록한다.  
   - query속성값에 조회용 sql문을 등록한다.
   - 조회한 내역을 다음에 다시 조회하지 않도록 update속성값에 polled칼럼을 true로 변경하는 sql문을 등록한다. :item_id는 쿼리 조회후 리턴받은 ResultSet의 item_id값을 sql파라미터로 재사용한다. item_id의 값은 배열값이므로 in을 사용하여 조회한다.  
-  - <int:poller>: fixed-rate=”4000” 폴링 타임을 4초로 지정
+  - &lt;int:poller&gt;: fixed-rate=”4000” 폴링 타임을 4초로 지정
 
-- <int-jdbc:outbound-channel-adapter>: 아웃바운드 채널 어뎁터를 생성한다.
+- &lt;int-jdbc:outbound-channel-adapter&gt;: 아웃바운드 채널 어뎁터를 생성한다.
   - query에 item_dest테이블에 insert할 sql문을 등록한다.
   - :payload[item_id], :payload[description]는 메시지 페이로드에 있는 item_id와 description값을 사용한다.
 
@@ -224,7 +224,7 @@ select *
 from public.item_dest
 where item_id = 'test01';
 ```
-결과
+결과  
 ![](images/image01.png)
 
 ## 참고 URL
