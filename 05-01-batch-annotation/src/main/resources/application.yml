@@ -18,7 +18,7 @@ spring:
   #Spring Batch 설정
   batch:
     #배치 데이타베이스 초기화(Spring Batch에 사용되는 테이블 생성)
-    initialize-schema: always  
+    initialize-schema: always   
     job:
       #Bootstrap시 Job을 자동으로 실행하지 않도록 false로 함
       enabled: false

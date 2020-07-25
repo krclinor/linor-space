@@ -12,27 +12,29 @@
 - Step과 ItemReader, ItemProcessor, ItemWriter 1:1
 - Job이라는 하나의 큰 일감(Job)에 여러 단계(Step)을 두고, 각 단계를 배치의 기본 흐름대로 구성한다.
 
-Job
-Job은 배치 처리 과정을 하나의 단위로 만들어 포현한 객체다. 또한 전체 배치 처리에 있어 항상 최상단 계층에 있다.  
-위에서 하나의 Job(일감) 안에는 여러 Step(단계)이 있다고 설명했던 바와 같이 스프링 배치에서 Job 객체는 여러 Step 인스턴스를 포함하는 컨테이너 이다.  
+### Job  
+Job은 배치 처리 과정을 하나의 단위로 만들어 표현한 객체로, 배치 처리에 있어 항상 최상단 계층에 있다.  
+Job 객체는 여러 Step 인스턴스를 포함하는 컨테이너 이다.  
 
-Step  
-Step은 실직적인 배치 처리를 정의하고 제어 하는데 필요한 모든 정보가 있는 도메인 객체이다. Job을 처리하는 실질적인 단위로 쓰인다.  
+### Step  
+Step은 실직적인 배치 처리를 정의하고 제어 하는데 필요한 모든 정보가 있는 도메인 객체이다.  
+Job을 처리하는 실질적인 단위로 쓰인다.  
 모든 Job에는 1개 이상의 Step이 있어야 한다.
 
-ItemReader
+### ItemReader  
 ItemReader는 Step의 대상이 되는 배치 데이터를 읽어오는 인터페이스이다.  
-File, Xml Db등 여러 타입의 데이터를 읽어올 수 있다.  
+File, Xml, Db등 여러 타입의 데이터를 읽어올 수 있다.  
 
-ItemProcessor
-ItemProcessor는 ItemReader로 읽어 온 배치 데이터를 변환하는 역할을 수행한다. 이것을 분리하는 이유는 다음과 같다.  
+### ItemProcessor  
+ItemProcessor는 ItemReader로 읽어온 배치 데이터를 변환하는 역할을 수행한다.  
+이것을 분리하는 이유는 다음과 같다.  
 - 비즈니스 로직의 분리 : ItemWriter는 저장 수행하고, ItemProcessor는 로직 처리만 수행해 역할을 명확하게 분리.  
 - 읽어온 배치 데이터와 씌여질 데이터의 타입이 다를 경우에 대응.
 
-ItemWriter  
+### ItemWriter  
 ItemWriter는 배치 데이터를 저장한다.  
 일반적으로 DB나 파일에 저장합니다.  
-ItemWriter도 ItemReader와 비슷한 방식을 구현한다. 제네릭으로 원하는 타입을 받고 write() 메서드는 List를 사용해서 저장한 타입의 리스트를 매게변수로 받는다.
+ItemWriter도 ItemReader와 비슷한 방식을 구현한다. 제너릭으로 원하는 타입을 받고 write() 메서드는 List를 사용해서 저장한 타입의 리스트를 매개변수로 받는다.
 
 ## Spring Boot Starter를 이용한 프로젝트 생성
 Spring Boot -> Spring Starter Project로 생성한다.  
@@ -133,13 +135,14 @@ id, firstName, lastName, birthDate
 3, 혜경, 민, 1978-01-03
 ```
 - files:output-file: files/output.csv  – 스프링 배치에서 출력 파일로 사용하기 위해 설정
-- spring:batch:initialize-schema: always – 스프링 배치를 사용하기 위해 필요한 테이블 설치를 위하여 설정한다.
--- BATCH_JOB_INSTANCE
--- BATCH_JOB_EXECUTION
--- BATCH_JOB_EXECUTION_CONTEXT
--- BATCH_JOB_EXECUTION_PARAMS
--- BATCH_STEP_EXECUTION
--- BATCH_STEP_EXECUTION_CONTEXT
+- spring:batch:initialize-schema: always – 스프링 배치사용에 필요한 테이블 생성을 위해 설정한다.  
+-- BATCH_JOB_INSTANCE  
+-- BATCH_JOB_EXECUTION  
+-- BATCH_JOB_EXECUTION_CONTEXT  
+-- BATCH_JOB_EXECUTION_PARAMS  
+-- BATCH_STEP_EXECUTION  
+-- BATCH_STEP_EXECUTION_CONTEXT  
+![](images/image02.png) 
 
 ### 데이타베이스 초기화 파일 생성
 소스 : [schema.sql](src/main/resources/schema.sql)  
@@ -177,8 +180,8 @@ public class Singer {
 	private LocalDate birthDate;
 }
 ```
-@Data는 lombok어노테이션으로 소스 컴파일시 자동으로 get/set, equals, hashCode, toString매서드를 생성하여 코딩을 깔끔하게 할 수 있다.
-@NoArgsConstructor는 lombok어노테이션으로 매개변수 없는 생성자를 만들어준다.
+@Data는 lombok어노테이션으로 소스 컴파일시 자동으로 get/set, equals, hashCode, toString매서드를 생성하여 코딩을 깔끔하게 할 수 있다.  
+@NoArgsConstructor는 lombok어노테이션으로 매개변수 없는 생성자를 만들어준다.  
 @AllArgsConstructor는 lombok어노테이션으로 Singer의 모든 프로퍼티를 포함하는 생성자를 만들어 준다.
 
 ## DAO인터페이스 생성
@@ -190,7 +193,7 @@ public interface SingerDao {
 	public List<Singer> findAll();
 }
 ```
-@Mapper는 인터페이스가 Mybatis의 Mapper인터페이스 임을 알려준다.  
+@Mapper는 인터페이스가 Mybatis의 Mapper인터페이스임을 선언한다.  
 csv파일에서 대량의 데이터를 singer테이블에 입력하기 위한 insert메서드와 singer테이블의 모든 레코드를 파일에 저장하기 위해 findAll메서드를 정의한다.  
 
 ### SingerDao인터페이스 구현
@@ -209,6 +212,7 @@ csv파일에서 대량의 데이터를 singer테이블에 입력하기 위한 in
 
 ## FieldSetMapper 구현
 LineMapper에서 사용할 FieldSetMapper를 구현한다.  
+FieldSetMapper는 파일에서 읽어온 라인의 각 필드를 객체의 맴버변수에 대입하기 위해 사용한다.  
 소스 : [SingerFieldSetMapper.java](src/main/java/com/linor/singer/batch/SingerFieldSetMapper.java)  
 ```java
 public class SingerFieldSetMapper implements FieldSetMapper<Singer> {
@@ -223,10 +227,9 @@ public class SingerFieldSetMapper implements FieldSetMapper<Singer> {
 	}
 }
 ```
-FieldSetMapper는 파일에서 읽어온 라인의 각 필드를 객체의 맴버변수 대입하기 위해 사용한다.  
 
 ## ItemProcessor구현
-ItemProcessor는 필터링효과 또는 중간에 데이터내용 변경등이 필요한 경우에 사용한다.  
+ItemProcessor는 필터링효과 또는 중간에 데이터의 내용을 변경하거나, 출격 객체의 타입변환이 필요한 경우에 사용한다.  
 소스 : [SingerProcessor.java](src/main/java/com/linor/singer/batch/SingerProcessor.java)  
 ```java
 @Service
@@ -283,9 +286,9 @@ public class BatchConfig {
 	private final SingerDbWriter singerDbWriter;
 ...
 ```
-@Configuration은 구성설정용 클래스임을 알린다.
-@EnableBatchProcessing은 스프링 Batch처리용임을 알린다.
-@RequiredArgsConstructor은 lombok어노테이션으로 private final인 프로퍼티들을 생성자메개변수로 하여 생성자를 만든다.
+@Configuration으로 설정용 클래스를 선언한다.  
+@EnableBatchProcessing은 스프링 Batch처리용임을 선언한다.  
+@RequiredArgsConstructor은 lombok어노테이션으로 private final인 프로퍼티들을 생성자매개변수로 하여 생성자를 만든다.
 
 ### Job
 ```java
@@ -299,6 +302,8 @@ public class BatchConfig {
 	}
 ```
 최종 처리할 job으로, step1처리 후 step2를 처리하도록 한다.
+- jobBuilderFactory.get("ETL-Load3") : "ETL-Load3"이란 이름의 Batch Job을 생성한다.
+- incrementer(new RunIdIncrementer()) : Spring Batch에서는 동일 파라미터인 Job을 다시 실행하고 싶을 때 사용하라는 의미로 RunIdIncrementer를 선언한다.  
 
 ### step1(파일 -> 데이터베이스)
 step1은 파일의 각 라인을 읽어서 데이타베이스에 저장한다.  
@@ -314,8 +319,9 @@ step1은 파일의 각 라인을 읽어서 데이타베이스에 저장한다.
 				.build();
 	}
 ```
+- stepBuilderFactory.get("ETL-file-load") : "ETL-file-load"이란 이름의 Batch Step을 생성한다.
 - chunk는 step에서 한번에 처리할 라인수를 지정한다. 파일에서 100라인을 읽어서 처리하도록 한다.  
-- reader()에 fileItemReader빈을 설정하고 파라미터를 null로 한다.  
+- reader()에 fileItemReader빈을 설정한다.  
 - writer(singerDbWriter)는 writer를 별도 빈으로 구현한 경우
 - writer(dbWriter())는 클래스 내에 빈을 설정하여 처리한 경우임.
 
@@ -330,9 +336,29 @@ step1은 파일의 각 라인을 읽어서 데이타베이스에 저장한다.
 		return flatFileItemReader;
 	}
 ```
-- 빈의 path값이 null인 경우 application.yml에서 선언한 file.input-file값을 삽입한다.  
+- @Value("${files.input-file}") : application.yml에서 선언한 file.input-file값을 삽입한다.  
 - flatFileItemReader.setLinesToSkip(1)은 파일의 첫 번째 라인이 해더이므로 읽지 않고 건너뛰도록 한다.  
 - flatFileItemReader.setLineMapper(lineMapper())은 라인매퍼 빈을 선언한여 파일에서 읽은 라인을 객체로 변환하도록 한다.  
+
+#### lineMapper
+```java
+	@Bean
+	public LineMapper<Singer> lineMapper(){
+		DefaultLineMapper<Singer> defaultLineMapper = new DefaultLineMapper<>();
+		DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
+		lineTokenizer.setDelimiter(",");
+		lineTokenizer.setStrict(false);
+		defaultLineMapper.setLineTokenizer(lineTokenizer);
+		
+		SingerFieldSetMapper mapper = new SingerFieldSetMapper();
+		defaultLineMapper.setFieldSetMapper(mapper);
+		
+		return defaultLineMapper;
+	}
+```
+파일에서 하나을 라인을 읽어 필드로 나누기 위해 사용한다. 
+- lineTokenizer.setDelimiter(","): 필드의 구분자를 콤마(,)고 구분한다.
+- defaultLineMapper.setFieldSetMapper(mapper): Singer 객체에 매핑하기 위해 SingerFieldSetMapper를 사용하도록 한다. 
 
 #### dbWriter 빈
 ```java
@@ -347,7 +373,7 @@ step1은 파일의 각 라인을 읽어서 데이타베이스에 저장한다.
 데이터베이스에 저장하기 위해 MyBatisBatchItemWriter를 사용하여 처리한 경우로 MybatisBatchItemWriter를 생성하여 sqlSessionFactory 및 statementId를 설정한다.
 
 ### step2(데이터베이스 -> 파일)
-step2는 데이타베이스에서 여러 레코드를 읽어서 파일에 저장한다.  
+step2는 데이타베이스에서 테이블을 조회하여 파일에 저장하는 일을 처리한다.  
 ```java
 	@Bean
 	Step step2() {
@@ -393,7 +419,7 @@ Mybatis에서는 ItemReader를 상속받은 MyBatisCursorItemReader를 이용하
 setResource를 이용하여 저장할 파일을 지정하고, setHeaderCallback으로 해더라인을 등록한다.
 setLineAggregator를 이용하여 라인값을 설정한다.
 
-## Spring Batch처리를 위한 RestAPI 만들기
+## RestAPI로 Spring Batch처리하기
 소스 : [LoadController.java](src/main/java/com/linor/singer/controller/LoadController.java)  
 ```java
 @RestController
@@ -430,8 +456,10 @@ public class LoadController {
 	}
 }
 ```
+- load(): [load](http://localhost:8080/load)를 호출하면 jobLauncher로 job2를 처리한다. job2는 db에서 singer테이블을 조회하여 파일에 저장하는 작업을 처리한다.    
+처리가 끝나면 결과상태를 리턴한다.
 
-## Spring Batch Job Scheduling
+## 스케줄러로 Spring Batch Job 처리
 소스 : [ScheduleConfig.java](src/main/java/com/linor/singer/config/ScheduleConfig.java)  
 ```java
 @Configuration
@@ -454,10 +482,12 @@ public class ScheduleConfig {
 	}
 }
 ```
-@EnableScheduling을 선언함으로써 스케줄 처리를 스프링프레임워크에 알린다.  
-스프링 배치를 처리하기 위하여 JobLauncher를 스프링으로부터 인젝션받아 사용한다.  
-@Scheduled(fixedRate = 5000)로 5초마다 스케줄러가 작동하도록 한다. cron등 다양한 방법으로 스케줄을 설정할 수 있다.  
-이제 스프링 부트를 실행하면 5초마다 자동 실행됨을 확인한다.  
+- @EnableScheduling: 스케줄러를 사용할 수 있도록 한다.  
+- 배치처리를 위한 JobLauncher를 선언한다.  
+- @Qualifier("job1"): Job을 여러개 선언한 경우 특정 빈의 이름(job1)으로 job1의 맴버변수에 삽입하도록 한다.  
+- @Scheduled(fixedRate = 5000): 5초마다 스케줄러가 작동하도록 한다. cron등 다양한 방법으로 스케줄을 설정할 수 있다.  
+
+이제 스프링 부트를 실행하면 5초마다 자동 실행된다.  
 
 ## 참고 사이트 
 - https://cheese10yun.github.io/spring-batch-basic/

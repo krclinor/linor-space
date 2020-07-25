@@ -1,0 +1,6 @@
+spring:
+  task:
+    scheduling:
+      pool:
+        size: 10
+      thread-name-prefix: linor-scheduler
