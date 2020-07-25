@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class IntegrationFlowConfig {
 	private final MessageProducer messageProducer;
+	private final MessageConsumer messgeConsumer;
 	
 	@Bean
 	public MessageSource<?> source(){
@@ -30,7 +31,7 @@ public class IntegrationFlowConfig {
 	}
 
 	@Bean
-	public IntegrationFlow inOutFlow(MessageProducer messageProducer, MessageConsumer messgeConsumer) {
+	public IntegrationFlow inOutFlow() {
 		return IntegrationFlows.from(source(), s -> s.poller(Pollers.fixedDelay(1000)))
 				.channel("channel")
 				.handle(messgeConsumer, "consume")

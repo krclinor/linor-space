@@ -13,7 +13,6 @@
 		<int:poller fixed-rate="1000"/>
 	</int:inbound-channel-adapter>
 	
-	
 	<int:outbound-channel-adapter channel="channel" id="outAdapter"
 		ref="messageConsumer" method="consume">
 	</int:outbound-channel-adapter>

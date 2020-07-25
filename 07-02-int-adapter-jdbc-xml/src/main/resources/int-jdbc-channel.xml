@@ -9,13 +9,13 @@
 
 	<int:channel id="channel"/>
 	<int-jdbc:inbound-channel-adapter id="fromDb" channel="channel"
-			data-source="dataSource"
+			data-source="dataSource1"
 			query="select * from item_source where polled = false"
 			update="update item_source set polled = 'true' where item_id in (:item_id)">
 		<int:poller fixed-rate = "4000"/>
 	</int-jdbc:inbound-channel-adapter>
 	<int-jdbc:outbound-channel-adapter id="toDb" channel="channel"
-			data-source="dataSource">
+			data-source="dataSource2">
 		<int-jdbc:query>insert into item_dest(item_id, description) values(:payload[item_id], :payload[description])</int-jdbc:query>
 	</int-jdbc:outbound-channel-adapter>	
 </beans>
