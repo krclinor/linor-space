@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.linor</groupId>
-	<artifactId>keycloak-server</artifactId>
+	<artifactId>reactive-r2dbc</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>reactive-r2jdbc</name>
+	<name>reactive-r2dbc</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -30,7 +30,6 @@
 		<dependency>
 			<groupId>io.r2dbc</groupId>
 			<artifactId>r2dbc-postgresql</artifactId>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>

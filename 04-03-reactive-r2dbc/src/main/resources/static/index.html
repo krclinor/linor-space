@@ -38,8 +38,7 @@
 // 			$("#singerTable").append(tag);
 // 		};
 	 var promise = $.ajax({
-	        url: '/singers',
-	        dataType: 'json'
+	        url: '/singers'
 	    }).promise();
 	 Rx.Observable.fromPromise(promise)
 		  .subscribe(
